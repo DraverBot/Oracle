@@ -9,6 +9,6 @@
   Source code of Oracle Bot.
 </p>
 
-## Blues
+## Oracle
 This GitHub repository is the backstage of the **Oracle** Bot, that can be found [here](https://top.gg/bot/). <br/>
 You can join the official guild of this project [here](https://discord.gg/jUMJkqSUzq). <br/>
