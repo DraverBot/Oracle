@@ -1,2 +1,2 @@
-# Yeisky
-Source code of Yeisky bot.
+# Oracle
+Source code of Oracle bot.
