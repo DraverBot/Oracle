@@ -1,6 +1,5 @@
-<<<<<<< Updated upstream
-   <p align="center"><img align="center" width="96" src="./.github/img/logo-white.png#gh-dark-mode-only"/></p>
-   <p align="center"><img align="center" width="96" src="./.github/img/logo-black.png#gh-light-mode-only"/></p>
+   <p align="center"><img align="center" width="90" src="./.github/img/logo-white.png#gh-dark-mode-only"/></p>
+   <p align="center"><img align="center" width="90" src="./.github/img/logo-black.png#gh-light-mode-only"/></p>
    <h3 align="center">Oracle</h3>
 
   </a>
@@ -13,11 +12,8 @@
 ## Oracle
 This GitHub repository is the backstage of the **Oracle** Bot, that can be found [here](https://top.gg/bot/). <br/>
 You can join the official guild of this project [here](https://discord.gg/jUMJkqSUzq). <br/>
-=======
-# Yeisky
-Source code of Yeisky bot.
+
 
 ## Note
 * Ne pas uploader [.gitignore](./gitignore) sur le vps.
 * Je te laisse faire les [embeds](./assets/embeds.js), t'as juste qu'a suivre le modèle que j'ai déjà fait
->>>>>>> Stashed changes
