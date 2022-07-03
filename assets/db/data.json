@@ -1,10 +1,6 @@
 {
-    "odatabase": "YeikzyBot",
-    "ohost": "127.0.0.1",
-    "ouser": "Yeikzy",
-    "opassword": "Yeikzy040206",
-    "host":"bdd.adkynet.com",
-    "password":"o9jrYK.WDP+We@3Ss4Jir@iG",
-    "database": "s10574_blues-test-db",
-    "user":"u10574_iIQM8brnwO"
+    "database": "YeikzyBot",
+    "host": "127.0.0.1",
+    "user": "Yeikzy",
+    "password": "Yeikzy040206"
 }
