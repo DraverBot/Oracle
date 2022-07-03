@@ -12,6 +12,7 @@ const basic = (user) => {
 };
 
 module.exports = {
+    classic: basic,
     onlyServer: (user) => {
         return basic(user)
             .setTitle("Commande exclusive")
