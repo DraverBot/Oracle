@@ -1,16 +1,101 @@
 const Discord = require('discord.js');
-const functions = require('../assets/functions');
-const package = functions.package();
+const { sendError } = require('../assets/functions');
+const API = require('../assets/tickets');
 
 module.exports = {
     event: 'interactionCreate',
     /**
-     * @param {Discord.CommandInteraction} interaction 
+     * @param {Discord.Interaction} interaction 
      */
     execute: (interaction) => {
-        if (!interaction.isCommand()) return;
-        let cmd = package.commands.get(interaction.commandName);
+        if (interaction.isCommand()) {
+            const name = interaction.commandName.replace(/ +/g, '-');
+            if (!name) return;
+    
+            const file = require(`../slash-commands/${name}.js`);
+            const run = new Promise((resolve) => resolve(file.run(interaction)));
+            run.catch((error) => {
+                console.log(error);
+                sendError(error, name, interaction.user);
 
-        if (cmd.help.dm == false && !interaction.guild) return
+                if (!interaction.replied) interaction.reply({ content: `Une erreur s'est produite lors de l'exécution de la commande` })
+                else interaction.editReply({ content: `Une erreur s'est produite lors de l'exécution de la commande`, embeds: [], components: [] });
+            })
+        } else if (interaction.isButton()) {
+            if (!interaction.guild) return;
+
+            interaction.client.db.query(`SELECT * FROM tickets WHERE guild_id="${interaction.guild.id}"`, (err, req) => {
+                if (err) {
+                    interaction.reply({ content: "Une erreur a eu lieu lors de l'ouverture du ticket", ephemeral: true });
+                    console.log(err);
+                    return;
+                };
+
+                if (req.length === 0) return;
+
+                const guild = interaction.guild;
+
+                const data = req.find((x) => x.message_id === interaction.message.id);
+
+                if (interaction.customId === 'ticket-create') {
+                    if (!data.type === 'panel') return;
+    
+                    API.create(interaction.guild, interaction.user, data.subject);
+                    interaction.reply({ content: "Je crée votre ticket.", ephemeral: true });
+                };
+                if (interaction.customId === 'reopen-ticket') {
+                    if (!data.type === 'panel-closed-ticket') return;
+                    
+                    const object = req.find((x) => x.channel_id === interaction.channel.id && x.type === "ticket-message");
+                    if (!object) return;
+    
+                    const member = guild.members.cache.get(object.user_id);
+                    if (!member) return;
+    
+                    API.reopen(interaction.channel, member.user);
+                    interaction.reply({ content: "Je réouvre votre ticket", ephemeral: true });
+                };
+                if (interaction.customId === 'delete-ticket') {
+                    if (!data.type === 'panel-closed-ticket') return;
+                    
+                    API.delete(interaction.channel, interaction.user);
+                    interaction.reply({ content: "Je supprime votre ticket", ephemeral: true });
+                };
+                if (interaction.customId === 'confirm-close-ticket') {
+                    if (!data.type === 'close-ticket-panel') return;
+                    
+                    const object = req.find((x) => x.channel_id === interaction.channel.id && x.type === 'ticket-message');
+                    if (!object) return;
+    
+                    const member = guild.members.cache.get(object.user_id);
+                    if (!member) return;
+    
+                    API.close_ticket(guild, interaction.channel, member.user);
+                    interaction.reply({ content: "Je ferme le ticket :white_check_mark:", ephemeral: true });
+                };
+                if (interaction.customId === 'close-ticket') {
+                    if (!data.type === 'ticket-message') return;
+
+                    API.close_ticket_panel(guild, interaction.channel, interaction.user);
+                    interaction.reply({ content: "Voulez-vous fermer le ticket ?", ephemeral: true });
+                };
+                if (interaction.customId === 'save-ticket') {
+                    if (!data.type === 'panel-closed-ticket') return;
+                    
+                    API.save_transcript(interaction.channel, interaction.user);
+                    interaction.reply({ content: "Je sauvegarde la conversation", ephemeral: true });
+                };
+                if (interaction.customId === 'cancel-close-ticket') {
+                    if (!data.type === 'close-ticket-panel') return;
+                    
+                    interaction.message.delete().catch(() => {});
+                    
+                    interaction.client.db.query(`DELETE FROM tickets WHERE message_id="${data.message_id}"`, (err, req) => {
+                        if (err) console.log(err);
+                    });
+                    interaction.reply({ content: "Je supprime le ticket." });
+                }
+            });
+        }
     }
-}
+};

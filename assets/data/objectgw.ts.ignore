@@ -1,0 +1,10 @@
+export class gw  {
+    public reward: String;
+    public winnerCount: Number;
+    public endsAt: Number;
+    public guild_id: String;
+    public channel_id: String;
+    public message_id: String;
+    public hoster_id: String;
+    public path: String;
+};
