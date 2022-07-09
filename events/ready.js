@@ -1,5 +1,5 @@
 const { Client, MessageEmbed } = require('discord.js');
-const { connect, beta } = require('../assets/data/data.json');
+const { connect, beta, statsYeikzy } = require('../assets/data/data.json');
 
 module.exports = {
     event: 'ready',
@@ -50,6 +50,17 @@ module.exports = {
 
         if (beta == false) {
             client.fetchWebhook(connect.id, connect.token).then((web) => {
+                if (!web) return;
+    
+                const embed = new MessageEmbed()
+                    .setTitle("Reconnexion")
+                    .setDescription(`Je viens de me reconnecter`)
+                    .setColor("ORANGE")
+                    .setTimestamp()
+    
+                web.send({ embeds: [ embed ] }).catch(() => {});
+            });
+            client.fetchWebhook(statsYeikzy.id, statsYeikzy.token).then((web) => {
                 if (!web) return;
     
                 const embed = new MessageEmbed()
