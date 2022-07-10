@@ -10,12 +10,13 @@ module.exports = {
     execute: (message) => {
         if (message.author.bot || !message.guild || message.webhookId) return;
 
-        message.client.db.query(`SELECT counting_channel, counting_enable, counting_amount FROM configs WHERE guild_id`, (err, req) => {
+        message.client.db.query(`SELECT counting_channel, counting_enable, counting_amount FROM configs WHERE guild_id="${message.guild.id}"`, (err, req) => {
             if (err) return console.log(err);
             
             if (req.length == 0) return;
             const data = req[0];
-            if (data.counting_enable == "0") return;
+            if (data.counting_enable == 0) return;
+            if (data.counting_channel == null) return;
             if (data.counting_channel !== message.channel.id) return;
 
             if (message.content.startsWith('"') && message.content.endsWith('"')) return;
