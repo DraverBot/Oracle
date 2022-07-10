@@ -76,7 +76,8 @@ module.exports = {
             statusIndex++;
             if (statusIndex > status.length) statusIndex = 0;
 
-            let statut = status[statusIndex]
+            let statut = status[statusIndex];
+            statut.name = statut.name
                 .replace('%users%', client.users.cache.size)
                 .replace('%servers%', client.guilds.cache.size);
 
