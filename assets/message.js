@@ -47,7 +47,7 @@ module.exports = {
                     reponse.setURL('https://www.youtube.com/watch?v=dQw4w9WgXcQ');
                 }; 
                 
-                functions.lineReply(message.id, message.channel, reponse, true);
+                functions.reply(message, reponse);
 
                 if (message.guild) {
                     if (functions.random(10000, 0) === 794) {
@@ -90,7 +90,7 @@ module.exports = {
                 const file = require(`../${command.path}`);
     
                 if (file.help.private && message.author.id !== require('./data/data.json').gs) {
-                    if (message.author.id !== "965592724990476319") return;
+                    if (message.author.id !== require('./data/data.json').yz) return;
                 };
     
                 if (!file.help.dm && !message.guild) return message.channel.send({ embeds: [ package.embeds.classic(message.author)

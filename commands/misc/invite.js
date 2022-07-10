@@ -18,7 +18,7 @@ module.exports.help = {
  */
 module.exports.run = (message, args, client, prefix) => {
     const link = `https://discord.com/oauth2/authorize?client_id=${client.user.id}&scope=bot%20applications.commands&permissions=8`;
-    const support = `https://discord.gg/G7QDcNkvPS`;
+    const { support } = package.configs;
 
     message.channel.send({ content: `Invitez-moi avec ce lien :\n<${link}>\n\nRejoignez le support avec ce lien\n${support}` }).catch(() => {});
 }

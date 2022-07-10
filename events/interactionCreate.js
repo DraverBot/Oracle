@@ -1,6 +1,8 @@
 const Discord = require('discord.js');
 const { sendError } = require('../assets/functions');
 const API = require('../assets/tickets');
+const commands = require('../assets/data/slashCommands');
+const embeds = require('../assets/embeds');
 
 module.exports = {
     event: 'interactionCreate',
@@ -9,14 +11,17 @@ module.exports = {
      */
     execute: (interaction) => {
         if (interaction.isCommand()) {
-            const name = interaction.commandName.replace(/ +/g, '-');
-            if (!name) return;
-    
-            const file = require(`../slash-commands/${name}.js`);
-            const run = new Promise((resolve) => resolve(file.run(interaction)));
+            let cmd = commands.get(interaction.commandName);
+            if (!cmd) return interaction.reply({ embeds: [ embeds.classic(interaction.user)
+                .setTitle("Erreur")
+                .setDescription(`Je n'ai pas trouvé cette commande parmi mes commandes.\nVeuillez patienter un peu.\n\n:bulb:\n> Si l'erreur persiste, contactez [mes développeurs](${require('../assets/data/data.json').support})`)
+                .setColor('ORANGE')
+            ], ephemeral: true });
+
+            const run = new Promise((resolve) => resolve(cmd.run(interaction)));
             run.catch((error) => {
                 console.log(error);
-                sendError(error, name, interaction.user);
+                sendError(error, interaction.commandName, interaction.user);
 
                 if (!interaction.replied) interaction.reply({ content: `Une erreur s'est produite lors de l'exécution de la commande` })
                 else interaction.editReply({ content: `Une erreur s'est produite lors de l'exécution de la commande`, embeds: [], components: [] });

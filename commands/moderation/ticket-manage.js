@@ -87,7 +87,7 @@ module.exports.run = (message, args, client, prefix) => {
                                 .setCustomId('ticket-create')
                                 .setEmoji('📩')
                                 .setLabel('Ouvrir un ticket')
-                                .setStyle('DANGER')
+                                .setStyle('SECONDARY')
                         )
 
                     channel.send({ components: [ row ], embeds: [ new Discord.MessageEmbed()

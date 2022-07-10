@@ -1,5 +1,6 @@
 const { Client, MessageEmbed } = require('discord.js');
-const { connect, beta, statsYeikzy, default_prefix } = require('../assets/data/data.json');
+const { connect, beta, connectYeikzy, default_prefix } = require('../assets/data/data.json');
+const commands = require('../assets/data/slashCommands');
 
 module.exports = {
     event: 'ready',
@@ -15,17 +16,12 @@ module.exports = {
             fs.readdirSync('./slash-commands').filter((x) => x.endsWith('.js')).forEach((fileName) => {
                 const file = require(`../slash-commands/${fileName}`);
 
-                client.application.commands.create({
-                    name: file.configs.name,
-                    description: file.configs.description,
-                    options: file.configs.options,
-                    type: 'CHAT_INPUT'
-                }).catch((e) => console.log(e));
+                client.application.commands.create(file.configs).catch((e) => console.log(e));
+                commands.set(file.configs.name, file);
             });
         };
 
         slashCommandsBuilder();
-        setInterval(slashCommandsBuilder, 600000);
 
         const dbl = require('dblapi.js');
         client.dbl = new dbl(require('../assets/data/data.json').token, {
@@ -55,7 +51,7 @@ module.exports = {
     
                 web.send({ embeds: [ embed ] }).catch(() => {});
             });
-            client.fetchWebhook(statsYeikzy.id, statsYeikzy.token).then((web) => {
+            client.fetchWebhook(connectYeikzy.id, connectYeikzy.token).then((web) => {
                 if (!web) return;
     
                 const embed = new MessageEmbed()
@@ -73,7 +69,7 @@ module.exports = {
             {name: 'la version ' + require('../assets/data/data.json').version, type: 'WATCHING'},
             {name: `avec ${client.users.cache.size} utilisateurs`, type: 'PLAYING'},
             {name: `${client.guilds.cache.size} serveurs`, type: 'STREAMING'},
-            {name: `un message qui commence par ${default_prefix}`, type: 'LISTENING'}
+            {name: `Le préfixe ${default_prefix}`, type: 'LISTENING'}
         ];
         
         setInterval(() => {

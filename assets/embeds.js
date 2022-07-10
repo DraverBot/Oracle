@@ -21,19 +21,19 @@ module.exports = {
         return new MessageEmbed()
             .setTitle("Utilisateur introuvable")
             .setColor('DARK_RED')
-            .setDescription(`Oops, cet utilisateur est introuvable, réessayez avec l'identifiant ou la mention.\n> Un [utilisateur](https://github.com/Greensky-gs/gs-bot-doc/blob/main/others/user.md) est attendu.`)
+            .setDescription(`Oops, cet utilisateur est introuvable, réessayez avec l'identifiant ou la mention.\n> Un [utilisateur](https://github.com/BotOracle/Documentation/blob/main/others/user.md) est attendu.`)
     },
     invalidNumber: (user) => {
         return generateBasic(user)
             .setTitle("Nombre invalide")
             .setColor('RED')
-            .setDescription(`Oops, on dirait que ce n'est pas un nombre correct.\n> Un [nombre](https://github.com/Greensky-gs/gs-bot-doc/blob/main/others/nombre.md) est attendu`)
+            .setDescription(`Oops, on dirait que ce n'est pas un nombre correct.\n> Un [nombre](https://github.com/BotOracle/Documentation/blob/main/others/nombre.md) est attendu`)
     },
     noReason: (user) => {
         return generateBasic(user)
             .setTitle("Raison invalide")
             .setColor('RED')
-            .setDescription(`Oops, vous avez oublié de saisir la raison.\n> Un [texte](https://github.com/Greensky-gs/gs-bot-doc/blob/main/others/texte.md) est attendu`)
+            .setDescription(`Oops, vous avez oublié de saisir la raison.\n> Un [texte](https://github.com/BotOracle/Documentation/blob/main/others/texte.md) est attendu`)
     },
     notEnoughHiger: (user, member) => {
         return generateBasic(user)
@@ -61,7 +61,7 @@ module.exports = {
     noChannel: (user) => {
         return generateBasic(user)
             .setTitle("Salon inexistant")
-            .setDescription(`Oops, ce salon n'existe pas, réessayez avec identifiant ou la mention.\n> Un [salon](https://github.com/Greensky-gs/gs-bot-doc/blob/main/others/salon.md) est attendu`)
+            .setDescription(`Oops, ce salon n'existe pas, réessayez avec identifiant ou la mention.\n> Un [salon](https://github.com/BotOracle/Documentation/blob/main/others/salon.md) est attendu`)
             .setColor('RED')
     },
     cancel: () => {
@@ -73,19 +73,19 @@ module.exports = {
         return generateBasic(user)
             .setTitle("Pas de texte")
             .setColor('RED')
-            .setDescription(`Oops, vous avez oublié le texte, réessayez la commande en saisissant un texte.\n> Un [texte](https://github.com/Greensky-gs/gs-bot-doc/blob/main/others/texte.md) est attendu`)
+            .setDescription(`Oops, vous avez oublié le texte, réessayez la commande en saisissant un texte.\n> Un [texte](https://github.com/BotOracle/Documentation/blob/main/others/texte.md) est attendu`)
     },
     collectorNoMessage: (user) => {
         return generateBasic(user)
             .setTitle("Aucune réponse")
             .setColor('RED')
-            .setDescription(`<@${user.id}>, je vous ai proposé un collecteur de messages mais il se trouve que vous n'y avez pas répondu.\nVeuillez réessayer.\n> Vous utilisez un [collecteur de messages](https://github.com/Greensky-gs/gs-bot-doc/blob/main/others/msg-collector.md)`)
+            .setDescription(`<@${user.id}>, je vous ai proposé un collecteur de messages mais il se trouve que vous n'y avez pas répondu.\nVeuillez réessayer.\n> Vous utilisez un [collecteur de messages](https://github.com/BotOracle/Documentation/blob/main/others/msg-collector.md)`)
     },
     invalidTime: (user) => {
         return generateBasic(user)
             .setTitle("Durée invalide :x:")
             .setColor('RED')
-            .setDescription(`Oops, ce n'est pas une durée valide, utilisez :\n\`s\` pour secondes\n\`m\` pour minutes\n\`h\` pour heures\n\`d\` pour jours\n\`y\` pour années.\n> [Documentation](https://github.com/Greensky-gs/gs-bot-doc/blob/main/others/temps.md)`)
+            .setDescription(`Oops, ce n'est pas une durée valide, utilisez :\n\`s\` pour secondes\n\`m\` pour minutes\n\`h\` pour heures\n\`d\` pour jours\n\`y\` pour années.\n> [Documentation](https://github.com/BotOracle/Documentation/blob/main/others/temps.md)`)
     },
     invalidArg: (user) => {
         let text = "Oops, il manque des arguments, vérifiez que vous ayez saisis **tous** les arguments de cette commande et réessayez-la.\nLes arguments de la commande sont disponibles sur la documentation.";
@@ -123,19 +123,19 @@ module.exports = {
     noRoles: (user) => {
         return generateBasic(user)
             .setTitle("Pas de rôles")
-            .setDescription(`Je n'ai pas trouvé suffisament de [**rôles**](https://github.com/Greensky-gs/gs-bot-doc/blob/main/others/role.md).`)
+            .setDescription(`Je n'ai pas trouvé suffisament de [**rôles**](https://github.com/BotOracle/Documentation/blob/main/others/role.md).`)
             .setColor('#ff0000')
     },
     noMember: (user) => {
         return generateBasic(user)
             .setTitle("Pas de membres")
-            .setDescription(`Je n'ai pas trouvé suffisament de [**membres**](https://github.com/Greensky-gs/gs-bot-doc/blob/main/others/user.md).`)
+            .setDescription(`Je n'ai pas trouvé suffisament de [**membres**](https://github.com/BotOracle/Documentation/blob/main/others/user.md).`)
             .setColor('#ff0000')
     },
     noText: (user) => {
         return generateBasic(user)
             .setTitle("Texte manquant")
-            .setDescription(`Vous avez oublié de saisir un **texte**.\n> Un [texte](https://github.com/Greensky-gs/gs-bot-doc/blob/main/others/texte.md) est attendu`)
+            .setDescription(`Vous avez oublié de saisir un **texte**.\n> Un [texte](https://github.com/BotOracle/Documentation/blob/main/others/texte.md) est attendu`)
             .setColor('#ff0000')
     }
 }
