@@ -89,9 +89,8 @@ module.exports = {
     
                 const file = require(`../${command.path}`);
     
-                if (file.help.private && message.author.id !== require('./data/data.json').gs) {
-                    if (message.author.id !== require('./data/data.json').yz) return;
-                };
+                const { gs, yz } = require('./data/data.json');
+                if (file.help.private && ![gs, yz].includes(message.author.id)) return;
     
                 if (!file.help.dm && !message.guild) return message.channel.send({ embeds: [ package.embeds.classic(message.author)
                     .setTitle("Commande inexécutable")

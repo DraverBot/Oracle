@@ -137,5 +137,11 @@ module.exports = {
             .setTitle("Texte manquant")
             .setDescription(`Vous avez oublié de saisir un **texte**.\n> Un [texte](https://github.com/BotOracle/Documentation/blob/main/others/texte.md) est attendu`)
             .setColor('#ff0000')
+    },
+    waitForDb: (user) => {
+        return generateBasic(user)
+            .setTitle("En attentente de la base de données")
+            .setDescription(`Merci de patienter le temps que la base de données réponde ${emojis.loading}`)
+            .setColor('ORANGE')
     }
 }
