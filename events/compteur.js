@@ -41,7 +41,7 @@ module.exports = {
             if (isNaN(int)) return del('vous avez envoyé un nombre invalide');
 
             let stat = parseInt(data.counting_amount);
-            if (!int === stat + 1) return del(`vous n'avez pas envoyé le bon nombre ( \`${int.toLocaleString()}\` au lieu de \`${stat.toLocaleString()}\` )`);
+            if (int - 1 > stat || int - 1 < stat) return del(`vous n'avez pas envoyé le bon nombre ( \`${int.toLocaleString()}\` au lieu de \`${stat.toLocaleString()}\` )`);
 
             message.client.db.query(`UPDATE configs SET counting_amount="${int}" WHERE guild_id="${message.guild.id}"`, (e) => {
                 if (e) console.log(e);
