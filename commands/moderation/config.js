@@ -33,6 +33,8 @@ module.exports.run = (message, args, client, prefix) => {
         'interchat_channel', //12
         'roles_enable', //13
         'gban_enable', // 14
+        'counting_enable', //15
+        'counting_channel' // 16
     ]
 
     const correspondance = {
@@ -50,7 +52,9 @@ module.exports.run = (message, args, client, prefix) => {
         interchatactive: 11,
         interchatchannel: 12,
         rolesdarrivee:13,
-        gbanactive: 14
+        gbanactive: 14,
+        countingactive: 15,
+        countingchannel: 16
     };
 
     const types = {
@@ -68,7 +72,9 @@ module.exports.run = (message, args, client, prefix) => {
         11: 'boolean',
         12: 'channel',
         13: 'boolean',
-        14: 'boolean'
+        14: 'boolean',
+        15: 'boolean',
+        16: 'channel'
     };
 
     const menu = package.embeds.classic(message.author)
@@ -88,7 +94,9 @@ module.exports.run = (message, args, client, prefix) => {
 \`interchatactive\` : active/désactive l'interchat.
 \`interchatchannel\` : configure le salon d'interchat.
 \`rolesdarrivee\` : Active/désactive les rôles d'arrivées.
-\`gbanactive\` : Activé/désactive le système de GBan
+\`gbanactive\` : Active/désactive le système de GBan
+\`countingactive\` : Active/désactive le système de compteur
+\`coutingchannel\` : Définit le salon du compteur
 
 
 Vous pouvez répondre par \`cancel\` pour annuler.\nVous disposez de deux minutes pour répondre`)

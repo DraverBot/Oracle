@@ -67,8 +67,8 @@ module.exports = {
         let statusIndex = 0;
         let status = [
             {name: 'la version ' + require('../assets/data/data.json').version, type: 'WATCHING'},
-            {name: `avec ${client.users.cache.size} utilisateurs`, type: 'PLAYING'},
-            {name: `${client.guilds.cache.size} serveurs`, type: 'STREAMING'},
+            {name: `avec %users% utilisateurs`, type: 'PLAYING'},
+            {name: `%servers% serveurs`, type: 'STREAMING'},
             {name: `Le préfixe ${default_prefix}`, type: 'LISTENING'}
         ];
         
@@ -76,7 +76,9 @@ module.exports = {
             statusIndex++;
             if (statusIndex > status.length) statusIndex = 0;
 
-            let statut = status[statusIndex];
+            let statut = status[statusIndex]
+                .replace('%users%', client.users.cache.size)
+                .replace('%servers%', client.guilds.cache.size);
 
             client.user.setActivity(statut);
         }, 20000);

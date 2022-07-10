@@ -38,7 +38,7 @@ module.exports.run = (message, args, client, prefix) => {
         message.channel.send({ embeds: [ package.embeds.classic(message.author)
             .setTitle("SQL")
             .setColor('GREEN')
-            .setDescription(`\`\`\`${request}\`\`\``)
+            .setDescription(`\`\`\`${JSON.stringify(request) || request}\`\`\``)
             .setAuthor({ name: `${request.length} résultats` })
         ] });
     });
