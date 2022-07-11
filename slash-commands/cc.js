@@ -82,12 +82,12 @@ module.exports = {
     
             if (text.includes('"') || name.includes('"')) return interaction.reply({ embeds: [ package.embeds.guillement(interaction.user) ] });
     
-            client.db.query(`SELECT name FROM customs WHERE guild_id="${interaction.guild.id}" AND name="${name.toLowerCase()}"`, (err, req) => {
+            interaction.client.db.query(`SELECT name FROM customs WHERE guild_id="${interaction.guild.id}" AND name="${name.toLowerCase()}"`, (err, req) => {
                 if (err) return interaction({ embeds: [ package.embeds.errorSQL(interaction.user) ] });
 
                 let sql = req.length === 0 ? `INSERT INTO customs (guild_id, name, text) VALUES ("${message.guild.id}", "${name}", "${text}")` : `UPDATE customs SET text="${text}" WHERE name="${name}" AND guild_id="${message.guild.id}"`;
 
-                client.db.query(sql, (error, request) => {
+                interaction.client.db.query(sql, (error, request) => {
                     if (error) {
                         interaction.reply({ embeds: [ package.embeds.errorSQL(interaction.user) ] });
                         return console.log(error);
@@ -103,7 +103,7 @@ module.exports = {
         } else if (subcommand === 'supprimer') {
             const name = interaction.options.get('nom').value;
     
-            client.db.query(`SELECT name FROM customs WHERE guild_id="${interaction.guild.id}" AND name="${name.toLowerCase()}"`, (err, req) => {
+            interaction.client.db.query(`SELECT name FROM customs WHERE guild_id="${interaction.guild.id}" AND name="${name.toLowerCase()}"`, (err, req) => {
                 if (err) return interaction.reply({ embeds: [ package.embeds.errorSQL(interaction.user) ] });
     
                 if (req.length === 0) return interaction.reply({ embeds: [ package.embeds.classic(interaction.user)
@@ -112,7 +112,7 @@ module.exports = {
                     .setDescription(`Cette commande n'existe pas`)
                 ] });
     
-                client.db.query(`DELETE FROM customs WHERE guild_id="${interaction.guild.id}" AND name="${name}"`, (error) => {
+                interaction.client.db.query(`DELETE FROM customs WHERE guild_id="${interaction.guild.id}" AND name="${name}"`, (error) => {
                     if (error) return interaction.reply({ embeds: [ package.embeds.errorSQL(interaction.user) ] });
     
                     interaction.reply({ embeds: [ package.embeds.classic(interaction.user)
@@ -123,7 +123,7 @@ module.exports = {
                 });
             });
         } else {
-            client.db.query(`SELECT * FROM name WHERE guild_id="${interaction.guild.id}"`, (err, req) => {
+            interaction.client.db.query(`SELECT * FROM name WHERE guild_id="${interaction.guild.id}"`, (err, req) => {
                 if (err) {
                     console.log(err);
                     return interaction.reply({ embeds: [ package.embeds.errorSQL(interaction.user) ] });

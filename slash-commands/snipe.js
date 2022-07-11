@@ -22,34 +22,23 @@ module.exports = {
     run: (interaction) => {
         if (!interaction.guild) return interaction.reply({ content: "Cette commande n'est pas exécutable en privé" });
 
-        const index = interaction.options.get('numéro') ? interaction.options.get('numéro').value : 1;
+        const index = interaction.options.get('numéro')?.value || 1;
 
-        interaction.client.db.query(`SELECT * FROM snipes WHERE guild_id="${interaction.guild.id}" AND channel_id="${interaction.channel.id}" ODER BY date DESC`, (err, req) => {
-            if (err) {
-                console.log(err);
-                interaction.reply({ embeds: [ package.embeds.errorSQL(interaction.user) ] });
-                return;
-            };
+        if (!interaction.channel.snipes || !interaction.channel.snipes.get(index)) return interaction.reply({ embeds: [ package.embeds.classic(message.author)
+            .setTitle("Rien")
+            .setDescription(`Je ne vois rien à sniper dans ce salon...`)
+            .setColor('ORANGE')
+        ] });
+        const snipeData = interaction.channel.snipes.get(index);
+    
+        const snipe = new Discord.MessageEmbed()
+            .setTitle("Snipe")
+            .setAuthor({ name: interaction.user.username, iconURL: interaction.user.avatarURL({ dynamic: false }) })
+            .setTimestamp(new Date(parseInt(snipeData.createdTimestamp)).toISOString())
+            .setFooter({ text: snipeData.author.username, iconURL: snipeData.author.avatarURL({ dynamic: true }) })
+            .setDescription(`Voici le contenu du message : \`\`\`${snipeData.content}\`\`\``)
+            .setColor(snipeData.member.roles.highest.hexColor)
 
-            const number = index-1;
-            if (req.length === 0 || number + 1 > req.length) return interaction.reply({ embeds: [ package.embeds.classic(interaction.user)
-                .setTitle("Rien")
-                .setDescription(`Je ne vois rien à sniper dans ce salon...`)
-                .setColor('ORANGE')
-            ] });
-    
-            const data = req[number];
-            const author = interaction.guild.members.cache.get(data.user_id) || interaction.guild.me;
-     
-            const snipe = new Discord.MessageEmbed()
-                .setTitle("Snipe")
-                .setAuthor({ name: interaction.user.username, iconURL: interaction.user.avatarURL({ dynamic: false }) })
-                .setTimestamp(new Date(parseInt(data.date)).toISOString())
-                .setFooter({ text: author.user.username, iconURL: author.user.avatarURL({ dynamic: true }) })
-                .setDescription(`Voici le contenu du message : \`\`\`${data.content}\`\`\``)
-                .setColor(author.roles.highest.hexColor)
-    
-            interaction.reply({ embeds: [ snipe ] });
-        })
+        interaction.reply({ embeds: [ snipe ] }).catch(() => {});
     }
 }
