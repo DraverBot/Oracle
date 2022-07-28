@@ -570,10 +570,7 @@ module.exports.run = async(message, args, client) => {
                 const element = reactionsArray.filter(x => x.fnt === i.customId)[0];
                 fnts[element.fnt]();
                 
-                i.reply({ content: `Suivez les étapes suivantes`, ephemeral: false });
-                setTimeout(() => {
-                    i.deleteReply().catch(() => {});
-                }, 2000)
+                i.deferUpdate();
             });
             bigCollector.on('end', async(c, r) => {
                 message.delete().catch(() => {});

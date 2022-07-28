@@ -76,6 +76,44 @@ module.exports = {
                         type: 'ROLE'
                     }
                 ]
+            },
+            {
+                name: 'renommer',
+                description: "Renomme un rôle",
+                type: 'SUB_COMMAND',
+                options: [
+                    {
+                        name: 'rôle',
+                        description: "Rôle à renommer",
+                        required: true,
+                        type: 'ROLE'
+                    },
+                    {
+                        name: 'nom',
+                        description: "Nom du rôle",
+                        required: true,
+                        type: 'STRING'
+                    }
+                ]
+            },
+            {
+                name: 'déplacer',
+                description: "Déplace un rôle",
+                type: 'SUB_COMMAND',
+                options: [
+                    {
+                        name: 'rôle',
+                        description: "Rôle à déplacer",
+                        required: true,
+                        type: 'ROLE'
+                    },
+                    {
+                        name: 'places',
+                        description: "Nombre de places pour déplacer le rôle. Rentrez un nombre négatif ou un nombre positif.",
+                        required: true,
+                        type: 'INTEGER'
+                    }
+                ]
             }
         ]
     },
@@ -83,6 +121,9 @@ module.exports = {
      * @param {Discord.CommandInteraction} interaction 
      */
     run: (interaction) => {
+        if (!interaction.guild) return interaction.reply({ content: "Cette commande n'est pas exécutable en messages privés" }).catch(() => {});
+        if (!interaction.member.permissions.has('MANAGE_ROLES')) return interaction.reply({ embeds: [ package.embeds.missingPermission(interaction.user, 'gérer les rôles') ] }).catch(() => {});
+
         const subCommand = interaction.options.getSubcommand();
 
         const check = (role, member) => {
@@ -94,11 +135,11 @@ module.exports = {
                 interaction.reply({ content: "Ce rôle est trop haut pour vous" });
                 return false;
             };
-            if (member.roles.highest.position >= interaction.guild.me.roles.highest.position) {
+            if (member && member.roles.highest.position >= interaction.guild.me.roles.highest.position) {
                 interaction.reply({ content: "Cet utilisateur est supérieur ou égal à moi dans la hiérachie des rôles" });
                 return false;
             };
-            if (interaction.member.roles.highest.position <= member.roles.highest.position) {
+            if (member && interaction.member.roles.highest.position <= member.roles.highest.position) {
                 interaction.reply({ content: "Cet utilisateur est supérieur ou égal à vous dans la hiérarchie des rôles" });
                 return false;
             };
@@ -111,7 +152,11 @@ module.exports = {
             interaction.guild.roles.create({
                 name: roleName
             }).then((role) => {
-                interaction.reply({ content: "Rôle crée" });
+                interaction.reply({ embeds: [ package.embeds.classic(interaction.user)
+                    .setTitle("Rôle crée")
+                    .setDescription(`Le rôle <@&${role.id}> a été crée`)
+                    .setColor(role.hexColor)
+                ] });
             }).catch(() => {});
         };
         if (subCommand === 'delete') {
@@ -121,26 +166,76 @@ module.exports = {
             if (role.position >= interaction.guild.me.roles.highest.position) return interaction.reply({ content: "Ce rôles est supérieur ou égal à moi dans la hiérarchie des rôles." });
 
             role.delete().then(() => {
-                interaction.reply({ content: "Rôle supprimé" });
+                interaction.reply({ embeds: [ package.embeds.classic(interaction.user)
+                    .setTitle("Rôle supprimé")
+                    .setDescription(`Le rôle ${role.name} a été supprimé`)
+                    .setColor(role.hexColor)
+                ] });
             }).catch(() => {});
         };
         if (subCommand === 'add') {
-            const member = interaction.options.get('user').member;
+            const member = interaction.options.get('utilisateur').member;
             const role = interaction.options.get('role').role;
 
             if (!check(role, member)) return;
             member.roles.add(role).then(() => {
-                interaction.reply({ content: "Rôle ajouté" });
+                interaction.reply({ embeds: [ package.embeds.classic(interaction.user)
+                    .setTitle("Rôle ajouté")
+                    .setDescription(`Le rôle <@&${role.id}> a été ajouté à <@${member.id}>`)
+                    .setColor(role.hexColor)
+                ] })
             }).catch(() => {});
         };
         if (subCommand === 'remove') {
-            const member = interaction.options.get('user').member;
+            const member = interaction.options.get('utilisateur').member;
             const role = interaction.options.get('role').role;
 
             if (!check(role, member)) return;
             member.roles.remove(role).then(() => {
-                interaction.reply({ content: "Rôle retiré" });
+                interaction.reply({ embeds: [ package.embeds.classic(interaction.user)
+                    .setTitle("Rôle retiré")
+                    .setDescription(`Le rôle <@&${role.id}> a été retiré à <@${member.id}>`)
+                    .setColor(role.hexColor)
+                ] })
             }).catch(() => {});
+        };
+        if (subCommand == 'renommer') {
+            let role = interaction.options.getRole('rôle');
+            let nom = interaction.options.getString('nom');
+
+            if (!check(role)) return;
+
+            let oldName = role.name;
+            role.setName(nom);
+
+            interaction.reply({ embeds: [ package.embeds.classic(interaction.user)
+                .setTitle("Rôle renommé")
+                .setDescription(`Le rôle ${oldName} a été renommé en <@&${role.id}>`)
+                .setColor(role.hexColor)
+            ] });
+        };
+        if (subCommand == 'déplacer') {
+            let places = interaction.options.getInteger('places');
+            let role = interaction.options.getRole('rôle');
+            
+            if (!check(role)) return;
+            let roles = interaction.guild.roles.cache.size;
+
+            let position = role.position + places;
+
+            if (position < 1) position = 1;
+            if (position > roles) position = roles;
+
+            if (position > interaction.guild.me.roles.highest.position) return interaction.options.reply({ content: `La nouvelle place de ce rôle est trop haute pour moi.` }).catch(() => {});
+            if (position > interaction.member.roles.highest.position) return interaction.options.reply({ content: `La nouvelle place de ce rôle est trop haute pour vous.` }).catch(() => {});
+
+            role.setPosition(position);
+
+            interaction.reply({ embeds: [ package.embeds.classic(interaction.user)
+                .setTitle("Rôle déplacé")
+                .setDescription(`Le rôle <@&${role.id}> a été déplacé vers le **${places > 0 ? 'haut' : 'bas'}**`)
+                .setColor(role.hexColor)
+            ] })
         }
     }
 }

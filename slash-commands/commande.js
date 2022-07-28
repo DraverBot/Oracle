@@ -27,6 +27,9 @@ module.exports = {
      * @param {Discord.CommandInteraction} interaction 
      */
     run: (interaction) => {
+        if (!interaction.guild) return interaction.reply({ content: "Cette commande n'est pas exécutable en messages privés" }).catch(() => {});
+        if (!interaction.member.permissions.has('MANAGE_GUILD')) return interaction.reply({ embeds: [ package.embeds.missingPermission(interaction.user, 'gérer le serveur') ] }).catch(() => {});
+
         const ephemeral = interaction.options.get('discret') ? interaction.options.get('discret').value : true;
 
         const commandName = interaction.options.get('commande').value;
@@ -70,6 +73,11 @@ module.exports = {
                 {
                     name: "Exécutable en privé ?",
                     value: command.help.dm ? "Oui" : "Non",
+                    inline: true
+                },
+                {
+                    name: "Documentation",
+                    value: `[${command.name}](https://github.com/BotOracle/Documentation/blob/main/commands/${command.name})`,
                     inline: true
                 }
             )

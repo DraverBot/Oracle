@@ -84,6 +84,8 @@ module.exports = {
      */
     run: (interaction) => {
         if (!interaction.guild) return interaction.reply({ content: "Cette commande n'est pas exécutable en privé" });
+        if (!interaction.member.permissions.has('MANAGE_GUILD')) return interaction.reply({ embeds: [ package.embeds.missingPermission(interaction.user, 'gérer le serveur') ] }).catch(() => {});
+
         const client = interaction.client;
 
         const subCommand = interaction.options.getSubcommand();

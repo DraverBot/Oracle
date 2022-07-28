@@ -28,12 +28,13 @@ module.exports = {
      */
     run: (interaction) => {
         if (!interaction.guild) return interaction.reply({ content: "Cette commande n'est pas exécutable en messages privés. :x:" });
+        if (!interaction.member.permissions.has('KICK_MEMBERS')) return interaction.reply({ embeds: [ package.embeds.missingPermission(interaction.user, 'expulser des membres') ] }).catch(() => {});
 
         const member = interaction.options.get('utilisateur').member;
         const reason = interaction.options.get('raison').value;
 
         if (reason.includes('"')) return interaction.reply({ embeds: [ package.embeds.errorSQL(interaction.user) ] });
-        if (!functions.checkAllConditions(interaction.guild, interaction.channel, interaction.member, member)) return interaction.deferReply();
+        if (!functions.checkAllConditions(interaction.guild, interaction, interaction.member, member, interaction)) return;
 
         const kicked = package.embeds.classic(interaction.user)
             .setTitle("Expulsion")
@@ -60,6 +61,8 @@ module.exports = {
 
         interaction.reply({ embeds: [ kicked ] });
         member.send({ embeds: [ kicked ] }).catch(() => {});
+
+        member.kick(reason).catch(() => {});
 
         functions.log(interaction.guild, kicked);
         functions.addCase(interaction.guild, member.id, interaction.user.id, reason, 'kick');

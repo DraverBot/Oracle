@@ -26,13 +26,12 @@ module.exports = {
             {name: "Aide", emoji: '🧰', value: 'aide', description: "Commandes d'aide"},
             {name: "Modération", emoji: "🛠", value: 'moderation', description: "Commandes de modération"},
             {name: 'Divers', emoji: '🎈', value: 'misc', description: "Commandes diverses"},
-            {name: 'Giveaways', emoji: '🎉', value: 'giveawyas', description: "Commandes de giveaway"},
+            {name: 'Giveaways', emoji: '🎉', value: 'giveaways', description: "Commandes de giveaway"},
             {name: 'Rôles à réaction', emoji: '➕', value: 'rolereacts', description: "Commandes de rôles à réaction"},
             {name: 'Mails', emoji: '📩', value: 'mails', description: "Commandes de mail"}
         ];
 
         correspondance.push({value: 'close', name: "Fermer", emoji: '❌', description: "Ferme le menu"});
-
 
         const menu = new Discord.MessageEmbed()
             .setTitle("Aide")
@@ -92,7 +91,7 @@ module.exports = {
                 commandsArray.forEach((command) => {
                     if (command.help.appear !== undefined && command.help.appear === false) return;
                     
-                    let prop = `\`${command.name}\` : ${command.help.description}\n`
+                    let prop = `[\`${command.name}\`](https://github.com/BotOracle/Documentation/blob/main/commands/${command.name}) : ${command.help.description}\n`
                     text = text + prop;
                 });
                 const newEmbed = new Discord.MessageEmbed()

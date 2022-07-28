@@ -140,8 +140,14 @@ module.exports = {
     },
     waitForDb: (user) => {
         return generateBasic(user)
-            .setTitle("En attentente de la base de données")
+            .setTitle("En attente de la base de données")
             .setDescription(`Merci de patienter le temps que la base de données réponde ${emojis.loading}`)
             .setColor('ORANGE')
+    },
+    missingPermission: (user, perm) => {
+        return generateBasic(user)
+            .setTitle("Permission manquante")
+            .setDescription(`La permission \`${perm}\` est requise pour exécuter cette commande.`)
+            .setColor('#ff0000')
     }
 }

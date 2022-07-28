@@ -84,9 +84,7 @@ module.exports = {
             const collector = msg.createMessageComponentCollector({ filter: x => x.user.id === message.author.id, time: 120000});
 
             collector.on('collect', (interaction) => {
-                interaction.reply({ content: "Commande reçue" }).then(() => {
-                    interaction.deleteReply();
-                });
+                interaction.deferUpdate();
 
                 const value = correspondance.find((x) => x.value === interaction.customId).value;
                 const commands = require('../../assets/data/commands.json');
@@ -103,7 +101,7 @@ module.exports = {
                 commandsArray.forEach((command) => {
                     if (command.help.appear !== undefined && command.help.appear === false) return;
                     
-                    text += `[\`${prefix}${command.name}\`](https://github.com/Greensky-gs/gs-bot-doc/blob/main/commands/${command.name}.md) : ${command.help.description}\n`;
+                    text += `[\`${prefix}${command.name}\`](https://github.com/BotOracle/Oracle/blob/main/commands/${command.name}.md) : ${command.help.description}\n`;
                 });
                 const newEmbed = new Discord.MessageEmbed()
                     .setTitle("Aide")

@@ -110,7 +110,7 @@ module.exports.run = (message, args, client, prefix) => {
         });
     } else if (subCommand === 'set') {
         const name = args.shift();
-        if (!name) return message.channel.send({ embed: [ package.embeds.classic(message.author)
+        if (!name) return message.channel.send({ embeds: [ package.embeds.classic(message.author)
             .setTitle("Pas de nom")
             .setDescription(`Oops, vous n'avez pas spécifié de nom de commande`)
             .setColor('#ff0000')

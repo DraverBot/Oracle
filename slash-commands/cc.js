@@ -74,18 +74,12 @@ module.exports = {
                 .setColor('#ff0000')
             ] });
     
-            if (!text) return interaction.reply({ embeds: [ package.embeds.classic(interaction.user)
-                .setTitle("Pas de texte")
-                .setDescription(`Oops, vous n'avez pas saisi de réponse`)
-                .setColor('#ff0000')
-            ] });
-    
             if (text.includes('"') || name.includes('"')) return interaction.reply({ embeds: [ package.embeds.guillement(interaction.user) ] });
     
             interaction.client.db.query(`SELECT name FROM customs WHERE guild_id="${interaction.guild.id}" AND name="${name.toLowerCase()}"`, (err, req) => {
                 if (err) return interaction({ embeds: [ package.embeds.errorSQL(interaction.user) ] });
 
-                let sql = req.length === 0 ? `INSERT INTO customs (guild_id, name, text) VALUES ("${message.guild.id}", "${name}", "${text}")` : `UPDATE customs SET text="${text}" WHERE name="${name}" AND guild_id="${message.guild.id}"`;
+                let sql = req.length === 0 ? `INSERT INTO customs (guild_id, name, text) VALUES ("${interaction.guild.id}", "${name}", "${text}")` : `UPDATE customs SET text="${text}" WHERE name="${name}" AND guild_id="${interaction.guild.id}"`;
 
                 interaction.client.db.query(sql, (error, request) => {
                     if (error) {
@@ -123,7 +117,7 @@ module.exports = {
                 });
             });
         } else {
-            interaction.client.db.query(`SELECT * FROM name WHERE guild_id="${interaction.guild.id}"`, (err, req) => {
+            interaction.client.db.query(`SELECT * FROM customs WHERE guild_id="${interaction.guild.id}"`, (err, req) => {
                 if (err) {
                     console.log(err);
                     return interaction.reply({ embeds: [ package.embeds.errorSQL(interaction.user) ] });
@@ -172,7 +166,15 @@ module.exports = {
                         interaction.deleteReply().catch(() => {});
                     });
                     functions.pagination(interaction.user, interaction.channel, embeds, `commandes personnalisées`);
-                };
+                } else {
+                    let embed = package.embeds.classic(interaction.user)
+                        .setTitle(`Commande${req.length > 1 ? 's':''} personnalisé${req.length > 1 ? 'es':'e'}`)
+                        .setDescription(`Il y a **${req.length}** commande${req.length > 1 ? 's personnélisées' : ' personnalisée'} sur ${interaction.guild.name}`)
+                        .addFields(req.map((x) => ({name: x.name, value: x.text, inline: false})))
+                        .setColor(interaction.guild.me.displayHexColor)
+                    
+                    interaction.reply({ embeds: [ embed ] }).catch(() => {});
+                }
             });
         };
     }

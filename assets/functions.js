@@ -221,14 +221,27 @@ module.exports = {
     },
     /**
      * @param {Discord.Guild} guild 
-     * @param {Discord.TextChannel} channel 
+     * @param {Discord.TextChannel} channel
      * @param {Discord.GuildMember} modo 
      * @param {Discord.GuildMember} member 
+     * @param {?Discord.CommandInteraction} interaction
      */
-    checkAllConditions: (guild, channel, modo, member) => {
+    checkAllConditions: (guild, channel, modo, member, interaction) => {
         const { compareRoles } = require('./functions.js')
+        let fnt = (params) => {
+            if (interaction) {
+                if (interaction.replied) {
+                    interaction.editReply(params).catch(() => {});
+                } else {
+                    interaction.reply(params).catch(() => {});
+                }
+            } else {
+                channel.send(params);
+            }
+        }
+
         if (!member.moderatable) {
-            channel.send({ embeds: [ embeds.classic(modo.user)
+            fnt({ embeds: [ embeds.classic(modo.user)
                 .setTitle("Non modérable")
                 .setDescription(`Oops, je ne peux pas effectuer d'actions de modération sur ce membre`)
                 .setColor('#ff0000')
@@ -236,11 +249,11 @@ module.exports = {
             return false;
         }
         if (!compareRoles(member, modo)) {
-            channel.send({ embeds: [ embeds.notEnoughHiger(modo.user, member.user) ] })
+            fnt({ embeds: [ embeds.notEnoughHiger(modo.user, member.user) ] })
             return false;
         };
         if (!compareRoles(member, guild.me)) {
-            channel.send({ embeds: [ embeds.classic(modo.user)
+            fnt({ embeds: [ embeds.classic(modo.user)
                 .setTitle("Pas assez élevé")
                 .setDescription(`Oops, il semblerait que <@${member.id}> soit supérieur ou égal à moi dans la hiérarchie des rôles.`)
                 .setColor('#ff0000')
@@ -248,7 +261,7 @@ module.exports = {
             return false;
         };
         if (guild.ownerId === member.id) {
-            channel.send({ embeds: [ embeds.classic(modo.user)
+            fnt({ embeds: [ embeds.classic(modo.user)
                 .setTitle("Propriétaire")
                 .setDescription(`Oops, il semblerait que <@${member.id}> soit le propriétaire du serveur.`)
                 .setColor('#ff0000')

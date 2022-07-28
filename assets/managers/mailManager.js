@@ -50,7 +50,7 @@ class MailManager {
      * @param {Discord.User} sender 
      * @param {Boolean}
      */
-    send(user, channel, content, object, sender, important) {
+    send(user, channel, content, object, sender, important, send) {
         this.db.query(`SELECT * FROM mails WHERE user_id="${user.id}" AND vu="0"`, (err, req) => {
             if (err) return channel.send({ embeds: [ pack.embeds.errorSQL(user) ] }) & console.log(err);
 
@@ -69,7 +69,7 @@ class MailManager {
             "${important ? 1 : 0}"
         )`, (err, req) => {
             if(err) return channel.send({ embeds: [ pack.embeds.errorSQL(sender) ] }) & console.log(err);
-            channel.send({ embeds: [ pack.embeds.classic(user)
+            if (send == true) channel.send({ embeds: [ pack.embeds.classic(user)
                 .setTitle("Mail envoyé")
                 .setDescription(`J'ai envoyé votre mail à <@${user.id}>`)
                 .setColor("ORANGE")
@@ -211,6 +211,7 @@ class MailManager {
         const collector = message.createMessageComponentCollector({ filter: i => i.user.id === user.id, time: 60*1000*5 });
 
         collector.on('collect', /** @param {Discord.SelectMenuInteraction} interaction */ (interaction) => {
+            interaction.deferUpdate();
             if (interaction.values[0] === 'cancel') return collector.stop('cancel');
 
             const mail = mails.find(x => x.id === parseInt(interaction.values[0]));
@@ -222,9 +223,6 @@ class MailManager {
 
             message.edit({ embeds: [ mailEmbed ], components: [ row ] });
 
-            interaction.reply({ content: `Mail reçu` }).catch(() => {
-                interaction.editReply({ content: "Mail reçu" }).catch(() => {});
-            })
             this.db.query(`UPDATE mails SET vu="1" WHERE id="${mail.id}"`, (e) => e?console.log:null);
         });
         collector.on('end', (collected, reason) => {
@@ -275,9 +273,7 @@ class MailManager {
                 const collectorValid = sended.createMessageComponentCollector({ filter: i => i.user.id === user.id && i.message.id === sended.id, time: 120000, max: 1 });
             
                 collectorValid.on('collect', (i) => {
-                    i.reply({ content: "Choix enregistré" }).then(() => {
-                        i.deleteReply().catch(() => {});
-                    });
+                    i.deferUpdate();
                 });
                 collectorValid.on('end', (collected, reason) => {
                     if (collected.size === 0) return sended.edit({ embeds: [ pack.embeds.cancel() ], components: [] });
@@ -346,7 +342,7 @@ class MailManager {
                 collector.on('collect', (interaction) => {
                     if (interaction.customId === 'cancel') return collector.stop('cancel') & interaction.reply({ content: `Commande annulée`, ephemeral: true }) & sent.edit({ embeds: [ pack.embeds.cancel() ], components: [] });
 
-                    interaction.reply({ content: `Messages reçus`, ephemeral: true });
+                    interaction.deferUpdate();
                     if (interaction.customId === 'read') {
                         this.readMailsReaden(user, sent, mails.filter(x => x.vu === 1));
                     } else if (interaction.customId === 'noread') {

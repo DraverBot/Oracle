@@ -201,9 +201,7 @@ class Morpion {
             const collector = sent.createMessageComponentCollector({ filter: x => x.user.id === this.user.id, time: 60*1000*10 });
 
             collector.on('collect', (i) => {
-                i.reply({ content: `Coup enregistré` }).then(() => {
-                    i.deleteReply();
-                });
+                i.deferUpdate();
             })
 
             collector.on('collect', /** @param {Discord.ButtonInteraction} interaction */ (interaction) => {

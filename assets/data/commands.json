@@ -31,6 +31,19 @@
    "path": "./commands/.devs/eval.js"
   },
   {
+   "name": "exportdb",
+   "help": {
+    "name": "exportdb",
+    "description": "Exporte la base de données",
+    "aliases": [],
+    "permissions": [],
+    "private": true,
+    "dm": false,
+    "cooldown": 0
+   },
+   "path": "./commands/.devs/exportdb.js"
+  },
+  {
    "name": "gban",
    "help": {
     "name": "gban",

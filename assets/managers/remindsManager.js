@@ -25,7 +25,7 @@ class RemindsManger {
         this.db.query(this.generateCreateReq(user.id, remind, time), (err, req) => {
             if (err) return channel.send({ embeds: [ pack.embeds.errorSQL(user) ] }) & console.log(err);
 
-            channel.send({ content: `Je vous rappelle <t:${moment(parseInt(time)).unix()}:R> pour \`${remind}\`\n> Merci de vérifier que vos messages privés soient ouverts.` });
+            channel.send({ content: `Je vous rappelle <t:${(moment(parseInt(time) ).unix() / 1000).toFixed(0)}:R> pour \`${remind}\`\n> Merci de vérifier que vos messages privés soient ouverts.` });
         });
     }
     createInteraction(user,interaction,time,remind) {

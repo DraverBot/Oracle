@@ -7,10 +7,11 @@
     "errorChannel":"839497213113270322",
     "botID":"918137973202112592",
     "contactChannel": "827790768272834580",
-    "version": "1.0",
+    "version": "1.1",
     "beta_token": "OTE4MTM3OTczMjAyMTEyNTky.G5q2vD.tYpVroN28ovgVIPXUKR9GDVqmZexUEwneXTTLk",
-    "beta": false,
+    "beta": true,
     "doc": "https://bit.ly/3c37f8V",
+    "link": "https://bit.ly/3NUdTvE",
     "error": {
         "id": "976874250260578404",
         "token": "LC8ld5MDeX1wh-DAtnhnBf9SsI8wevos2Q9N0PiqkhKWhzaT3G934trT9DqbCRQlLKkd",

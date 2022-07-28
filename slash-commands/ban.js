@@ -28,15 +28,14 @@ module.exports = {
      */
     run: (interaction) => {
         if (!interaction.guild) return interaction.reply({ content: "Cette commande n'est pas exécutable en messages privés." });
-        if (!interaction.member.permissions.has('BAN_MEMBERS')) return interaction.reply({ content: "Vous n'avez pas les permissions nécéssaires", ephemeral: true });
+        if (!interaction.member.permissions.has('BAN_MEMBERS')) return interaction.reply({ embeds: [ package.embeds.missingPermission(interaction.user, 'bannir des membres') ] });
 
         const member = interaction.options.get('member').member;
         const reason = interaction.options.get('raison').value;
         if (reason.includes('"')) return interaction.reply({ embeds: [ package.embeds.guillement(interaction.user) ] });
 
-        if (!functions.checkAllConditions(interaction.guild, interaction.channel, interaction.member, member)) return interaction.deferReply();
+        if (!functions.checkAllConditions(interaction.guild, interaction.channel, interaction.member, member, interaction)) return;
 
-        const emojis = package.emojis;
         const banned = package.embeds.classic(interaction.user)
             .setTitle("Bannissement")
             .setFooter({ text: interaction.member.nickname ? interaction.member.nickname : interaction.user.username, iconURL: interaction.user.displayAvatarURL({ dynamic: true }) })

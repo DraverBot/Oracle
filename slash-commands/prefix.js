@@ -32,6 +32,7 @@ module.exports = {
      */
     run: async(interaction) => {
         if (!interaction.guild) return interaction.reply({ content: "Désolé, cette commande n'est exécutable que sur un serveur" });
+        if (!interaction.member.permissions.has('MANAGE_GUILD')) return interaction.reply({ embeds: [ package.embeds.missingPermission(interaction.user, 'gérer le serveur') ] }).catch(() => {});
         await interaction.reply({ embeds: [ package.embeds.waitForDb(interaction.user) ] });
 
         interaction.client.db.query(`SELECT prefix FROM prefixes WHERE guild_id="${interaction.guild.id}"`, (err, req) => {

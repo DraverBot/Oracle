@@ -28,7 +28,7 @@ module.exports = {
      */
     run: (interaction) => {
         if (!interaction.guild) return interaction.reply({ content: "Cette commande n'est pas exécutable en messages privés." });
-        if (!interaction.member.permissions.has('MANAGE_GUILD')) return interaction.reply({ content: "Vous n'avez pas les permissions nécéssaires" });
+        if (!interaction.member.permissions.has('MANAGE_GUILD')) return interaction.reply({ embeds: [ package.embeds.missingPermission(interaction.user, 'gérer le serveur') ] }).catch(() => {});
 
         const reason = interaction.options.get('raison').value;
         const member = interaction.options.get('utilisateur').member;
