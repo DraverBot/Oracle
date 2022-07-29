@@ -588,7 +588,7 @@ module.exports.run = async(message, args, client) => {
 
 module.exports.help = {
     name: "embed",
-    description: "Construisez un embed avec des réactions",
+    description: "Construisez un embed avec des bouttons",
     aliases: ['embedbuilder'],
     permissions: ['manage_channels'],
     private: false,

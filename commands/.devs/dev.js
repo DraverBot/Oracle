@@ -16,7 +16,6 @@ module.exports.run = (message, args, client, prefix) => {
     const id = "807287341399539733";
     const gid = "930858671322316820";
 
-
     let data = {};
 
     client.db.query(`SELECT * FROM levels WHERE guild_id="${gid}" AND user_id="${id}"`, (err, req) => {

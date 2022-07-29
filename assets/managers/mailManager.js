@@ -360,14 +360,24 @@ class MailManager {
                 if (err) return console.log(err);
 
                 if (req.length === 0) return;
-                const chances = functions.random(15, 0);
-                if (chances === 6) {
-                    message.channel.send({ embeds: [ pack.embeds.classic(message.author)
-                        .setTitle("Nouveau mail")
-                        .setDescription(`Vous avez un mail non-lu.\n\nUtilisez la commande \`mail\` pour les consulter`)
-                        .setColor('ORANGE')
-                    ] });
-                };
+                this.db.query(`SELECT notified FROM mails_notif WHERE user_id="${message.author.id}"`, (e, r) => {
+                    if (e) return console.log(e);
+                    if (r.length > 0 && r[0].notified == "0") return;
+
+                    const chances = functions.random(15, 0);
+                    if (chances === 6) {
+                        let text = "";
+                        if (functions.random(5, 0) == 3) {
+                            text = `\n\n:bulb: Vous pouvez désactiver les notifications de mail avec \`/mail-notifs disable\``;
+                        }
+
+                        message.channel.send({ embeds: [ pack.embeds.classic(message.author)
+                            .setTitle("Nouveau mail")
+                            .setDescription(`Vous avez ${req.length} mail${req.length > 1 ? 's':''} non-lu.\n\nUtilisez la commande \`mail\` pour le${req.length > 1 ? 's':''} consulter.${text}`)
+                            .setColor('ORANGE')
+                        ] });
+                    };
+                })
             });
         });
     }

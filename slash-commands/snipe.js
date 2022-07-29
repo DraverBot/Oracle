@@ -24,7 +24,7 @@ module.exports = {
 
         const index = interaction.options.get('numéro')?.value || 1;
 
-        if (!interaction.channel.snipes || !interaction.channel.snipes.get(index)) return interaction.reply({ embeds: [ package.embeds.classic(message.author)
+        if (!interaction.channel.snipes || !interaction.channel.snipes.get(index)) return interaction.reply({ embeds: [ package.embeds.classic(interaction.user)
             .setTitle("Rien")
             .setDescription(`Je ne vois rien à sniper dans ce salon...`)
             .setColor('ORANGE')

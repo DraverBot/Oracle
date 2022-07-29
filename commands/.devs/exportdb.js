@@ -2,6 +2,7 @@ const { Message, Client } = require('discord.js');
 const functions = require('../../assets/functions');
 const package = functions.package();
 const fs = require('fs');
+const moment = require('moment');
 
 module.exports = {
     help: {
@@ -61,11 +62,11 @@ ${tableData.map((x) => `                        ${x.Field} ${x.Type.toUpperCase(
                         if (request.length > 0) sql+=data + '\n\n';
 
                         if (index + 1 == tables.length) {
-                            fs.writeFileSync(`./assets/db/${Date.now()}.txt`, sql);
+                            fs.writeFileSync(`./assets/db/saves/${moment(Date.now()).format('YYYY-MM-DD_hh-mm')}.txt`, sql);
 
                             msg.edit({ embeds: [ package.embeds.classic(message.author)
                                 .setTitle("Base de données exportée")
-                                .setDescription(`La base de données a été exportée et mise sur l'hébergeur ( assets/db )`)
+                                .setDescription(`La base de données a été exportée et mise sur l'hébergeur ( \`assets/db/saves\` )`)
                                 .setColor('ORANGE')
                             ] });
                         };

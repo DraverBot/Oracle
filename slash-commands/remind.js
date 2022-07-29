@@ -51,6 +51,8 @@ module.exports = {
      * @param {Discord.CommandInteraction} interaction
      */
     run: (interaction) => {
+        return interaction.reply({ embeds: [ new Discord.MessageEmbed({ title: 'Commande en développement', color: 'YELLOW' }) ] }).catch(() => {});
+
         const sub = interaction.options.getSubcommand();
         const manager = interaction.client.RemindsManager;
 

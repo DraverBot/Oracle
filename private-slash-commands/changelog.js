@@ -50,7 +50,7 @@ module.exports = {
         if (adds) {
             adds = adds.split('--').map(x => `→ ${x}`).join('\n');
         };
-        let removes = interaction.options.getString('removes');
+        let removes = interaction.options.getString('retraits');
         removes+='--*removed herobrine*';
 
         if (removes) {
@@ -65,10 +65,10 @@ module.exports = {
         let name = interaction.options.getString('nom');
 
         let changelog = package.embeds.classic(interaction.user)
-            .setTitle(package.configs.link)
-            .setURL(package.configs.doc)
+            .setTitle("Changelog")
+            .setURL(package.configs.link)
             .setAuthor({ name: interaction.guild.name, iconURL: interaction.guild.iconURL({ dynamic: true }) })
-            .setDescription(`__Version **${package.configs.version}**__\n*${name}${name.endsWith('update') ? ' update':''}*${note ? `\n\n${note}`:''}${adds ? `\n\n**Ajouts :**\n${adds}` :''}${fixes ? `\n\n**Fix :**\${fixes}`:''}${removes ? `\n\n**Retraits :**\n${removes}`:''}`)
+            .setDescription(`__Version **${package.configs.version}**__\n*${name}${name.endsWith('update') ? ' update':''}*${note ? `\n\n${note}`:''}${adds ? `\n\n**Ajouts :**\n${adds}` :''}${fixes ? `\n\n**Fix :**\n${fixes}`:''}${removes ? `\n\n**Retraits :**\n${removes}`:''}`)
             .setColor('ORANGE')
             .addField('Documentation', `[Documentation](${package.configs.doc})`, false)
 

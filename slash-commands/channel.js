@@ -123,6 +123,10 @@ module.exports = {
             interaction.guild.channels.create(name, {
                 type: type
             }).then((channel) => {
+                if (interaction.options.getChannel('catégorie') && interaction.options.getChannel('catégorie').type == 'GUILD_CATEGORY') {
+                    channel.setParent(interaction.options.getChannel('catégorie')).catch(() => {});
+                }
+                
                 interaction.reply({ embeds: [ package.embeds.classic(interaction.user)
                     .setTitle("Salon crée")
                     .setDescription(`${package.emojis.gsyes} Le salon a été crée ( <#${channel.id}> )`)

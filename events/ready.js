@@ -76,7 +76,7 @@ module.exports = {
         let statusIndex = 0;
         let status = [
             {name: 'la version ' + require('../assets/data/data.json').version, type: 'WATCHING'},
-            {name: `avec %users% utilisateurs`, type: 'WATCHING'},
+            {name: `%users% utilisateurs`, type: 'WATCHING'},
             {name: `%servers% serveurs`, type: 'WATCHING'},
             {name: `Le préfixe ${default_prefix}`, type: 'WATCHING'}
         ];

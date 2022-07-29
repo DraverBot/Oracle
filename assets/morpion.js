@@ -6,8 +6,9 @@ class Morpion {
     /**
      * @param {Discord.NonThreadGuildBasedChannel} channel 
      * @param {Discord.USer} user 
+     * @param {?Discord.CommandInteraction} interaction
      */
-    constructor(channel, user) {
+    constructor(channel, user, interaction) {
         this.channel = channel;
         this.user = user;
         this.matrix =  new Array(9);
@@ -17,6 +18,7 @@ class Morpion {
         this.tourPlay = 'user';
         this.winner = null;
         this.ended = false;
+        this.interaction = interaction;
     }
     end() {
         this.ended = true;
@@ -195,61 +197,66 @@ class Morpion {
         }
         return choosen;
     }
-    start() {
+    async start() {
         this.init();
-        this.channel.send(this.generateContent()).then((sent) => {
-            const collector = sent.createMessageComponentCollector({ filter: x => x.user.id === this.user.id, time: 60*1000*10 });
+        const sent = await this.send();
+        const collector = sent.createMessageComponentCollector({ filter: x => x.user.id === this.user.id, time: 60*1000*10 });
 
-            collector.on('collect', (i) => {
-                i.deferUpdate();
-            })
+        collector.on('collect', /** @param {Discord.ButtonInteraction} interaction */ (interaction) => {
+            if (interaction.customId === 'cancel') return collector.stop('cancel') & this.end() & interaction.deferUpdate();
+            if (this.tourPlay === 'bot') return interaction.reply({ content: `Ce n'est pas à vous de jouer` }).then(() => setTimeout(() => {interaction.deleteReply()}, 5000));
 
-            collector.on('collect', /** @param {Discord.ButtonInteraction} interaction */ (interaction) => {
-                if (interaction.customId === 'cancel') return collector.stop('cancel') & this.end();
-                if (this.tourPlay === 'bot') return this.channel.send({ content: `Ce n'est pas à vous de jouer` }).then(x => setTimeout(x.delete, 5000));
+            interaction.deferUpdate();
 
-                this.tourPlay='bot';
-                this.placePiece('user', parseInt(interaction.customId));
+            this.tourPlay='bot';
+            this.placePiece('user', parseInt(interaction.customId));
 
+            sent.edit(this.generateContent());
+            if (this.check()) return collector.stop('ended') & this.end();
+
+            const play = this.play();
+            setTimeout(() => {
+                if (!play) {
+                    collector.stop('tie');
+                    this.end();
+                    return;
+                };
+                
+                this.placePiece('bot', play);
+                this.tourPlay = 'user';
                 sent.edit(this.generateContent());
-                if (this.check()) return collector.stop('ended') & this.end();
 
-                const play = this.play();
-                setTimeout(() => {
-                    if (!play) {
-                        collector.stop('tie');
-                        this.end();
-                        return;
-                    };
-                    
-                    this.placePiece('bot', play);
-                    this.tourPlay = 'user';
-                    sent.edit(this.generateContent());
-
-                    if(this.check()) return collector.stop('ended');
-                    if (this.matrix.filter(x => x === this.neutral).length === 0) {
-                        collector.stop('tie');
-                        this.end();
-                        return;
-                    }
-                }, 2000);
-            });
-
-            collector.on('end', (collected, reason) => {
-                if (reason === 'cancel') return sent.edit(this.generateCancelContent());
-                if (reason === 'tie') {
-                    sent.edit({ embeds: [ this.generateWinEmbed() ], components: [] });
+                if(this.check()) return collector.stop('ended');
+                if (this.matrix.filter(x => x === this.neutral).length === 0) {
+                    collector.stop('tie');
+                    this.end();
                     return;
-                };
-                if (reason === 'ended') {
-                    sent.edit({ embeds: [ this.generateWinEmbed() ], components: [] });
-                    return;
-                };
+                }
+            }, 2000);
+        });
 
-                sent.edit({ embeds: [ pack.embeds.collectorNoMessage(this.user) ], components: [] }).catch(() => {});
-            });
+        collector.on('end', (collected, reason) => {
+            if (reason === 'cancel') return sent.edit(this.generateCancelContent());
+            if (reason === 'tie') {
+                sent.edit({ embeds: [ this.generateWinEmbed() ], components: [] });
+                return;
+            };
+            if (reason === 'ended') {
+                sent.edit({ embeds: [ this.generateWinEmbed() ], components: [] });
+                return;
+            };
+
+            sent.edit({ embeds: [ pack.embeds.collectorNoMessage(this.user) ], components: [] }).catch(() => {});
         });
     }
-};
+    async send() {
+        if (this.interaction) {
+            await this.interaction.reply(this.generateContent());
+            return await this.interaction.fetchReply();
+        } else {
+            return await this.channel.send(this.generateContent());
+        }
+    }
+}
 
 module.exports = Morpion;

@@ -87,6 +87,19 @@
    "path": "./commands/.devs/sql.js"
   },
   {
+   "name": "switch",
+   "help": {
+    "name": "switch",
+    "description": "Alterne beta/finale",
+    "aliases": [],
+    "permissions": [],
+    "private": true,
+    "dm": false,
+    "cooldown": 0
+   },
+   "path": "./commands/.devs/switch.js"
+  },
+  {
    "name": "test",
    "help": {
     "name": "test",
@@ -376,7 +389,7 @@
    "name": "embed",
    "help": {
     "name": "embed",
-    "description": "Construisez un embed avec des réactions",
+    "description": "Construisez un embed avec des bouttons",
     "aliases": [
      "embedbuilder"
     ],
