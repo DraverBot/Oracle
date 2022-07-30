@@ -18,7 +18,12 @@ module.exports = {
             fs.readdirSync('./slash-commands').filter((x) => x.endsWith('.js')).forEach((fileName) => {
                 const file = require(`../slash-commands/${fileName}`);
 
-                client.application.commands.create(file.configs).catch((e) => console.log(e));
+                if (file.guild) {
+                    client.application.commands.create(file.configs, file.guild).catch((e) => console.log(e));
+                } else {                    
+                    client.application.commands.create(file.configs).catch((e) => console.log(e));
+                }
+
                 commands.set(file.configs.name, file);
             });
         };
