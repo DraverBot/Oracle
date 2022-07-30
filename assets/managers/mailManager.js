@@ -375,7 +375,7 @@ class MailManager {
                             .setTitle("Nouveau mail")
                             .setDescription(`Vous avez ${req.length} mail${req.length > 1 ? 's':''} non-lu.\n\nUtilisez la commande \`mail\` pour le${req.length > 1 ? 's':''} consulter.${text}`)
                             .setColor('ORANGE')
-                        ] });
+                        ] }).catch(() => {});
                     };
                 })
             });

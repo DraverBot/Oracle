@@ -188,21 +188,6 @@ module.exports = {
             interaction.reply({ embeds: [ embed ] }).catch(() => {});
         };
         if (('multijoueur solo').includes(game)) {
-            let filter = (m) => {
-                let n = parseInt(m.content);
-                if (isNaN(n)) return false;
-                if (n < 0) return false;
-                if (n > 100) return false;
-
-                if (game == 'solo') {
-                    if (m.author.id !== interaction.user.id) return false;
-                };
-
-                return true;
-            };
-
-            const collector = interaction.channel.createMessageCollector({ filter, time: 120000 });
-            
             let max = interaction.options.get('max')?.value ?? 100;
             let min = interaction.options.get('min')?.value ?? 1;
             
@@ -213,6 +198,22 @@ module.exports = {
                 max = min;
                 min = oldMax;
             };
+
+            const filter = (m) => {
+                let n = parseInt(m.content);
+                if (isNaN(n)) return false;
+                if (n < min) return false;
+                if (n > max) return false;
+
+                if (game == 'solo') {
+                    if (m.author.id !== interaction.user.id) return false;
+                };
+
+                return true;
+            };
+
+            const collector = interaction.channel.createMessageCollector({ filter, time: 120000 });
+            
             
             interaction.reply({ embeds: [ package.embeds.classic(interaction.user)
                 .setTitle("Guess the number")

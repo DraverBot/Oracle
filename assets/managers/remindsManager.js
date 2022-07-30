@@ -25,7 +25,7 @@ class RemindsManger {
         this.db.query(this.generateCreateReq(user.id, remind, time), (err, req) => {
             if (err) return channel.send({ embeds: [ pack.embeds.errorSQL(user) ] }) & console.log(err);
 
-            channel.send({ content: `Je vous rappelle <t:${(moment(parseInt(Date.now() + time) ).unix() / 1000).toFixed(0)}:R> pour \`${remind}\`\n> Merci de vérifier que vos messages privés soient ouverts.` });
+            channel.send({ content: `Je vous rappelle <t:${((Date.now() + parseInt(time)) / 1000).toFixed(0)}:R> pour \`${remind}\`\n> Merci de vérifier que vos messages privés soient ouverts.` });
         });
     }
     createInteraction(user,interaction,time,remind) {
@@ -34,7 +34,7 @@ class RemindsManger {
         this.db.query(this.generateCreateReq(user.id, remind, time), (err, req) => {
             if (err) return interaction.reply({ embeds: [ pack.embeds.errorSQL(user) ] }) & console.log(err);
 
-            interaction.reply({ content: `Je vous rappelle <t:${moment(parseInt(Date.now() + time).unix() / 1000).toFixed(0)}:R> pour \`${remind}\`\n> Merci de vérifier que vos messages privés soient ouverts.` });
+            interaction.reply({ content: `Je vous rappelle <t:${((Date.now() + parseInt(time)) / 1000).toFixed(0)}:R> pour \`${remind}\`\n> Merci de vérifier que vos messages privés soient ouverts.` });
         });
     }
     remove(user, channel, number) {

@@ -23,7 +23,6 @@ module.exports.run = (message, args, client, prefix) => {
     const action = ( args.shift() || 'help' ).toLowerCase();
     message.delete().catch(() => {});
 
-    
     client.db.query(`SELECT * FROM tickets WHERE guild_id="${message.guild.id}"`, (err, req) => {
         if (err) return message.channel.send({ embeds: [ package.embeds.errorSQL(message.author) ] }) & console.log(err);
         

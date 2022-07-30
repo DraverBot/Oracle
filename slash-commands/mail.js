@@ -37,7 +37,7 @@ module.exports = {
 
         if ([objet, content].some(x => x.includes('"'))) return interaction.reply({ embeds: [ package.embeds.guillement(interaction.user) ] });
 
-        interaction.client.mailManager.send(user, interaction.channel, content, objet, interaction.user, false);
+        interaction.client.MailsManager.send(user, interaction.channel, content, objet, interaction.user, false);
         interaction.reply({ embeds: [ package.embeds.classic(interaction.user)
             .setTitle("Mail envoyé")
             .setDescription(`J'ai envoyé votre mail à <@${user.id}>`)

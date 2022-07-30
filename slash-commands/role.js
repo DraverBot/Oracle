@@ -114,6 +114,25 @@ module.exports = {
                         type: 'INTEGER'
                     }
                 ]
+            },
+            {
+                name: 'coloriser',
+                description: "Colorise un rôle",
+                type: 'SUB_COMMAND',
+                options: [
+                    {
+                        name: 'rôle',
+                        description: "Rôle à coloriser",
+                        type: 'ROLE',
+                        required: true
+                    },
+                    {
+                        name: 'couleur',
+                        description: "Couleur à mettre sur le rôle. Donnez la en hexadecimal (ex: #ff0000)",
+                        type: 'STRING',
+                        required: true
+                    }
+                ]
             }
         ]
     },
@@ -236,6 +255,25 @@ module.exports = {
                 .setDescription(`Le rôle <@&${role.id}> a été déplacé vers le **${places > 0 ? 'haut' : 'bas'}**`)
                 .setColor(role.hexColor)
             ] })
+        };
+        if (subCommand == 'coloriser') {
+            let color = interaction.options.getString('couleur');
+            let role = interaction.options.getRole('rôle');
+
+            if (!check(role)) return;
+            const reg = /^#[0-9A-F]{6}$/i;
+            if (!reg.test(color)) return interaction.reply({ embeds: [ package.embeds.classic(interaction.user)
+                .setTitle("Couleur invalide")
+                .setDescription(`Vous avez saisi une couleur invalide.\nUtilisez le code hexadécimal.\nExemple :\n> \`#AA19EE\``)
+                .setColor('#ff0000')
+            ] });
+
+            role.setColor(color);
+            interaction.reply({ embeds: [ package.embeds.classic(interaction.user)
+                .setTitle("Rôle colorisé")
+                .setDescription(`La couleur du rôle <@&${role.id}> a été changée en ${color.startsWith('#') ? '':'#'}${color}`)
+                .setColor(role.hexColor)
+            ] });
         }
     }
 }

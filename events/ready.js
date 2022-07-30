@@ -2,6 +2,7 @@ const { Client, MessageEmbed } = require('discord.js');
 const { connect, beta, connectYeikzy, default_prefix } = require('../assets/data/data.json');
 const commands = require('../assets/data/slashCommands');
 const fs = require('fs');
+const { privateSlashCommandsBuilder } = require('../assets/functions');
 
 module.exports = {
     event: 'ready',
@@ -11,16 +12,8 @@ module.exports = {
     execute: (client) => {
         console.log('Ready !');
 
-        const privateSlashCommandsBuilder = () => {
-            fs.readdirSync('./private-slash-commands').filter(x => x.endsWith('.js')).forEach((fileName) => {
-                const file = require(`../private-slash-commands/${fileName}`);
-
-                client.application.commands.create(file.configs, file.guild).catch((e) => console.log(e));
-                commands.set(file.configs.name, file)
-            });
-        };
         const slashCommandsBuilder = () => {
-            privateSlashCommandsBuilder();
+            privateSlashCommandsBuilder(client);
 
             fs.readdirSync('./slash-commands').filter((x) => x.endsWith('.js')).forEach((fileName) => {
                 const file = require(`../slash-commands/${fileName}`);

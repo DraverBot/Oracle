@@ -99,6 +99,25 @@ module.exports = {
                         type: 'CHANNEL'
                     }
                 ]
+            },
+            {
+                name: 'catégoriser',
+                type: 'SUB_COMMAND',
+                description: "Catégoriser un salon",
+                options: [
+                    {
+                        name: 'catégorie',
+                        description: "Catégorie qui pendra le salon",
+                        required: false,
+                        type: 'CHANNEL'
+                    },
+                    {
+                        name: 'salon',
+                        description: "Salon à catégoriser",
+                        required: false,
+                        type: 'CHANNEL'
+                    }
+                ]
             }
         ]
     },
@@ -195,6 +214,34 @@ module.exports = {
                 .setTitle("Salon déplacé")
                 .setDescription(`Le salon <#${channel.id}> a été déplacé`)
                 .setColor('ORANGE')
+            ] });
+        };
+        if (subcommand == 'catégoriser') {
+            let channel = interaction.options.get('salon')?.channel ?? interaction.channel;
+            let category = interaction.options.get('catégorie')?.channel ?? {type: 'GUILD_CATEGORY'};
+
+            if (channel.type == 'GUILD_CATEGORY') return interaction.reply({ embeds: [ package.embeds.classic(interaction.user)
+                .setTitle("Salon invalide")
+                .setDescription(`Le salon que vous avez spécifié est une **catégorie**.\nJe ne suis pas magicien, je ne peux pas ranger une catégorie dans une catégorie`)
+                .setColor('#ff0000')
+            ] });
+            if (category.type !== "GUILD_CATEGORY") return interaction.reply({ embeds: [ package.embeds.classic(interaction.user)
+                .setTitle("Salon invalide")
+                .setDescription(`La catégorie que vous avez spécifié **n'**est **pas** une **catégorie**.\nJe ne suis pas un contortionniste de salon, je ne peux pas mettre une catégorie dans un salon.`)
+                .setColor('#ff0000')
+            ] });
+
+            let categorised = true;
+            if (!category.name) {
+                channel.setParent();
+                categorised = false;
+            } else {
+                channel.setParent(category);
+            };
+            interaction.reply({ embeds: [ package.embeds.classic(interaction.user)
+                .setTitle(`Salon ${categorised ? '':"dé"}catégorisé`)
+                .setDescription(`Le salon <#${channel.id}> a été ${categorised == true ? `déplacé dans la catégorie ${category.name}` : 'décatégorisé'}`)
+                .setColor(interaction.guild.me.displayHexColor)
             ] });
         }
     }

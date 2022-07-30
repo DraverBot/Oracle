@@ -89,7 +89,7 @@ module.exports = {
     
                     interaction.reply({ embeds: [ package.embeds.classic(interaction.user)
                         .setTitle("Commande personnalisée")
-                        .setDescription(`J'ai **${sql.startsWith('INSERT') ? "crée" : "modifié"}** la commande \`${text}\``)
+                        .setDescription(`J'ai **${sql.startsWith('INSERT') ? "crée" : "modifié"}** la commande \`${name}\``)
                         .setColor('ORANGE')
                     ] });
                 });

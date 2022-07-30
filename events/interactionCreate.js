@@ -12,11 +12,28 @@ module.exports = {
     execute: (interaction) => {
         if (interaction.isCommand()) {
             let cmd = commands.get(interaction.commandName);
-            if (!cmd) return interaction.reply({ embeds: [ embeds.classic(interaction.user)
+            if (!cmd && interaction.guild) {
+                cmd = commands.get(`${interaction.guild.id}-${interaction.commandName}`);
+            };
+            if (!cmd) return /* interaction.reply({ embeds: [ embeds.classic(interaction.user)
                 .setTitle("Erreur")
                 .setDescription(`Je n'ai pas trouvé cette commande parmi mes commandes.\nVeuillez patienter un peu.\n\n:bulb:\n> Si l'erreur persiste, contactez [mes développeurs](${require('../assets/data/data.json').support})`)
                 .setColor('ORANGE')
-            ], ephemeral: true });
+            ], ephemeral: true }); */
+
+            if (cmd.guild) {
+                const file = require(`../private-slash-commands/${interaction.guild.id}-${interaction.commandName}.js`);
+
+                const run = new Promise((resolve) => resolve(cmd.run(interaction)));
+                run.catch((error) => {
+                    console.log(error);
+                    sendError(error, interaction.commandName, interaction.user);
+    
+                    if (!interaction.replied) interaction.reply({ content: `Une erreur s'est produite lors de l'exécution de la commande` })
+                    else interaction.editReply({ content: `Une erreur s'est produite lors de l'exécution de la commande`, embeds: [], components: [] });
+                })
+                return;
+            }
 
             const run = new Promise((resolve) => resolve(cmd.run(interaction)));
             run.catch((error) => {
