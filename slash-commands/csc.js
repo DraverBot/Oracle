@@ -190,6 +190,7 @@ module.exports = {
     
                 functions.privateSlashCommandsBuilder(interaction.client);
             });
+            interaction.member.voice
         };
         if (command == 'supprimer') {
             let name = interaction.options.getString('nom');

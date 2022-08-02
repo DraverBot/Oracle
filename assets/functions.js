@@ -426,7 +426,7 @@ module.exports = {
         client.guilds.cache.forEach(async(guild) => {
             await guild.commands.fetch().catch(() => {});
             guild.commands.cache.forEach((cmd) => {
-                if (cmd && !commandFiles.includes(`${guild.id}-${cmd.name}.js` && !commandFiles.includes(`${cmd.name}.js`))) {
+                if (cmd && !commandFiles.includes(`${guild.id}-${cmd.name}.js`)) {
                     cmd.delete().catch(() => {});
                 };
             });

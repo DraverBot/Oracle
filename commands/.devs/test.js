@@ -1,7 +1,7 @@
 const Discord = require('discord.js');
 const functions = require('../../assets/functions');
 const package = functions.package();
-const morpion = require('../../assets/morpion');
+const save = require('../../assets/scripts/htmlSave');
 
 module.exports.help = {
     name: 'test',
@@ -18,6 +18,6 @@ module.exports.help = {
  * @param {Discord.Client} client 
  * @param {String} prefix 
  */
-module.exports.run = (message, args, client, prefix) => {
-    client.RpgManager.start({ channel: message.channel, user: message.author, username: "Hiwada" });
+module.exports.run = async(message, args, client, prefix) => {
+    client.TicketsManager.createPanel({ guild: message.guild, channel: message.channel, subject: 'test', user: message.author });
 };

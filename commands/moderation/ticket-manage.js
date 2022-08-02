@@ -81,32 +81,8 @@ module.exports.run = (message, args, client, prefix) => {
                         .setColor('GREEN')
                     ] });
 
-                    const row = new Discord.MessageActionRow()
-                        .addComponents(
-                            new Discord.MessageButton()
-                                .setCustomId('ticket-create')
-                                .setEmoji('📩')
-                                .setLabel('Ouvrir un ticket')
-                                .setStyle('SECONDARY')
-                        )
-
-                    channel.send({ components: [ row ], embeds: [ new Discord.MessageEmbed()
-                        .setTitle("Ticket")
-                        .setDescription(`Sujet du ticket : ${sujet}.\nAppuyez sur "ouvrir un ticket" pour ouvrir un ticket`)
-                        .setColor(message.guild.me.displayHexColor)
-                        .setFooter({ text: message.guild.name, iconURL: message.guild.iconURL() ? message.guild.iconURL({ dynamic: false, format: 'png' }) : message.guild.me.user.displayAvatarURL({ dynamic: false, format: 'png' })})
-                        .setTimestamp()
-                    ] }).then((panel) => {
-                        const object = {
-                            channel: panel.channel.id,
-                            messageId: panel.id,
-                            type: 'panel',
-                            subject: sujet
-                        };
-
-                        client.db.query(`INSERT INTO tickets (guild_id, channel_id, message_id, type, subject) VALUES ("${message.guild.id}", "${panel.channel.id}", "${panel.id}" , "panel", "${sujet}")`)
-                    })
-                }
+                    client.TicketsManager.createPanel({ guild: message.guild, channel: channel, subject: sujet, user: message.author });
+                };
             });
         })
     } else if (action == 'delete') {
@@ -115,7 +91,7 @@ module.exports.run = (message, args, client, prefix) => {
         client.db.query(`SELECT * FROM tickets WHERE guild_id="${message.guild.id}"`, (err, file) => {
             if (err) return console.log(err) & message.channel.send({ embeds: [ package.embeds.errorSQL(message.author) ] });
 
-            const ticket = file.find((x) => x.message_id === msgId && x.type === 'panel');
+            const ticket = file.find((x) => x.message_id === msgId && x.type === 'ticket-panel');
 
             if (!ticket) return message.channel.send({ embeds: [ package.embeds.classic(message.author)
                 .setTitle("Identifiant invalide")

@@ -39,7 +39,7 @@ module.exports = {
         const kicked = package.embeds.classic(interaction.user)
             .setTitle("Expulsion")
             .setColor('#ff0000')
-            .setThumbnail(member.user.dispalyAvatarURL({ dynamic: true }))
+            .setThumbnail(member.displayAvatarURL({ dynamic: true }))
             .setAuthor({ name: interaction.guild.name })
             .addFields(
                 {

@@ -149,5 +149,13 @@ module.exports = {
             .setTitle("Permission manquante")
             .setDescription(`La permission \`${perm}\` est requise pour exécuter cette commande.`)
             .setColor('#ff0000')
+    },
+    tickets: {
+        created: (user) => {
+            return generateBasic(user)
+                .setTitle("Ticket ouvert")
+                .setDescription(`Votre ticket a été ouvert`)
+                .setColor('#ff0000')
+        }
     }
 }

@@ -2,6 +2,8 @@ const Discord = require('discord.js');
 const functions = require('../assets/functions');
 const package = functions.package();
 
+const rpsSigns = require('../assets/data/rpsSigns');
+
 module.exports = {
     configs: {
         name: 'game',
@@ -72,6 +74,20 @@ module.exports = {
                         description: "⚠ Si vous perdez vous serez expulsé.",
                         required: false,
                         type: 'BOOLEAN'
+                    }
+                ]
+            },
+            {
+                name: 'shifumi',
+                description: "Joue au shifumi contre Oracle",
+                type: 'SUB_COMMAND',
+                options: [
+                    {
+                        name: 'signe',
+                        type: 'STRING',
+                        required: true,
+                        description: "Signe que vous jouez",
+                        choices: rpsSigns
                     }
                 ]
             }
@@ -250,5 +266,49 @@ module.exports = {
                 ] }).catch(() => {});
             });
         };
+        if (game == 'shifumi') {
+            let sign = interaction.options.getString('signe');
+            let userSign = rpsSigns.find(x => x.value == sign);
+            const botSign = rpsSigns[functions.random(rpsSigns.length)];
+            let rep;
+
+            if (botSign.value === userSign.value) rep = 'tie';
+            if (botSign.value === '0' && userSign.value === '1') {
+              rep = 'user';
+            } else if (botSign.value === '0' && userSign.value === '2') {
+                rep = 'bot';
+            };
+            if (botSign.value === '1' && userSign.value === '0') {
+              rep = 'bot';
+            } else if (botSign.value === '1' && userSign.value === '2') {
+                rep = 'user';
+            };
+            if (botSign.value === '2' && userSign.value === '1') {
+              rep = 'bot';
+            } else if (botSign.value === '2' && userSign.value === '0') {
+                rep = 'user';
+            };
+           
+            const embed = package.embeds.classic(interaction.user)
+                .setTitle("Shifumi")
+                .addFields(
+                {name:interaction.user.username, value: userSign.emoji, inline: true},
+                {name: 'VS', value: ':zap:', inline: true},
+                {name: interaction?.guild.me.nickname ?? interaction.user.username, value: botSign.emoji, inline: true}
+            )
+            
+            if (rep === 'user') {
+                embed.setDescription(`Victoire ! Vous avez gagné !`)
+                embed.setColor('GREEN');
+            } else if (rep === 'bot') {
+                embed.setDescription("Défaite ! Vous avez perdu !");
+                embed.setColor('RED')
+            } else {
+                embed.setDescription(`Égalité ! Nous avons fait égalité !`)
+                embed.setColor('ORANGE')
+            };
+                
+           interaction.reply({ embeds: [ embed ] }).catch(() => {});
+        }
     }
 };
