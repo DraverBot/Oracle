@@ -358,24 +358,30 @@ class MailManager {
         this.client.on('messageCreate', (message) => {
             this.db.query(`SELECT * FROM mails WHERE user_id="${message.author.id}" AND vu="0"`, (err, req) => {
                 if (err) return console.log(err);
-
                 if (req.length === 0) return;
+
+                
                 this.db.query(`SELECT notified FROM mails_notif WHERE user_id="${message.author.id}"`, (e, r) => {
                     if (e) return console.log(e);
                     if (r.length > 0 && r[0].notified == "0") return;
-
+                    
                     const chances = functions.random(15, 0);
                     if (chances === 6) {
                         let text = "";
                         if (functions.random(5, 0) == 3) {
                             text = `\n\n:bulb: Vous pouvez désactiver les notifications de mail avec \`/mail-notifs disable\``;
                         }
-
-                        message.channel.send({ embeds: [ pack.embeds.classic(message.author)
-                            .setTitle("Nouveau mail")
-                            .setDescription(`Vous avez ${req.length} mail${req.length > 1 ? 's':''} non-lu.\n\nUtilisez la commande \`mail\` pour le${req.length > 1 ? 's':''} consulter.${text}`)
-                            .setColor('ORANGE')
-                        ] }).catch(() => {});
+                        
+                        this.db.query(`SELECT prefix FROM prefixes WHERE guild_id="${message.guild ? message.guild.id : 'no guild'}"`, (er, re) => {
+                            if (er) return functions.sendError(er, 'mail notif select prefix', message.author);
+        
+                            let prefix = re.length > 0 ? re[0].prefix : pack.configs.default_prefix;
+                            message.channel.send({ embeds: [ pack.embeds.classic(message.author)
+                                .setTitle("Nouveau mail")
+                                .setDescription(`Vous avez ${req.length} mail${req.length > 1 ? 's':''} non-lu.\n\nUtilisez la commande \`${prefix}mail\` pour le${req.length > 1 ? 's':''} consulter.${text}`)
+                                .setColor('ORANGE')
+                            ] }).catch(() => {});
+                        })
                     };
                 })
             });

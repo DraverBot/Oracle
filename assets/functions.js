@@ -240,6 +240,14 @@ module.exports = {
             }
         }
 
+        if (member.id == modo.id) {
+            fnt({ embeds: [ embeds.classic(modo.user)
+                .setTitle("Erreur sur la personne")
+                .setDescription(`La personne que vous ciblez est vous-même ${(functions.random(10, 0) == 6) ? "( êtes-vous narcissique ? )" :''}`)
+                .setColor('#ff0000')
+            ] });
+            return false;
+        }
         if (!member.moderatable) {
             fnt({ embeds: [ embeds.classic(modo.user)
                 .setTitle("Non modérable")
