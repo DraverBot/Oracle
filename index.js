@@ -7,6 +7,7 @@ const RemindsManager = require('./assets/managers/remindsManager');
 const MailsManager = require('./assets/managers/mailManager');
 const RpgManager = require('./assets/managers/rpManager');
 const TicketsManager = require('./assets/managers/ticketsManager');
+const RolesReactManager = require('./assets/managers/RolesReactManager');
 
 const client = new Discord.Client({
     partials: ['MESSAGE', 'CHANNEL', 'REACTION', 'USER'],
@@ -25,12 +26,14 @@ client.RemindsManager = new RemindsManager(client, client.db);
 client.MailsManager = new MailsManager(client, client.db);
 client.RpgManager = new RpgManager(client, client.db);
 client.TicketsManager = new TicketsManager(client, client.db);
+client.RolesReactManager = new RolesReactManager(client, client.db);
 
 client.GiveawayManager.init()
 client.RemindsManager.init();
 client.MailsManager.init();
 client.RpgManager.init();
 client.TicketsManager.init()
+client.RolesReactManager.init();
 
 fs.readdirSync('./events').filter(x => x.endsWith('.js')).forEach((fileName) => {
     let prop = require(`./events/${fileName}`);

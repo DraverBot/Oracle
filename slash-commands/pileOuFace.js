@@ -32,11 +32,11 @@ module.exports = {
         const faces = ["pile", "face"];
         let pari = faces[interaction.options.get("pari").value];
 
-        interaction.reply({ content: "Lancement de la pièce !" });
+        await interaction.reply({ content: "Lancement de la pièce !" });
         setTimeout(() => {
             const face = faces[functions.random(0, 2)];
 
             interaction.editReply({ content: `Et c'est **${face}** ! Vous avez **${face == pari ? "gagné" : "perdu"}** votre pari.` });
-        });
+        }, 1000);
     }
 };

@@ -157,5 +157,11 @@ module.exports = {
                 .setDescription(`Votre ticket a été ouvert`)
                 .setColor('#ff0000')
         }
+    },
+    notTextChannel: (user) => {
+        return generateBasic(user)
+            .setTitle("Salon invalide")
+            .setDescription(`Le salon que vous avez spécifié n'est pas un salon textuel.`)
+            .setColor('#ff0000')
     }
 }

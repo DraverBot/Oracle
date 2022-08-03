@@ -19,6 +19,11 @@ module.exports.help = {
  * @param {String} prefix 
  */
 module.exports.run = (message, args, client, prefix) => {
+    return functions.reply(message, package.embeds.classic(message.author)
+        .setTitle("Commande périmée")
+        .setDescription(`Cette commande n'est plus actuelle, utilisez la commande \`/role-react\` à la place.`)
+        .setColor('ORANGE')
+    )
     const action = (args.shift() || 'help').toLowerCase();
 
     if (action === 'help') {

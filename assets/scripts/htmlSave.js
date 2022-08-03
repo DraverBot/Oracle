@@ -146,6 +146,9 @@ const save = (messages, customId) => {
     text = text.replace('/CODE/', fileContent)
         .replace(/guild\.name/g, messages.first().guild.name)
         .replace(/channel\.name/g, messages.first().channel.name);
+    (/**@param {Discord.Guild} guild */(guild) => {
+        if (guild.icon) text = text.replace(/guild\.icon/g, guild.iconURL({ size: 32 }));
+    })(messages.first().guild);
 
     fs.writeFileSync(`./assets/scripts/${customId}.html`, text);
 

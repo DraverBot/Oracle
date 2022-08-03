@@ -28,6 +28,18 @@ module.exports = {
                                 description: "Salon du panel de ticket",
                                 required: true,
                                 type: 'CHANNEL'
+                            },
+                            {
+                                name: 'description',
+                                description: "Description du ticket, son objectif.",
+                                required: true,
+                                type: 'STRING'
+                            },
+                            {
+                                name: 'image',
+                                description: "Image affichée sur l'embe du ticket",
+                                required: false,
+                                type: 'STRING'
                             }
                         ]
                     },
@@ -145,6 +157,18 @@ module.exports = {
 
             let sujet = interaction.options.getString('sujet');
             let channel = interaction.options.getChannel('salon');
+            let description = interaction.options.getString('description');
+            let image = interaction.options.getString('image');
+
+            if (image) {
+                const validation = /(jpg|gif|png|JPG|GIF|PNG|JPEG|jpeg)$/;
+                
+                if (!validation.test(image)) return interaction.reply({ embeds: [ package.embeds.classic(interaction.user)
+                    .setTitle("Image invalide")
+                    .setDescription(`Hola ? D'après mes agents de vérification, votre image est invalide.\nSi ce n'est pas le cas, contactez mes développeurs`)
+                    .setColor('#ff0000')
+                ] });
+            }
 
             if (channel.type !== 'GUILD_TEXT') return interaction.reply({ embeds: [ package.embeds.classic(interaction.user)
                 .setTitle("Salon invalide")
@@ -152,7 +176,7 @@ module.exports = {
                 .setColor('#ff0000')
             ] });
 
-            tickets.createPanel({ guild: interaction.guild, channel: channel, subject: sujet, user: interaction.user });
+            tickets.createPanel({ guild: interaction.guild, channel: channel, subject: sujet, user: interaction.user, description: description, image: image });
 
             interaction.reply({ embeds: [ package.embeds.classic(interaction.user)
                 .setTitle("Panel crée")

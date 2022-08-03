@@ -40,18 +40,21 @@ class TicketsManager {
     }
     /**
      * 
-     * @param {{ guild: Discord.Guild, channel: Discord.NonThreadGuildBasedChannel, subject: String, user: Discord.User }} data 
+     * @param {{ guild: Discord.Guild, channel: Discord.NonThreadGuildBasedChannel, subject: String, user: Discord.User, description: String, image: String }} data 
      */
     createPanel(data) {
         if (data.channel.type !== 'GUILD_TEXT') return 'not a text channel';
         if (!this.validString(data.subject)) return 'not a valid text';
 
-        data.channel.send({ embeds: [ new Discord.MessageEmbed()
-            .setTitle("Panel de ticket")
-            .setDescription(`__Sujet du ticket :__ ${data.subject}\n\nRappel :\n→ Pas de spam\n→ Pas de troll\n\nAppuyez sur le bouton pour ouvrir un ticket.`)
-            .setColor(data.guild.me.displayHexColor)
-            .setTimestamp()
-        ], components: [ new Discord.MessageActionRow().addComponents(new Discord.MessageButton({ customId: 'ticket_panel', emoji: '📥', style: 'SECONDARY' })) ] }).then((sent) => {
+        const panel = new Discord.MessageEmbed()
+        .setTitle("Panel de ticket")
+        .setDescription(`__Sujet du ticket :__ ${data.subject}\n__Description :__\n${data.description}\n\nRappel :\n→ Pas de spam\n→ Pas de troll\n\nAppuyez sur le bouton pour ouvrir un ticket.`)
+        .setColor(data.guild.me.displayHexColor)
+        .setTimestamp()
+
+        if (data.image) panel.setImage(data.image);
+        
+        data.channel.send({ embeds: [ panel ], components: [ new Discord.MessageActionRow().addComponents(new Discord.MessageButton({ customId: 'ticket_panel', emoji: '📥', style: 'SECONDARY' })) ] }).then((sent) => {
             const dataset = {
                 message_id: sent.id,
                 guild_id: sent.guild.id,
@@ -70,7 +73,7 @@ class TicketsManager {
         });
     }
     /**
-     * @param {{ guild: Discord.Guild, sujet: String, user: Discord.User }} data 
+     * @param {{ guild: Discord.Guild, sujet: String, user: Discord.User, image: String }} data 
      */
     createTicket(data) {
         if (!this.validString(data.sujet)) return 'not a valid text';
@@ -78,6 +81,8 @@ class TicketsManager {
             .setTitle("Ticket")
             .setDescription(`Ticket ouvert par <@${data.user.id}>.\n__Sujet :__ ${data.sujet}`)
             .setColor(data.guild.me.displayHexColor)
+        
+        if (data.image) embed.setImage(data.image);
 
         const row = new Discord.MessageActionRow()
             .addComponents(
@@ -255,7 +260,9 @@ class TicketsManager {
                     let { subject } = this.tickets.get(interaction.message.id);
 
                     await interaction.deferUpdate();
-                    this.createTicket({ guild: interaction.guild, sujet: subject, user: interaction.user });
+                    const dataset = { guild: interaction.guild, sujet: subject, user: interaction.user };
+                    if (interaction.message.embeds[0].image) dataset.image = interaction.message.embeds[0].image.url;
+                    this.createTicket(dataset);
                 };
                 if (id == 'mention-everyone') {
                     await interaction.reply({ embeds: [ pack.embeds.classic(interaction.user)
