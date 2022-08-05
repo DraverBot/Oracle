@@ -161,6 +161,12 @@
             "type": "channel",
             "description": "Configure le salon de comptage",
             "param": "counting_channel"
+        },
+        {
+            "name": "Système d'économie",
+            "type": "boolean",
+            "description": "Active ou désactive le système d'économie",
+            "param": "economy_enable"
         }
     ]
 }

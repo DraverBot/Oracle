@@ -11,10 +11,12 @@ const CoinsManager = class CoinsManager {
     }
     /**
      * @param {{ user_id: String, guild_id: String }} ids 
+     * @param {?Boolean} refill default is true
      */
-    set(ids) {
+    set(ids, refill) {
         if (!this.has(this.getCode(ids))) {
             this.db.query(`INSERT INTO coins (guild_id, user_id, coins, bank) VALUES ("${ids.guild_id}", "${ids.user_id}", "0", "100")`, (e) => {
+                if (refill == false) return;
                 this.fillCache();
             });
         };
@@ -43,7 +45,10 @@ const CoinsManager = class CoinsManager {
      */
     addCoins(ids, amount) {
         const code = this.getCode(ids);
-        if (!this.has(code)) return false;
+        this.set(code, false);
+        if (!this.has(code)) {
+            this.coins.set(code, { coins: 0, bank: 100 });
+        };
 
         const stats = this.getStats(code);
         stats.coins+= amount;
@@ -106,6 +111,20 @@ const CoinsManager = class CoinsManager {
         this.coins.set(code, stats);
         this.save(code);
         return stats;
+    }
+    /**
+     * @param {String} guild_id 
+     */
+    getGuild(guild_id) {
+        return this.coins.map((value, key) => {
+            let splited = this.splitCode(key);
+            if (splited.guild_id !== guild_id) return;
+            
+            return {
+                coins: value,
+                user: splited.user_id
+            };
+        });
     }
     resetGuild(guild_id) {
         this.db.query(`DELETE FROM coins WHERE guild_id="${guild_id}"`, (err, req) => {

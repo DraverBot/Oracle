@@ -31,11 +31,12 @@ module.exports = {
     },
     /**
     * @param {Discord.User} user 
-    * @param {Discord.Channel} channel
+    * @param {Discord.Channel | 'none'} channel
     * @param {Array} list 
     * @param {String} paginationName 
+    * @param {Discord.CommandInteraction} interaction
     */
-    pagination: (user, channel, list, paginationName) => {
+    pagination: async(user, channel, list, paginationName, interaction) => {
         const pages = list;
         pages.forEach((page) => {
             const index = (pages.indexOf(page) + 1).toLocaleString();
@@ -67,79 +68,91 @@ module.exports = {
                     .setEmoji('❌')
             )
 
-       channel.send({ embeds: [list[index]], components: [ row ] }).then(/** @param {Discord.Message} msg*/ (msg) => {
-           const collector = msg.createMessageComponentCollector({ filter: (i) => i.user.id == user.id , time: 60000*5});
-
-           /**
-            * @param {Discord.ButtonInteraction} interaction 
-            */
-           const fnt = async(interaction) => {
-               if (interaction.customId == 'arrière') {
-                   if (index == 0) return;
-                   index--;
-
-                   await msg.edit({ embeds: [ pages[index] ] }).catch(() => {});
-               };
-
-               if (interaction.customId == 'avant') {
-                   if (index == pages.length) return;
-                   index++;
-
-                   await msg.edit({ embeds: [ pages[index] ] }).catch(() => {});
-               };
-
-               if (interaction.customId === 'close') {
-                   await msg.delete().catch(() => {});
-
-                   channel.send({ content: `<@${user.id}> vous avez fermé le paginateur \`${id}\`` }).catch(() => {});
-                   collector.stop('closed');
-               };
-           
-               if (interaction.customId === 'select') {
-                   const msgCollector = channel.createMessageCollector({ filter: (m) => m.author.id == user.id , time: 120000});
-
-                   var trash = [];
-                   
-                   channel.send({ content: `<@${user.id}> Quelle page souhaitez-vous consulter ?` }).then((x) => {
-                       trash.push(x);
-                   });
-
-                   msgCollector.on('collect', async(m) => {
-                       trash.push(m);
-                       if (m.content.toLowerCase() == 'cancel') {
-                           channel.send({ content: "Annulé" }).then((x) => {
-                               setTimeout(() => {x.delete().catch(() => {})}, 5000);
-                           });
-
-                           msgCollector.stop('closed');
-                           return;
-                       };
-
-                       let number = parseInt(m.content);
-                       if (isNaN(number)) return channel.send({ embeds: [ embeds.invalidNumber(user) ] }).then(x => trash.push(x));
-                       number--;
-                       if (number < 0 || number > pages.length) return channel.send({ content: 'Cette page n\'existe pas' }).then(x => trash.push(x));
-
-                       const selected = pages[number];
-
-                       await msg.edit({ embeds: [ selected ] }).catch(() => {});
-                       index = number;
-                       msgCollector.stop();
-                   });
-
-                   msgCollector.on('end', (collected, reason) => {
-                       trash.forEach((x) => {
-                           x.delete().catch(() => {});
-                       });
-                   });
+        const paginatorFnt = (msg) => {
+            const collector = msg.createMessageComponentCollector({ filter: (i) => i.user.id == user.id , time: 60000*5});
+ 
+            /**
+             * @param {Discord.ButtonInteraction} interaction 
+             */
+            const fnt = async(interaction) => {
+                if (interaction.customId == 'arrière') {
+                    if (index == 0) return;
+                    index--;
+ 
+                    await msg.edit({ embeds: [ pages[index] ] }).catch(() => {});
                 };
-            }
+ 
+                if (interaction.customId == 'avant') {
+                    if (index == pages.length) return;
+                    index++;
+ 
+                    await msg.edit({ embeds: [ pages[index] ] }).catch(() => {});
+                };
+ 
+                if (interaction.customId === 'close') {
+                    await msg.delete().catch(() => {});
+ 
+                    msg.channel.send({ content: `<@${user.id}> vous avez fermé le paginateur \`${id}\`` }).catch(() => {});
+                    collector.stop('closed');
+                };
+            
+                if (interaction.customId === 'select') {
+                    const msgCollector = channel.createMessageCollector({ filter: (m) => m.author.id == user.id , time: 120000});
+ 
+                    var trash = new Discord.Collection();
+                    
+                    msg.channel.send({ content: `<@${user.id}> Quelle page souhaitez-vous consulter ?` }).then((x) => {
+                        trash.set(x.id, x);
+                    });
+ 
+                    msgCollector.on('collect', async(m) => {
+                        trash.set(m.id, m);
+                        if (m.content.toLowerCase() == 'cancel') {
+                            channel.send({ content: "Annulé" }).then((x) => {
+                                setTimeout(() => {x.delete().catch(() => {})}, 5000);
+                            });
+ 
+                            msgCollector.stop('closed');
+                            return;
+                        };
+ 
+                        let number = parseInt(m.content);
+                        if (isNaN(number)) return msg.channel.send({ embeds: [ embeds.invalidNumber(user) ] }).then(x => trash.set(x.id, x));
+                        number--;
+                        if (number < 0 || number > pages.length) return channel.send({ content: 'Cette page n\'existe pas' }).then(x => trash.set(x.id, x));
+ 
+                        const selected = pages[number];
+ 
+                        await msg.edit({ embeds: [ selected ] }).catch(() => {});
+                        index = number;
+                        msgCollector.stop();
+                    });
+ 
+                    msgCollector.on('end', (collected, reason) => {
+                        msg.channel.bulkDelete(trash);
+                    });
+                 };
+             }
+ 
+             collector.on('collect', (interaction) => {
+                 fnt(interaction);
+                 interaction.deferUpdate()
+             });
+        };
 
-            collector.on('collect', (interaction) => {
-                fnt(interaction);
-                interaction.deferUpdate()
-            });
-       });
+        if (channel == "none") {
+            if (interaction.replied) {
+                await interaction.editReply({ embeds: [ list[0] ], content: '', components: [ row ] }).catch(() => {});
+            } else {
+                await interaction.reply({ embeds: [ list[0] ], components: [ row ] }).catch(() => {});
+            };
+
+            const msg = await interaction.fetchReply();
+            if (msg) paginatorFnt(msg);
+        } else {
+            const msg = await channel.send({ embeds: [ list[0] ], components: [ row ] });
+            paginatorFnt(msg);
+        };
     },
     /**
      * @deprecated use `reply` instead

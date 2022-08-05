@@ -72,7 +72,7 @@ module.exports = {
 
         if (message.author.bot) return;
 
-        client.db.query(`SELECT * FROM configs WHERE guild_id="${message.guild.id}"`, (err, req) => {
+        client.db.query(`SELECT level_enable, level_message, level_channel, economy_enable FROM configs WHERE guild_id="${message.guild.id}"`, (err, req) => {
             if (err) return console.log(err);
 
             if (req.length === 0) return;
@@ -97,7 +97,7 @@ module.exports = {
 
                         const channel = message.guild.channels.cache.get(gdata.level_channel) || message.channel;
 
-                        let text = gdata.level_message || "Bravo {user.mention} ! Tu passes au niveau **{user.level}**";
+                        let text = (gdata.level_message || "Bravo {user.mention} ! Tu passes au niveau **{user.level}**");
                         const replace = (x, y) => text = text.replace(x, y);
 
                         replace(/{user.mention}/g, `<@${message.author.id}>`);
@@ -106,7 +106,15 @@ module.exports = {
                         replace(/{user.id}/g, message.author.id);
                         replace(/{user.level}/g, data.level);
 
-                        channel.send({ content: text });
+                        channel.send({ content: text }).catch(() => {});
+                        if (gdata.economy_enable == "1") {
+                            message.client.CoinsManager.addCoins({ user_id: message.author.id, guild_id: message.guild.id }, parseInt(data.level) * 100);
+                            channel.send({ embeds: [ package.embeds.classic(message.author)
+                                .setTitle("Récompense de niveau")
+                                .setDescription(`<@${message.author.id}> a récupéré ${parseInt(data.level) * 100} ${package.configs.coins} pour son passage au niveau supérieur.`)
+                                .setColor(message.guild.me.displayHexColor)
+                            ] }).catch(() => {});
+                        };
                     };
 
                     client.db.query(`UPDATE levels SET total="${data.total}", messages="${data.messages}", objectif="${data.objectif}", level="${data.level}" WHERE guild_id="${message.guild.id}" AND user_id="${message.author.id}"`, (e) => {if (e) console.log(e)});
