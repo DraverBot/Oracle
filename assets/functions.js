@@ -6,6 +6,7 @@ const embeds = require('./embeds');
 const functions = require('./functions.js');
 const emojis = require('./data/emojis.json');
 const data = require('./data/data.json');
+const { specificCooldowns } = require('./data/collects');
 
 moment.locale('fr');
 
@@ -439,5 +440,32 @@ module.exports = {
                 };
             });
         });
+    },
+    cooldowns: {
+        /**
+         * @param {{ userId: String, commandName: String, time: Number, client: Discord.Client, ?isSlash: Boolean  }} data 
+         */
+        set: (data) => {
+            let dataset = {
+                user_id: data.userId,
+                guild_id: 'missingno',
+                command: data.commandName,
+                date: data.time
+            };
+            if (data.isSlash == true) dataset.command = `/${data.commandName}`;
+
+            data.client.db.query(`INSERT INTO cooldowns (${Object.keys(dataset).join(', ')}) VALUES (${Object.values(dataset).map(x => `"${x}"`).join(', ')})`, (err) => {
+                if (err) console.log(err);
+            });
+            
+            specificCooldowns.set(`${dataset.user_id}.${dataset.command}`, dataset);
+        },
+        has: (userId, commandName) => {
+            if (specificCooldowns.has(`${userId}.${commandName}`)) return true;
+            return false;
+        },
+        getTime: (userId, commandName) => {
+            return specificCooldowns.get(`${userId}.${commandName}`).date;
+        }
     }
 }

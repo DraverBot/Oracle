@@ -1,0 +1,166 @@
+{
+    "params": [
+        "logs_enable",
+        "join_enable",
+        "leave_enable",
+        "join_message",
+        "leave_message",
+        "join_channel",
+        "leave_channel",
+        "logs_channel",
+        "level_channel",
+        "level_message",
+        "level_enable",
+        "interchat_enable",
+        "interchat_channel",
+        "roles_enable",
+        "gban_enable",
+        "counting_enable",
+        "counting_channel",
+        "economy_enable"
+    ],
+    "correspondance": {
+        "joinmsg": 3,
+        "leavemsg": 4,
+        "logs": 0,
+        "logschannel": 7,
+        "joinchannel": 5,
+        "leavechannel": 6,
+        "joinactive": 1,
+        "leaveactive": 2,
+        "levelactive": 10,
+        "levelchannel": 8,
+        "levelmsg": 9,
+        "interchatactive": 11,
+        "interchatchannel": 12,
+        "rolesdarrivee": 13,
+        "gbanactive": 14,
+        "countingactive": 15,
+        "countingchannel": 16,
+        "economyactive": 17
+    },
+    "types": {
+        "0": "boolean",
+        "1": "boolean",
+        "2": "boolean",
+        "3": "text",
+        "4": "text",
+        "5": "channel",
+        "6": "channel",
+        "7": "channel",
+        "8": "channel",
+        "9": "text",
+        "10": "boolean",
+        "11": "boolean",
+        "12": "channel",
+        "13": "boolean",
+        "14": "boolean",
+        "15": "boolean",
+        "16": "channel",
+        "17": "boolean"
+    },
+    "data": [
+        {
+            "name": "Logs",
+            "type": "boolean",
+            "description": "Active ou désactive les logs",
+            "param": "logs_enable"
+        },
+        {
+            "name": "Messages d'arrivées",
+            "type": "boolean",
+            "description": "Active ou désactive les messages d'arrivée",
+            "param": "join_enable"
+        },
+        {
+            "name": "Messages de départs",
+            "type": "boolean",
+            "description": "Active ou désactive les messages de départ",
+            "param": "leave_enable"
+        },
+        {
+            "name": "Salon d'arrivée",
+            "type": "channel",
+            "description": "Configure le salon d'arrivées",
+            "param": "join_channel"
+        },
+        {
+            "name": "Salon de départ",
+            "type": "channel",
+            "description": "Configure le salon de départs",
+            "param": "leave_channel"
+        },
+        {
+            "name": "Message d'arrivée",
+            "type": "text",
+            "description": "Définit le message d'arrivée",
+            "param": "join_message"
+        },
+        {
+            "name": "Message de départ",
+            "type": "text",
+            "description": "Définit le message de départ",
+            "param": "leave_message"
+        },
+        {
+            "name": "Salon des logs",
+            "type": "channel",
+            "description": "Configure le salon des logs",
+            "param": "logs_channel"
+        },
+        {
+            "name": "Salon de niveaux",
+            "type": "channel",
+            "description": "Configure le salon de niveaux",
+            "param": "level_channel"
+        },
+        {
+            "name": "Message de niveau",
+            "type": "text",
+            "description": "Définit le message de niveau",
+            "param": "level_message"
+        },
+        {
+            "name": "Système de niveaux",
+            "type": "boolean",
+            "description": "Active ou désactive le système de niveaux",
+            "param": "level_enable"
+        },
+        {
+            "name": "Système d'interchat",
+            "type": "boolean",
+            "description": "Active ou désactive le système d'interchat",
+            "param": "interchat_enable"
+        },
+        {
+            "name": "Salon d'interchat",
+            "type": "channel",
+            "description": "Configure le salon d'interchat",
+            "param": "interchat_channel"
+        },
+        {
+            "name": "Roles d'arrivée",
+            "type": "boolean",
+            "description": "Active ou désactive les rôles donnés à l'arrivée des membres",
+            "param": "roles_enable"
+        },
+        {
+            "name": "Système de GBan",
+            "type": "boolean",
+            "description": "Active ou désactive le système de GBan",
+            "param": "gban_enable"
+        },
+        {
+            "name": "Système de compteur",
+            "type": "boolean",
+            "description": "Active ou désactive le système de comptage",
+            "param": "counting_enable"
+        },
+        {
+            "name": "Salon de comptage",
+            "type": "channel",
+            "description": "Configure le salon de comptage",
+            "param": "counting_channel"
+        }
+    ]
+}

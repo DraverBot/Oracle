@@ -1,7 +1,7 @@
 const Discord = require('discord.js');
 const functions = require('../../assets/functions');
 const package = functions.package();
-const cryptor = require('../../assets/managers/vigenereCode');
+const cryptor = require('../../assets/scripts/vigenereCode');
 
 module.exports = {
     help: {

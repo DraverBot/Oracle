@@ -133,7 +133,7 @@ module.exports = {
                     };
     
                     if (req.length === 0) {
-                        client.db.query(`INSERT INTO cooldowns (guild_id, user_id, command, date) VALUES ("${message.guild.id}", "${message.author.id}", "${file.name}", "${Date.now() + file.help.cooldown * 1000}")`, (error) => {
+                        client.db.query(`INSERT INTO cooldowns (guild_id, user_id, command, date) VALUES ("${message.guild.id}", "${message.author.id}", "${file.help.name}", "${Date.now() + file.help.cooldown * 1000}")`, (error) => {
                             if (error) go = false;
                             if (error) return message.channel.send({ embeds: [ package.embeds.errorSQL(message.author) ] })  & console.log(error);
                         });
