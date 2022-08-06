@@ -120,6 +120,12 @@ module.exports = {
             .setDescription(`Oops, vous ne pouvez pas saisir de \`"\` pour des raisons de sécurité.`)
             .setColor('#ff0000')
     },
+    noRole: (user) => {
+        return generateBasic(user)
+            .setTitle("Pas de rôle")
+            .setDescription(`Vous n'avez pas précisé de [**rôle**](https://github.com/BotOracle/Documentation/blob/main/others/role.md)`)
+            .setColor('#ff0000')
+    },
     noRoles: (user) => {
         return generateBasic(user)
             .setTitle("Pas de rôles")
