@@ -1,6 +1,7 @@
 const emojis = require('./data/emojis.json');
 const { MessageEmbed, User, Message } = require('discord.js');
 const collections = require('./data/collects');
+const data = require('./data/data.json');
 
 /**
  * @param {User} user 
@@ -168,6 +169,12 @@ module.exports = {
         return generateBasic(user)
             .setTitle("Salon invalide")
             .setDescription(`Le salon que vous avez spécifié n'est pas un salon textuel.`)
+            .setColor('#ff0000')
+    },
+    notEnoughCoins: (user) => {
+        return generateBasic(user)
+            .setTitle(`Pas assez ${data.coinsSuffix}`)
+            .setDescription(`Vous n'avez pas assez ${data.coinsSuffix} pour faire ça.\n> :bulb:\n> Les ${data.coins} sont ceux comptés **qui ne sont pas dans votre banque**`)
             .setColor('#ff0000')
     }
 }

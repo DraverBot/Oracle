@@ -33,7 +33,8 @@ module.exports = {
             {name: "Modération", emoji: "🛠", value: 'moderation', description: "Commandes de modération"},
             {name: 'Divers', emoji: '🎈', value: 'misc', description: "Commandes diverses"},
             {name: 'Fun', emoji: '🥳', value: 'fun', description: "Commandes d'amusement"},
-            {name: 'Utilitaires', emoji: '⚙', description: "Commandes utiles", value: 'usefull'}
+            {name: 'Utilitaires', emoji: '⚙', description: "Commandes utiles", value: 'usefull'},
+            {name: "Économie", emoji: '🪙', description: "Commandes d'économie", value: 'economy'}
         ];
 
         correspondance.push({value: 'close', name: "Fermer", emoji: '❌', description: "Ferme le menu"});
@@ -95,7 +96,7 @@ module.exports = {
                 commands.forEach((command) => {
                     if (command.help.appear !== undefined && command.help.appear === false) return;
                     
-                    let prop = `\`/${command.name}\` : ${command.help.description}\n`
+                    let prop = `\`/${command.configs.name}\` : ${command.configs.description}\n`
                     text = text + prop;
                 });
                 const newEmbed = new Discord.MessageEmbed()

@@ -9,7 +9,7 @@
     "contactChannel": "827790768272834580",
     "version": "1.4",
     "beta_token": "OTE4MTM3OTczMjAyMTEyNTky.G5q2vD.tYpVroN28ovgVIPXUKR9GDVqmZexUEwneXTTLk",
-    "beta": true,
+    "beta": false,
     "doc": "https://bit.ly/3c37f8V",
     "link": "https://bit.ly/3NUdTvE",
     "error": {
@@ -38,5 +38,6 @@
         "id": "995397323687473282",
         "token": "WE6gnpDWwNt0L84bEtGd0rYoh10LTAQNqi6ZY0BSKGxCgHoCUwceGGIAXNmynAPL9Bc6"
     },
-    "coins": "OraCoins"
+    "coins": "OraCoins",
+    "coinsSuffix": "d'OraCoins"
 }

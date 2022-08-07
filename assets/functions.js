@@ -474,11 +474,12 @@ module.exports = {
             specificCooldowns.set(`${dataset.user_id}.${dataset.command}`, dataset);
         },
         has: (userId, commandName) => {
-            if (specificCooldowns.has(`${userId}.${commandName}`)) return true;
+            if (specificCooldowns.has(`${userId}.${commandName}`) && specificCooldowns.get(`${userId}.${commandName}`).date > Date.now()) return true;
             return false;
         },
         getTime: (userId, commandName) => {
             return specificCooldowns.get(`${userId}.${commandName}`).date;
-        }
+        },
+        getCode: (userId, commandName) => userId + '.' + commandName
     }
 }

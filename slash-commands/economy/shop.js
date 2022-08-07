@@ -11,7 +11,7 @@ module.exports = {
         dev: false
     },
     configs: {
-        name: 'magasin',
+        name: 'shop',
         description: "Utilisez le système de magasin",
         options: [
             {
@@ -136,7 +136,13 @@ module.exports = {
                 .setColor('#ff0000')
             ] }).catch(() => {});
 
-            let sql = `INSERT INTO shop (guild_id, item_name, item_type, quantity, extra, price) VALUES ("${interaction.guild.id}", "${name}", "${type}", "${quantity}", '{${type == 'role' ? `"id": "${role.id}"` : `"text": "${description}"`}}", "${price}")`;
+            let extra = {};
+            if (type == 'role') {
+                extra.id = role.id;
+            } else {
+                extra.text = description;
+            }
+            let sql = `INSERT INTO shop (guild_id, item_name, item_type, quantity, extra, price) VALUES ("${interaction.guild.id}", "${name}", "${type}", "${quantity}", '{${type == 'role' ? `"id": "${role.id}"` : `"text": "${description.replace(/'/g, "\\'")}"`}}', "${price}")`;
             interaction.client.db.query(sql, (err, req) => {
                 if (err) {
                     interaction.reply({ embeds: [ package.embeds.errorSQL(interaction.user) ] }).catch(() => {});
@@ -191,7 +197,7 @@ module.exports = {
                 .setColor('ORANGE')
             ] }).catch(() => {});
 
-            interaction.client.db.query(`SELECT * FROM shop WHERE guild_id="${interaction.guild.id}"`, (err, req) => {
+            interaction.client.db.query(`SELECT * FROM shop WHERE guild_id="${interaction.guild.id}"`, async(err, req) => {
                 if (err) {
                     interaction.editReply({ embeds: [ package.embeds.errorSQL(interaction.user) ] }).catch(() => {});
                     functions.sendError(err, 'query add at /shop view', interaction.user);
@@ -229,5 +235,62 @@ module.exports = {
                 interaction.editReply({ embeds: [ embed ] }).catch(() => {});
             });
         };
+        if (subcommand == 'acheter') {
+            let id = interaction.options.getString('identifiant');
+            
+            interaction.client.db.query(`SELECT item_name, item_type, price, quantity, extra FROM shop WHERE id="${id}" AND guild_id="${interaction.guild.id}"`, async(err, req) => {
+                if (err) {
+                    functions.sendError(err, 'query at fetch in /shop acheter', interaction.user);
+                    return interaction.reply({ embeds: [ package.embeds.errorSQL(interaction.user) ] }).catch(() => {});
+                };
+
+                if (req.length == 0) return interaction.reply({ embeds: [ package.embeds.classic(interaction.user)
+                    .setTitle("Item inexistant")
+                    .setDescription(`Cet item n'existe pas sur ce serveur.`)
+                    .setColor("#ff0000")
+                ] }).catch(() => {});
+                
+                const item = req[0];
+                item.price = parseInt(item.price);
+                item.quantity = parseInt(item.quantity);
+                item.extra = JSON.parse(item.extra);
+
+                const result = interaction.client.CoinsManager.removeCoins({ user_id: interaction.user.id, guild_id: interaction.guild.id }, item.price);
+                if (result == 'not enough coins' || result == false) return interaction.reply({ embeds: [ package.embeds.notEnoughCoins(interaction.user) ] }).catch(() => {});
+
+                await interaction.reply({ embeds: [ package.embeds.classic(interaction.user)
+                    .setTitle("Item acheté")
+                    .setDescription(`Vous avez acheté **${item.item_name}** pour ${item.price.toLocaleString('en').replace(/,/g, ' ')} ${package.configs.coins}`)
+                    .setColor('#00ff00')
+                ] }).catch(() => {});
+
+                if (item.quantity > 0) {
+                    let sql = `UPDATE shop SET quantity="${item.quantity - 1}" WHERE id="${id}"`;
+                    if (item.quantity == 1) sql = `DELETE FROM shop WHERE id="${id}"`;
+
+                    interaction.client.db.query(sql, (e) => {
+                        if (e) functions.sendError(e, 'query update in /shop acheter', interaction.user);
+                    });
+                };
+
+                if (item.item_type == 'role') {
+                    let role = interaction.guild.roles.cache.get(item.extra.id);
+                    if (role) interaction.member.roles.add(role).catch(() => {});
+                };
+
+                interaction.client.db.query(`INSERT INTO inventory (guild_id, user_id, item_name, item_type) VALUES ("${interaction.guild.id}", "${interaction.user.id}", "${item.item_name.replace(/'/g, "\\'")}", "${item.item_type}")`, (error, request) => {
+                    if (error) {
+                        interaction.client.CoinsManager.addCoins({ user_id: interaction.user.id, guild_id: interaction.guild.id }, item.price);
+                        interaction.editReply({ content: `<@${interaction.user.id}>`, embeds: [ package.embeds.classic(interaction.user)
+                            .setTitle("Erreur")
+                            .setDescription(`Une erreur a eu lieu lors de l'ajout de l'item dans votre inventaire.\nL'achat vous a été remboursé, vous récupérez **${item.price.toLocaleString('en').replace(/,/g, ' ')}** ${package.configs.coins}`)
+                            .setColor('#ff0000')
+                        ] }).catch(() => {});
+
+                        functions.sendError(error, 'query at inventory add in /shop acheter', interaction.user);
+                    };
+                });
+            });
+        }
     }
 };

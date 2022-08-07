@@ -62,6 +62,18 @@ module.exports = {
                     cooldowns.delete(cdCode);
                 }, (cmd.help.cd ? cmd.help.cd : 5) * 1000);
             };
+            if (cmd.help.sCd) {
+                const sCd = cmd.help.sCd;
+
+                if (functions.cooldowns.has(interaction.user.id, sCd.code)) return interaction.reply({ embeds: [ package.embeds.classic(interaction.user)
+                    .setTitle("Cooldown")
+                    .setDescription(`Vous avez un cooldown sur cette commande.\nRéessayez <t:${(functions.cooldowns.getTime(interaction.user.id, sCd.code) / 1000).toFixed(0)}:R>`)
+                    .setColor('#ff0000')
+                ] }).catch(() => {});
+                else {
+                    functions.cooldowns.set({ userId: interaction.user.id, commandName: sCd.code, time: Date.now() + (sCd.time * 1000), client: interaction.client, isSlash: false })
+                }
+            }
             if (cmd.help.permissions && cmd.help.permissions.length > 0 && interaction.guild) {
                 let missing = [];
                 for (const perm of cmd.help.permissions) {

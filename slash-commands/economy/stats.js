@@ -28,23 +28,23 @@ module.exports = {
     run: (interaction) => {
         let user = interaction.options.get('utilisateur')?.user ?? interaction.user;
 
-        const stats = interaction.client.CoinsManager.getStats(`${interaction.guild.id}.${user.id}`) || { coins: 0, bank: 100 };
+        const stats = interaction.client.CoinsManager.getStats(`${interaction.guild.id}.${user.id}`) || { coins: 0, bank: 0 };
         const embed = package.embeds.classic(user)
             .setTitle("Stats")
             .addFields(
                 {
                     name: 'En poche',
-                    value: parseInt(stats.coins).toLocaleString('fr') + ' ' + package.configs.coins,
+                    value: parseInt(stats.coins).toLocaleString('en').replace(/,/g, ' ') + ' ' + package.configs.coins,
                     inline: true
                 },
                 {
                     name: 'Banque',
-                    value: parseInt(stats.bank).toLocaleString('fr') + ' ' + package.configs.coins,
+                    value: parseInt(stats.bank).toLocaleString('en').replace(/,/g, ' ') + ' ' + package.configs.coins,
                     inline: true
                 },
                 {
                     name: 'Total',
-                    value: (parseInt(stats.coins) + parseInt(stats.bank)) + ' ' + package.configs.coins
+                    value: (parseInt(stats.coins) + parseInt(stats.bank)).toLocaleString('en').replace(/,/g, ' ') + ' ' + package.configs.coins
                 }
             )
             .setColor(interaction.guild.me.displayHexColor);

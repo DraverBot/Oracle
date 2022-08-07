@@ -31,7 +31,9 @@ const CoinsManager = class CoinsManager {
         const stats = this.getStats(code);
         const ids = this.splitCode(code);
 
-        this.db.query(`UPDATE coins SET coins="${stats.coins}", bank="${stats.bank}" WHERE user_id="${ids.user_id}" AND guild_id="${ids.guild_id}"`)
+        this.db.query(`UPDATE coins SET coins="${stats.coins}", bank="${stats.bank}" WHERE user_id="${ids.user_id}" AND guild_id="${ids.guild_id}"`, (e) => {
+            if (e) console.log(e);
+        })
     }
     getStats(code) {
         return this.coins.get(code);
@@ -45,7 +47,8 @@ const CoinsManager = class CoinsManager {
      */
     addCoins(ids, amount) {
         const code = this.getCode(ids);
-        this.set(code, false);
+        this.set(ids, false);
+
         if (!this.has(code)) {
             this.coins.set(code, { coins: 0, bank: 100 });
         };
