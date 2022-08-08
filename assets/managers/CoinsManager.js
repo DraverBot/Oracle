@@ -54,7 +54,7 @@ const CoinsManager = class CoinsManager {
         };
 
         const stats = this.getStats(code);
-        stats.coins+= amount;
+        stats.coins = parseInt(stats.coins) + parseInt(amount);
 
         this.coins.set(code, stats);
         this.save(code);
@@ -69,9 +69,9 @@ const CoinsManager = class CoinsManager {
         if (!this.has(code)) return false;
 
         const stats = this.getStats(code);
-        if (stats.coins < amount) return 'not enough coins';
+        if (stats.coins < parseInt(amount)) return 'not enough coins';
 
-        stats.coins-=amount;
+        stats.coins = parseInt(stats.coins) - parseInt(amount);
         this.coins.set(code, stats);
         this.save(code);
 

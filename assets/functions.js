@@ -15,6 +15,7 @@ const capitalize = str => str.split(' ').map(x => x[0].toUpperCase() + x.slice(1
  * @param {Number} number 
  */
 const numberToHuman = number => number.toLocaleString('fr-DE');
+const random = (max, min) => Math.floor(Math.random() * (max || 100)) + (min || 0);
 
 module.exports = {
     package: () => {
@@ -182,9 +183,7 @@ module.exports = {
    /**
     * @returns {Number}
     */
-   random: (max, min) => {
-       return Math.floor(Math.random() * (max || 100)) + (min || 0);
-   },
+   random: random,
    /**
     * @returns {Array} 
     * @description renvoie un tableau contenant toutes les lettres en minuscule.
@@ -257,7 +256,7 @@ module.exports = {
         if (member.id == modo.id) {
             fnt({ embeds: [ embeds.classic(modo.user)
                 .setTitle("Erreur sur la personne")
-                .setDescription(`La personne que vous ciblez est vous-même ${(functions.random(10, 0) == 6) ? "( êtes-vous narcissique ? )" :''}`)
+                .setDescription(`La personne que vous ciblez est vous-même ${(random(15, 0) == 6) ? "( êtes-vous narcissique ? )" :''}`)
                 .setColor('#ff0000')
             ] });
             return false;

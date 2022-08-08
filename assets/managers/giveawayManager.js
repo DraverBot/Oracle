@@ -21,7 +21,7 @@ class GiveawayManager {
         const embed = embeds.classic(hoster)
             .setTitle(":tada: GIVEAWAY :tada:")
             .setTimestamp(new Date(parseInt(data.endsAt)).toISOString())
-            .setDescription(`Appuyez sur le boutton pour participer !\n\nRécompense: \`${data.reward}\`\nOffert par: <@${data.hoster_id}>\n${data.winnerCount} gagnan${data.winnerCount > 1 ? "ts" : "t"}\nFinit le ${moment(parseInt(data.endsAt)).format('DD/MM/YYYY hh:mm:ss')}`)
+            .setDescription(`Appuyez sur le boutton pour participer !\n\nRécompense: \`${data.reward}\`\nOffert par: <@${data.hoster_id}>\n${data.winnerCount} gagnan${data.winnerCount > 1 ? "ts" : "t"}\nFinit le <t:${(parseInt(data.endsAt) / 1000).toFixed(0)}:R>`)
             .setColor(guild.me.displayHexColor)
             
         if (data.endsAt - Date.now() < 10000) embed.setColor('#ff0000').setTitle(":tada: **G I V E A W A Y** :tada:");
@@ -36,7 +36,7 @@ class GiveawayManager {
         const hoster = (guild.members.cache.get(data.hoster_id) || guild.me).user;
 
         const embed = embeds.classic(hoster)
-            .setTitle(":data: **GIVEAWAY TERMINÉ** :data:")
+            .setTitle(":tada: **GIVEAWAY TERMINÉ** :tada:")
             .setTimestamp(new Date(parseInt(data.endsAt)).toISOString())
             .setColor(guild.me.displayHexColor)
             .setDescription(`Giveaway terminé !\n\nRécompense: \`${data.reward}\`\nOffert par <@${hoster.id}>\n${data.winnerCount} gagnan${data.winnerCount > 1 ? 'ts' : "t"}`)
@@ -236,15 +236,15 @@ class GiveawayManager {
 
             if (!interaction.customId === 'giveaway-participate') return;
 
-            this.db.query(`SELECT * FROM giveaways WHERE guild_id="${interaction.guild.id}" AND channel_id="${interaction.channel.id}" AND message_id="${interaction.message.id}" AND ended="0"`, (err, req) => {
+            this.db.query(`SELECT guild_id FROM giveaways WHERE guild_id="${interaction.guild.id}" AND channel_id="${interaction.channel.id}" AND message_id="${interaction.message.id}" AND ended="0"`, (err, req) => {
                 if (err) return interaction.reply({ embeds: [ embeds.errorSQL(interaction.user) ], ephemeral: true }) & console.log(err);
                 const data = req[0];
 
                 if (!data) return;
 
-                this.db.query(`SELECT * FROM gw_participants WHERE message_id="${interaction.message.id}" AND guild_id="${interaction.guild.id}" AND user_id="${interaction.user.id}"`, (error, request) => {
+                this.db.query(`SELECT user_idFROM gw_participants WHERE message_id="${interaction.message.id}" AND guild_id="${interaction.guild.id}" AND user_id="${interaction.user.id}"`, (error, request) => {
                     if (error) return interaction.reply({ embeds: [ embeds.errorSQL(interaction.user) ], ephemeral: true }) & console.log(error);
-                   
+
                     if (request.length === 0) {
                         this.db.query(`INSERT INTO gw_participants (guild_id, channel_id, message_id, user_id) VALUES ("${interaction.guild.id}", "${interaction.channel.id}", "${interaction.message.id}", "${interaction.user.id}")`);
                         interaction.reply({ content: `J'ai enregistré votre participation`, ephemeral: true });
@@ -253,7 +253,7 @@ class GiveawayManager {
                         this.db.query(`DELETE FROM gw_participants WHERE guild_id="${interaction.guild.id}" AND message_id="${interaction.message.id}" AND user_id="${interaction.user.id}"`);
                         
                         interaction.reply({ content: `J'annule votre participation à ce giveaway`, ephemeral: true });
-                    }
+                    };
                 });
             });
         });

@@ -19,7 +19,7 @@ module.exports = {
      */
     run: (interaction) => {
         let stats = interaction.client.CoinsManager.getGuild(interaction.guild.id);
-        if (stats.size == 0) return interaction.reply({ embeds: [ package.embeds.classic(interaction.user)
+        if (stats.length == 0) return interaction.reply({ embeds: [ package.embeds.classic(interaction.user)
             .setTitle("Leaderboard")
             .setDescription(`Il n'y a personne classé dans le serveur`)
             .setColor('#ff0000')
