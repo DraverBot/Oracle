@@ -11,15 +11,21 @@ module.exports = {
         dev: false
     },
     configs: {
-        name: 'richarchie',
+        name: 'leaderboard',
         description: "Affiche le classement des " + package.configs.coins + " du serveur"
     },
     /**
      * @param {Discord.CommandInteraction} interaction 
      */
     run: (interaction) => {
-        const stats = interaction.client.CoinsManager.getGuild(interaction.guild.id).map(x => ({ coins: (parseInt(x.coins.coins) + parseInt(x.coins.bank)), user: x.user })).sort((a, b) => b.coins - a.coins);
+        let stats = interaction.client.CoinsManager.getGuild(interaction.guild.id);
+        if (stats.size == 0) return interaction.reply({ embeds: [ package.embeds.classic(interaction.user)
+            .setTitle("Leaderboard")
+            .setDescription(`Il n'y a personne classé dans le serveur`)
+            .setColor('#ff0000')
+        ] }).catch(() => {});
 
+        stats = stats.map(x => ({ coins: (parseInt(x.coins.coins) + parseInt(x.coins.bank)), user: x.user })).sort((a, b) => b.coins - a.coins);
 
         if (stats.length > 5) {
             let now = package.embeds.classic(interaction.user)

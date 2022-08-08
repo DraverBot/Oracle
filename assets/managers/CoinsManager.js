@@ -119,15 +119,17 @@ const CoinsManager = class CoinsManager {
      * @param {String} guild_id 
      */
     getGuild(guild_id) {
-        return this.coins.map((value, key) => {
+        let array = this.coins.map((value, key) => {
             let splited = this.splitCode(key);
-            if (splited.guild_id !== guild_id) return;
-            
-            return {
-                coins: value,
-                user: splited.user_id
-            };
+            if (splited.guild_id === guild_id) {
+                return {
+                    coins: value,
+                    user: splited.user_id
+                };
+            };            
         });
+        array = array.filter(x => x!== undefined);
+        return array;
     }
     resetGuild(guild_id) {
         this.db.query(`DELETE FROM coins WHERE guild_id="${guild_id}"`, (err, req) => {

@@ -19,7 +19,7 @@ module.exports = {
      * @param {Discord.CommandInteraction} interaction 
      */
     run: (interaction) => {
-        let reward = functions.random(80000, 8000);
+        let reward = functions.random(8000, 800);
 
         interaction.reply({ embeds: [ package.embeds.classic(interaction.user)
             .setTitle("Récompense quotidienne")

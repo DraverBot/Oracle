@@ -26,6 +26,7 @@ module.exports = {
                         client.application.commands.create(file.configs).catch((e) => console.log(e));
                     };
     
+                    if (!file.help) file.help = { dm: false, dev: false, permissions: [], systems:[], cd: 5 };
                     file.help.category = dir;
 
                     commands.set(file.configs.name, file);

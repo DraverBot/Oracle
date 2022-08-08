@@ -90,7 +90,7 @@ module.exports = {
                     return;
                 };
 
-                const commands = require('../../assets/data/slashCommands').filter(x => x.help.category == value);
+                const commands = require('../../assets/data/slashCommands').filter(x => x.help && x.help.category == value);
                 let text = "";
 
                 commands.forEach((command) => {
