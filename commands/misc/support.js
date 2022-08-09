@@ -1,4 +1,4 @@
-const { lineReply } = require('../../assets/functions.js');
+const { lineReply, package } = require('../../assets/functions.js');
 const { Message } = require('discord.js');
 
 module.exports.help = {
@@ -15,5 +15,5 @@ module.exports.help = {
  * @param {Message} message 
  */
 module.exports.run = (message) => {
-    lineReply(message.id, message.channel, `Soyez informé de l'état du bot directement de puis son serveur de support\n\nhttps://discord.gg/G7QDcNkvPS`);
+    lineReply(message.id, message.channel, `Soyez informé de l'état du bot directement de puis son serveur de support\n\n${package().configs.support}`);
 }

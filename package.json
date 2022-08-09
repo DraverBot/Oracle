@@ -1,26 +1,23 @@
 {
-  "name": "yeisky",
+  "name": "bot-v3",
   "version": "1.0.0",
-  "description": "Source code of Yeisky bot.",
+  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Yeisky/Yeisky.git"
-  },
-  "keywords": [],
   "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Yeisky/Yeisky/issues"
-  },
-  "homepage": "https://github.com/Yeisky/Yeisky#readme",
   "dependencies": {
-    "discord.js": "^13.8.1",
+    "@discordjs/rest": "^0.3.0",
+    "blagues-api": "^2.1.0",
+    "dblapi.js": "^2.4.1",
+    "discord-api-types": "^0.26.1",
+    "discord.js": "^13.6.0",
     "fs": "^0.0.1-security",
+    "moment": "^2.29.1",
     "ms": "^2.1.3",
-    "mysql": "^2.18.1"
+    "mysql": "^2.18.1",
+    "twemoji": "^14.0.2"
   }
 }

@@ -1,0 +1,1226 @@
+{
+ ".devs": [
+  {
+   "name": "dev",
+   "help": {
+    "name": "dev",
+    "description": "dev",
+    "aliases": [],
+    "permissions": [],
+    "private": true,
+    "dm": true,
+    "cooldown": 0
+   },
+   "path": "./commands/.devs/dev.js"
+  },
+  {
+   "name": "eval",
+   "help": {
+    "name": "eval",
+    "private": true,
+    "exemples": [
+     "isNaN('-31');",
+     "message.channel.send('Hello');"
+    ],
+    "description": "Éxecute le code passé en arguments. Renvoie `undefined` si il n'y a pas de sortie",
+    "cooldown": 5,
+    "aliases": [],
+    "dm": true,
+    "permissions": []
+   },
+   "path": "./commands/.devs/eval.js"
+  },
+  {
+   "name": "exportdb",
+   "help": {
+    "name": "exportdb",
+    "description": "Exporte la base de données",
+    "aliases": [],
+    "permissions": [],
+    "private": true,
+    "dm": false,
+    "cooldown": 0
+   },
+   "path": "./commands/.devs/exportdb.js"
+  },
+  {
+   "name": "gban",
+   "help": {
+    "name": "gban",
+    "description": "Gère les gbans",
+    "aliases": [
+     "dev-ban"
+    ],
+    "permissions": [],
+    "private": true,
+    "dm": false,
+    "cooldown": 0
+   },
+   "path": "./commands/.devs/gban.js"
+  },
+  {
+   "name": "sendglobalmail",
+   "help": {
+    "name": "sendglobalmail",
+    "description": "Envoie un mail à tous les utilisateurs",
+    "aliases": [],
+    "permissions": [],
+    "private": true,
+    "dm": false,
+    "cooldown": 10
+   },
+   "path": "./commands/.devs/sendglobalmail.js"
+  },
+  {
+   "name": "sql",
+   "help": {
+    "name": "sql",
+    "description": "Fait une requete sql",
+    "aliases": [
+     "mysql"
+    ],
+    "permissions": [],
+    "private": true,
+    "dm": true,
+    "cooldown": 0
+   },
+   "path": "./commands/.devs/sql.js"
+  },
+  {
+   "name": "switch",
+   "help": {
+    "name": "switch",
+    "description": "Alterne beta/finale",
+    "aliases": [],
+    "permissions": [],
+    "private": true,
+    "dm": false,
+    "cooldown": 0
+   },
+   "path": "./commands/.devs/switch.js"
+  },
+  {
+   "name": "test",
+   "help": {
+    "name": "test",
+    "description": "Test",
+    "private": true,
+    "aliases": [
+     "tset"
+    ],
+    "permissions": [],
+    "dm": false
+   },
+   "path": "./commands/.devs/test.js"
+  }
+ ],
+ "aide": [
+  {
+   "name": "commande",
+   "help": {
+    "name": "commande",
+    "aliases": [
+     "cmd",
+     "commande-help"
+    ],
+    "description": "Affiche l'aide concernant une commande",
+    "permissions": [],
+    "private": false,
+    "dm": true,
+    "cooldown": 5
+   },
+   "path": "./commands/aide/cmd.js"
+  },
+  {
+   "name": "help",
+   "help": {
+    "name": "help",
+    "description": "Commande affichant toutes les autres commandes",
+    "aliases": [
+     "aide"
+    ],
+    "permissions": [],
+    "cooldown": 5,
+    "private": false,
+    "dm": true
+   },
+   "path": "./commands/aide/help.js"
+  }
+ ],
+ "giveaways": [
+  {
+   "name": "gcreate",
+   "help": {
+    "name": "gcreate",
+    "description": "Crée un giveaway avec un système de messages",
+    "aliases": [
+     "giveaway-create"
+    ],
+    "permissions": [
+     "manage_guild"
+    ],
+    "dm": false,
+    "private": false,
+    "cooldown": 5
+   },
+   "path": "./commands/giveaways/create.js"
+  },
+  {
+   "name": "gend",
+   "help": {
+    "name": "gend",
+    "description": "Termine un giveaway",
+    "permissions": [
+     "manage_guild"
+    ],
+    "aliases": [
+     "giveaway-end"
+    ],
+    "private": false,
+    "dm": false,
+    "cooldown": 5
+   },
+   "path": "./commands/giveaways/end.js"
+  },
+  {
+   "name": "glist",
+   "help": {
+    "name": "glist",
+    "description": "Affiche la liste des giveaways en cours sur le serveur",
+    "aliases": [
+     "giveaway-list"
+    ],
+    "permissions": [
+     "manage_guild"
+    ],
+    "cooldown": 5,
+    "private": false,
+    "dm": false
+   },
+   "path": "./commands/giveaways/list.js"
+  },
+  {
+   "name": "greroll",
+   "help": {
+    "name": "greroll",
+    "description": "Reroll un giveaway",
+    "aliases": [
+     "giveaway-reroll"
+    ],
+    "permissions": [
+     "manage_guild"
+    ],
+    "dm": false,
+    "private": false,
+    "cooldown": 5
+   },
+   "path": "./commands/giveaways/reroll.js"
+  },
+  {
+   "name": "gstart",
+   "help": {
+    "name": "gstart",
+    "description": "Démarre un giveaway",
+    "aliases": [
+     "giveaway-start"
+    ],
+    "permissions": [
+     "manage_guild"
+    ],
+    "private": false,
+    "dm": false,
+    "cooldown": 5
+   },
+   "path": "./commands/giveaways/start.js"
+  }
+ ],
+ "mails": [
+  {
+   "name": "mail",
+   "help": {
+    "name": "mail",
+    "description": "Mail",
+    "private": false,
+    "dm": true,
+    "permissions": [],
+    "aliases": [],
+    "cooldown": 5
+   },
+   "path": "./commands/mails/mail.js"
+  },
+  {
+   "name": "mail-envoi",
+   "help": {
+    "name": "mail-envoi",
+    "description": "Envoie un mail à un utilisateur",
+    "aliases": [
+     "msend",
+     "menvoi",
+     "e-mail"
+    ],
+    "permissions": [],
+    "dm": false,
+    "private": false,
+    "cooldown": 10
+   },
+   "path": "./commands/mails/send.js"
+  }
+ ],
+ "misc": [
+  {
+   "name": "8ball",
+   "help": {
+    "name": "8ball",
+    "description": "Répond à votre question (aléatoirement)",
+    "aliases": [],
+    "permissions": [],
+    "cooldown": 5,
+    "private": false,
+    "dm": true
+   },
+   "path": "./commands/misc/8ball.js"
+  },
+  {
+   "name": "avatar",
+   "help": {
+    "name": "avatar",
+    "aliases": [
+     "pp",
+     "pdp"
+    ],
+    "permissions": [],
+    "description": "Affiche la photo de profil d'un utilisateur",
+    "cooldown": 5,
+    "private": false,
+    "dm": true
+   },
+   "path": "./commands/misc/avatar.js"
+  },
+  {
+   "name": "blague",
+   "help": {
+    "name": "blague",
+    "description": "Affiche une blague aléatoire",
+    "permissions": [],
+    "aliases": [
+     "joke"
+    ],
+    "private": false,
+    "dm": false,
+    "cooldown": 5
+   },
+   "path": "./commands/misc/blague.js"
+  },
+  {
+   "name": "crypt",
+   "help": {
+    "name": "crypt",
+    "description": "Crypte un texte selon le code de vigenere",
+    "aliases": [
+     "encrypt"
+    ],
+    "permissions": [],
+    "private": false,
+    "dm": false,
+    "cooldown": 5
+   },
+   "path": "./commands/misc/crypt.js"
+  },
+  {
+   "name": "customcommand",
+   "help": {
+    "name": "customcommand",
+    "description": "Gère les commandes personnalisées",
+    "private": false,
+    "dm": false,
+    "aliases": [
+     "cc"
+    ],
+    "permissions": [
+     "manage_guild"
+    ],
+    "cooldown": 5
+   },
+   "path": "./commands/misc/customcommands.js"
+  },
+  {
+   "name": "decrypt",
+   "help": {
+    "name": "decrypt",
+    "description": "Décrypte un texte selon le code de vigenere",
+    "aliases": [],
+    "permissions": [],
+    "private": false,
+    "dm": false,
+    "cooldown": 5
+   },
+   "path": "./commands/misc/decrypt.js"
+  },
+  {
+   "name": "documentation",
+   "help": {
+    "name": "documentation",
+    "aliases": [
+     "doc"
+    ],
+    "description": "Affiche la documentation du bot",
+    "permissions": [],
+    "dm": true,
+    "private": false,
+    "cooldown": 5
+   },
+   "path": "./commands/misc/doc.js"
+  },
+  {
+   "name": "drop",
+   "help": {
+    "name": "drop",
+    "description": "Fait un drop dans le salon actuel",
+    "permissions": [
+     "manage_guild"
+    ],
+    "dm": false,
+    "private": false,
+    "aliases": []
+   },
+   "path": "./commands/misc/drop.js"
+  },
+  {
+   "name": "embed",
+   "help": {
+    "name": "embed",
+    "description": "Construisez un embed avec des bouttons",
+    "aliases": [
+     "embedbuilder"
+    ],
+    "permissions": [
+     "manage_channels"
+    ],
+    "private": false,
+    "dm": false,
+    "cooldown": 15
+   },
+   "path": "./commands/misc/embed.js"
+  },
+  {
+   "name": "farsight",
+   "help": {
+    "name": "farsight",
+    "appear": false,
+    "dm": true,
+    "private": false,
+    "cooldown": 5
+   },
+   "path": "./commands/misc/farsight.js"
+  },
+  {
+   "name": "game-number",
+   "help": {
+    "name": "game-number",
+    "description": "Jouez à guess the number directement sur Discord. Peut se jouer à plusieurs en ajoutant multijoueur",
+    "aliases": [
+     "guess-the-number"
+    ],
+    "permissions": [],
+    "cooldown": 5,
+    "private": false,
+    "dm": false
+   },
+   "path": "./commands/misc/gameNumber.js"
+  },
+  {
+   "name": "generatepassword",
+   "help": {
+    "name": "generatepassword",
+    "aliases": [
+     "getpassword"
+    ],
+    "permissions": [],
+    "description": "Vous génère un mot de passe aléatoire plus ou moins sécurisé en fonction de vos choix",
+    "cooldown": 5,
+    "private": false,
+    "dm": true
+   },
+   "path": "./commands/misc/generatePassword.js"
+  },
+  {
+   "name": "google",
+   "help": {
+    "name": "google",
+    "description": "Effectue une recherche google",
+    "permissions": [],
+    "aliases": [
+     "googlesearch"
+    ],
+    "cooldown": 5,
+    "private": false,
+    "dm": true
+   },
+   "path": "./commands/misc/google.js"
+  },
+  {
+   "name": "herobrine",
+   "help": {
+    "name": "herobrine",
+    "appear": false,
+    "dm": false,
+    "private": false,
+    "permissions": [
+     "administrator"
+    ],
+    "aliases": [],
+    "description": ".",
+    "cooldown": 5
+   },
+   "path": "./commands/misc/herobrine.js"
+  },
+  {
+   "name": "invite",
+   "help": {
+    "name": "invite",
+    "aliases": [
+     "link"
+    ],
+    "description": "Envoie le lien d'invitation du bot",
+    "permissions": [],
+    "cooldown": 1,
+    "private": false,
+    "dm": true
+   },
+   "path": "./commands/misc/invite.js"
+  },
+  {
+   "name": "top",
+   "help": {
+    "name": "top",
+    "aliases": [
+     "levels"
+    ],
+    "description": "Affiche le classement des niveaux sur le serveur",
+    "permissions": [],
+    "private": false,
+    "dm": false,
+    "cooldown": 5
+   },
+   "path": "./commands/misc/levels.js"
+  },
+  {
+   "name": "demineur",
+   "help": {
+    "name": "demineur",
+    "description": "Lance une partie de démineur sur Discord",
+    "aliases": [
+     "minesweeper"
+    ],
+    "permissions": [],
+    "cooldown": 5,
+    "private": false,
+    "dm": true
+   },
+   "path": "./commands/misc/minesweeper.js"
+  },
+  {
+   "name": "morpion",
+   "help": {
+    "name": "morpion",
+    "description": "Joue au morpion",
+    "aliases": [
+     "tictactoe",
+     "tic-tac-toe"
+    ],
+    "permissions": [],
+    "private": false,
+    "dm": false,
+    "cooldown": 10
+   },
+   "path": "./commands/misc/morpion.js"
+  },
+  {
+   "name": "pile-ou-face",
+   "help": {
+    "name": "pile-ou-face",
+    "description": "Lance une pièce pour le pile ou face",
+    "aliases": [
+     "pof",
+     "pileouface"
+    ],
+    "permissions": [],
+    "cooldown": 5,
+    "private": false,
+    "dm": true
+   },
+   "path": "./commands/misc/pileOuFace.js"
+  },
+  {
+   "name": "rank",
+   "help": {
+    "name": "rank",
+    "description": "Affiche les informations de niveaux d'un utilisateur mentionné.",
+    "aliases": [
+     "lvl"
+    ],
+    "permissions": [],
+    "private": false,
+    "dm": false,
+    "cooldown": 5
+   },
+   "path": "./commands/misc/rank.js"
+  },
+  {
+   "name": "rappel",
+   "help": {
+    "name": "rappel",
+    "description": "Gère vos rappels",
+    "aliases": [
+     "rmd",
+     "remind",
+     "reminders",
+     "rap"
+    ],
+    "permissions": [],
+    "dm": true,
+    "private": false,
+    "cooldown": 5
+   },
+   "path": "./commands/misc/remind.js"
+  },
+  {
+   "name": "contact",
+   "help": {
+    "name": "contact",
+    "aliases": [
+     "bug",
+     "erreur",
+     "report"
+    ],
+    "description": "Signale un bug à Greensky",
+    "permissions": [],
+    "dm": true,
+    "private": false,
+    "cooldown": 5
+   },
+   "path": "./commands/misc/report.js"
+  },
+  {
+   "name": "roulette-russe",
+   "help": {
+    "name": "roulette-russe",
+    "description": "Joue à la roulette russe",
+    "aliases": [
+     "russian-roulette",
+     "rr"
+    ],
+    "permissions": [],
+    "cooldown": 5,
+    "private": false,
+    "dm": false
+   },
+   "path": "./commands/misc/russian-roulette.js"
+  },
+  {
+   "name": "suggestion",
+   "help": {
+    "name": "suggestion",
+    "description": "Envoie une suggestion **dans le salon actuel**",
+    "aliases": [
+     "suggest"
+    ],
+    "permissions": [],
+    "private": false,
+    "dm": false,
+    "cooldown": 5
+   },
+   "path": "./commands/misc/suggestion.js"
+  },
+  {
+   "name": "super-secret-settings",
+   "help": {
+    "name": "super-secret-settings",
+    "appear": false,
+    "permissions": [],
+    "aliases": [
+     "supersecretsettings",
+     "sss"
+    ],
+    "cooldown": 5,
+    "private": false,
+    "dm": true
+   },
+   "path": "./commands/misc/supersecretsettings.js"
+  },
+  {
+   "name": "support",
+   "help": {
+    "name": "support",
+    "description": "Affiche le lien du serveur de support.",
+    "aliases": [
+     "support-server",
+     "support-server"
+    ],
+    "permissions": [],
+    "private": false,
+    "dm": true,
+    "cooldown": 1
+   },
+   "path": "./commands/misc/support.js"
+  },
+  {
+   "name": "ticket",
+   "help": {
+    "name": "ticket",
+    "description": "Interagir avec le système de ticket. Utilisez `help` en argument pour avoir l'aide.",
+    "private": false,
+    "dm": false,
+    "aliases": [],
+    "permissions": [],
+    "cooldown": 5
+   },
+   "path": "./commands/misc/ticket.js"
+  }
+ ],
+ "moderation": [
+  {
+   "name": "ban",
+   "help": {
+    "name": "ban",
+    "permissions": [
+     "ban_members"
+    ],
+    "description": "Permet de bannir un membre",
+    "aliases": [],
+    "private": false,
+    "dm": false,
+    "cooldown": 15
+   },
+   "path": "./commands/moderation/ban.js"
+  },
+  {
+   "name": "censure",
+   "help": {
+    "name": "censure",
+    "description": "Censure le pseudo d'un membre",
+    "aliases": [],
+    "permissions": [
+     "manage_guild"
+    ],
+    "cooldown": 5,
+    "private": false,
+    "dm": false
+   },
+   "path": "./commands/moderation/censor.js"
+  },
+  {
+   "name": "create-channel",
+   "help": {
+    "name": "create-channel",
+    "aliases": [
+     "channel-create"
+    ],
+    "permissions": [
+     "manage_channels"
+    ],
+    "description": "Permet de créer un salon",
+    "cooldown": 5,
+    "private": false,
+    "dm": false
+   },
+   "path": "./commands/moderation/channel-create.js"
+  },
+  {
+   "name": "clear",
+   "help": {
+    "name": "clear",
+    "aliases": [],
+    "description": "Nettoie un certain nombre de messages dans un salon",
+    "permissions": [
+     "manage_messages"
+    ],
+    "private": false,
+    "dm": false,
+    "cooldown": 10
+   },
+   "path": "./commands/moderation/clear.js"
+  },
+  {
+   "name": "set",
+   "help": {
+    "name": "set",
+    "aliases": [
+     "config",
+     "configs",
+     "settings",
+     "configssettings"
+    ],
+    "description": "Configure les différents paramètres modifiables",
+    "permissions": [
+     "manage_guild"
+    ],
+    "private": false,
+    "dm": false,
+    "cooldown": 10
+   },
+   "path": "./commands/moderation/config.js"
+  },
+  {
+   "name": "demote",
+   "help": {
+    "name": "demote",
+    "description": "Retire un ou plusieurs roles à un utilisateur. Utilisez `help` pour avoir toutes les informations.",
+    "aliases": [
+     "downgrade",
+     "role-remove"
+    ],
+    "permissions": [
+     "MANAGE_ROLES"
+    ],
+    "private": false,
+    "dm": false,
+    "cooldown": 5
+   },
+   "path": "./commands/moderation/demote.js"
+  },
+  {
+   "name": "edit-case",
+   "help": {
+    "name": "edit-case",
+    "description": "Modifie une case de modération",
+    "aliases": [],
+    "permissions": [
+     "manage_guild"
+    ],
+    "private": false,
+    "dm": false,
+    "cooldown": 5
+   },
+   "path": "./commands/moderation/edit-case.js"
+  },
+  {
+   "name": "filtre-case-action",
+   "help": {
+    "name": "filtre-case-action",
+    "description": "Filtre les cases de modération selon votre choix.",
+    "private": false,
+    "aliases": [
+     "filtre-modlogs"
+    ],
+    "permissions": [
+     "manage_guild"
+    ],
+    "dm": false,
+    "cooldown": 5
+   },
+   "path": "./commands/moderation/filtre-case-action.js"
+  },
+  {
+   "name": "kick",
+   "help": {
+    "name": "kick",
+    "description": "Expulse un membre du serveur pour une raison donnée",
+    "permissions": [
+     "kick_members"
+    ],
+    "aliases": [
+     "expulse"
+    ],
+    "private": false,
+    "dm": false,
+    "cooldown": 10
+   },
+   "path": "./commands/moderation/kick.js"
+  },
+  {
+   "name": "lock",
+   "help": {
+    "name": "lock",
+    "aliases": [
+     "channellock",
+     "lockchannel",
+     "lock-channel",
+     "channel-lock"
+    ],
+    "permissions": [
+     "manage_channels"
+    ],
+    "cooldown": 5,
+    "private": false,
+    "dm": false,
+    "description": "Vérouille un salon pour le role everyone"
+   },
+   "path": "./commands/moderation/lock.js"
+  },
+  {
+   "name": "log",
+   "help": {
+    "name": "log",
+    "description": "Affiche un log de modération donné",
+    "aliases": [
+     "log-info"
+    ],
+    "permissions": [
+     "MANAGE_GUILD"
+    ],
+    "cooldown": 5,
+    "private": false,
+    "dm": false
+   },
+   "path": "./commands/moderation/log.js"
+  },
+  {
+   "name": "massban",
+   "help": {
+    "name": "massban",
+    "description": "Permet de bannir plusieurs membres à la fois",
+    "aliases": [
+     "multipleban"
+    ],
+    "permissions": [
+     "ban_members"
+    ],
+    "private": false,
+    "dm": false,
+    "cooldown": 10
+   },
+   "path": "./commands/moderation/massBan.js"
+  },
+  {
+   "name": "modlogs",
+   "help": {
+    "name": "modlogs",
+    "description": "Affiche les logs de modération",
+    "aliases": [],
+    "permissions": [
+     "manage_guild"
+    ],
+    "private": false,
+    "dm": false,
+    "cooldown": 5
+   },
+   "path": "./commands/moderation/modlogs.js"
+  },
+  {
+   "name": "mute",
+   "help": {
+    "name": "mute",
+    "description": "Rend un membre du serveur muet",
+    "permissions": [
+     "kick_members"
+    ],
+    "aliases": [],
+    "private": false,
+    "dm": false,
+    "cooldown": 10
+   },
+   "path": "./commands/moderation/mute.js"
+  },
+  {
+   "name": "nuke",
+   "help": {
+    "name": "nuke",
+    "description": "Nettoie un salon entier",
+    "cooldown": 10,
+    "permissions": [
+     "manage_channels"
+    ],
+    "private": false,
+    "dm": false,
+    "aliases": []
+   },
+   "path": "./commands/moderation/nuke.js"
+  },
+  {
+   "name": "pin",
+   "help": {
+    "name": "pin",
+    "aliases": [
+     "epingle",
+     "épingle"
+    ],
+    "permissions": [
+     "manage_messages"
+    ],
+    "description": "Épingle un message. Utilisez un identifiant.",
+    "cooldown": 5,
+    "private": false,
+    "dm": false
+   },
+   "path": "./commands/moderation/pin.js"
+  },
+  {
+   "name": "prefix",
+   "help": {
+    "name": "prefix",
+    "description": "Configure le préfixe.",
+    "aliases": [
+     "prefixe"
+    ],
+    "permissions": [
+     "manage_guild"
+    ],
+    "cooldown": 5,
+    "private": false,
+    "dm": false
+   },
+   "path": "./commands/moderation/prefix.js"
+  },
+  {
+   "name": "purge",
+   "help": {
+    "name": "purge",
+    "description": "Ban tous les membres GBannis du serveur.",
+    "permissions": [
+     "ADMINISTRATOR"
+    ],
+    "aliases": [
+     "gban-purge"
+    ],
+    "private": false,
+    "dm": false,
+    "cooldown": 5
+   },
+   "path": "./commands/moderation/purge.js"
+  },
+  {
+   "name": "role",
+   "help": {
+    "name": "role",
+    "description": "Ajoute un rôle choisi à un utilisateur choisi",
+    "permissions": [
+     "manage_roles"
+    ],
+    "aliases": [
+     "addrole"
+    ],
+    "cooldown": 5,
+    "private": false,
+    "dm": false
+   },
+   "path": "./commands/moderation/role.js"
+  },
+  {
+   "name": "see-warns",
+   "help": {
+    "name": "see-warns",
+    "aliases": [
+     "infractions",
+     "seewarns"
+    ],
+    "description": "Montre les avertissements d'un utilisateur.",
+    "permissions": [
+     "manage_guild"
+    ],
+    "dm": false,
+    "private": false,
+    "cooldown": 5
+   },
+   "path": "./commands/moderation/see-warns.js"
+  },
+  {
+   "name": "slowmode",
+   "help": {
+    "name": "slowmode",
+    "description": "Configure le slowmode du salon",
+    "permissions": [
+     "manage_channels"
+    ],
+    "aliases": [],
+    "private": false,
+    "dm": false,
+    "cooldown": 5
+   },
+   "path": "./commands/moderation/slowmode.js"
+  },
+  {
+   "name": "snipe",
+   "help": {
+    "name": "snipe",
+    "description": "Affiche le dernier message supprimé dans le salon, et plus si un nombre est spécifié.",
+    "aliases": [],
+    "permissions": [
+     "manage_messages"
+    ],
+    "dm": false,
+    "private": false,
+    "cooldown": 5
+   },
+   "path": "./commands/moderation/snipe.js"
+  },
+  {
+   "name": "sondage",
+   "help": {
+    "name": "sondage",
+    "description": "Faites un sondage, utilisez-là de cette manière\n\n`gs sondage <sondage> --choix 1 --choix 2... --choix 7` ou simplement aucun choix",
+    "aliases": [
+     "poll"
+    ],
+    "permissions": [
+     "manage_guild"
+    ],
+    "cooldown": 10,
+    "private": false,
+    "dm": false
+   },
+   "path": "./commands/moderation/sondage.js"
+  },
+  {
+   "name": "ticket-config",
+   "help": {
+    "name": "ticket-config",
+    "description": "Configurez un panel de ticket. Utilisez `create` pour le créer et `delete` pour le supprimer.",
+    "aliases": [
+     "configtickets",
+     "config-tickets",
+     "tickets-config",
+     "ticket-panel",
+     "ticket-configs"
+    ],
+    "permissions": [
+     "manage_guild"
+    ],
+    "cooldown": 5,
+    "private": false,
+    "dm": false
+   },
+   "path": "./commands/moderation/ticket-manage.js"
+  },
+  {
+   "name": "unban",
+   "help": {
+    "name": "unban",
+    "description": "Débanni un utilisateur du serveur. Utilisez l'identifiant du membre.",
+    "aliases": [
+     "deban"
+    ],
+    "permissions": [
+     "ban_members"
+    ],
+    "cooldown": 5,
+    "private": false,
+    "dm": false
+   },
+   "path": "./commands/moderation/unban.js"
+  },
+  {
+   "name": "unlock",
+   "help": {
+    "name": "unlock",
+    "description": "Dévérouille le salon pour le rôle everyone",
+    "permissions": [
+     "manage_channels"
+    ],
+    "aliases": [],
+    "cooldown": 5,
+    "private": false,
+    "dm": false
+   },
+   "path": "./commands/moderation/unlock.js"
+  },
+  {
+   "name": "unmute",
+   "help": {
+    "name": "unmute",
+    "description": "Démute un membre mentionné",
+    "aliases": [
+     "demute"
+    ],
+    "permissions": [
+     "manage_roles"
+    ],
+    "dm": false,
+    "private": false,
+    "cooldown": 10
+   },
+   "path": "./commands/moderation/unmute.js"
+  },
+  {
+   "name": "unpin",
+   "help": {
+    "name": "unpin",
+    "aliases": [
+     "desepingle",
+     "désepingle"
+    ],
+    "permissions": [
+     "manage_messages"
+    ],
+    "description": "Désepingle un message. Utilisez un identifiant.",
+    "cooldown": 5,
+    "private": false,
+    "dm": false
+   },
+   "path": "./commands/moderation/unpin.js"
+  },
+  {
+   "name": "unwarn",
+   "help": {
+    "name": "unwarn",
+    "aliases": [
+     "dewarn"
+    ],
+    "permissions": [
+     "manage_guild"
+    ],
+    "description": "Enlève un avertissement à un utilsateur",
+    "cooldown": 5,
+    "private": false,
+    "dm": false
+   },
+   "path": "./commands/moderation/unwarn.js"
+  },
+  {
+   "name": "warn",
+   "help": {
+    "name": "warn",
+    "description": "Avertit un membre",
+    "aliases": [
+     "avertit"
+    ],
+    "permissions": [
+     "manage_guild"
+    ],
+    "dm": false,
+    "private": false,
+    "cooldown": 5
+   },
+   "path": "./commands/moderation/warn.js"
+  }
+ ],
+ "rolereacts": [
+  {
+   "name": "role-react-manage",
+   "help": {
+    "name": "role-react-manage",
+    "aliases": [
+     "rrm",
+     "manage-rolesreact",
+     "manage-rolereact",
+     "rm"
+    ],
+    "description": "Configure les rôles à réactions",
+    "permissions": [
+     "manage_guild"
+    ],
+    "dm": false,
+    "private": false,
+    "cooldown": 5
+   },
+   "path": "./commands/rolereacts/manage.js"
+  }
+ ],
+ "rpg": [
+  {
+   "name": "adventure",
+   "help": {
+    "name": "adventure",
+    "aliases": [
+     "aventure"
+    ],
+    "description": "Obtenez les infos sur le RPG",
+    "permissions": [],
+    "cooldown": 5,
+    "private": false,
+    "dm": true
+   },
+   "path": "./commands/rpg/adventure.js"
+  }
+ ]
+}

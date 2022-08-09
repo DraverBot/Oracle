@@ -46,10 +46,12 @@ module.exports = {
                 
                 msg.edit({ embeds: [ended], components: [] }).catch(() => {});
             } else {
+                collected.first().deferUpdate()
+
                 const ended = package.embeds.classic(message.author)
                     .setTitle("Drop terminé")
-                    .setDescription(`<@${collected.first.user.id}> a gagné ${drop}`)
-                    .setColor('#ff0000')
+                    .setDescription(`<@${collected.first().user.id}> a gagné ${drop}`)
+                    .setColor(collected.first().member.roles.highest.hexColor)
                 
                 msg.edit({ embeds: [ended], components: [] }).catch(() => {});
             };

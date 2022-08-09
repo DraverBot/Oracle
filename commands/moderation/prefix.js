@@ -56,7 +56,7 @@ module.exports.run = (message, args, client, prefix) => {
     } else {
         const embed = package.embeds.classic(message.author)
             .setTitle("Aide")
-            .setDescription(`Mon préfixe est \`${prefix}\`.\n\n**Note: les crochets tels que \`<>\` ne sont pas à utiliser lors de l'éxécution de la commande.`)
+            .setDescription(`Mon préfixe est \`${prefix}\`.\n\n**Note: les crochets tels que \`<>\` ne sont pas à utiliser lors de l'éxécution de la commande.**`)
             .addField(`Utilisation`, `\`${prefix}prefix set <préfixe>\``, true)
             .addField('Exemple', `\`${prefix}prefix set $\``, true)
             .setColor('ORANGE')

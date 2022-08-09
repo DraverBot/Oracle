@@ -1,1 +1,5 @@
 node_modules/
+
+assets/managers/rpManager.js
+private-slash-commands/*.js
+script.js

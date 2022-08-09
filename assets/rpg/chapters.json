@@ -1,0 +1,35 @@
+[
+    {"name": "Départ", "description": "Vous venez de commencer l'aventure, et vous devez rapporter l'épée de smith au Roi Hyrule."},
+    {
+        "name": "Forêt de Tyloria", "description": "Vous venez de partir du chateau d'hyrule après avoir reçu l'épée de Smith pour sauver la princesse Zelda, changée en pierre par Vaati.\nLe Roi vous a dit de trouver le temple minish de la forêt Tyloria (sud-est de votre carte).\nVous devez trouver ce temple pour récupérer les 4 éléments.",
+        "objectifs": [
+            {"type": "monstres", "description": "Tuer 5 monstres", "number": 5},
+            {"type": "rubis", "description": "Récupérer 10 rubis", "number": 10}
+        ],
+        "element": {
+            "isElement": false
+        }
+    },
+    {
+        "name": "Village minish sylvestres", "description": "Vous êtes arrivés à un tronc d'arbre. Vous rencontrez Exelo, qui lui aussi a subit une malédiction de Vaati.\nIl vous explique que les humains utilisaient autrefois des souches minish pour arriver à leur taille.\nElles sont dissimulées un peu partout.\nIl vous fait rétrécir via une sourche et vous arrivez tout les deux au village des minish sylvestres, dans lequel vous parlerez avec le chef du village, Genta.",
+        "objectifs": [
+            {"type": "rubis", "description": "Collecter 15 rubis", "number": ""}
+        ]
+    },
+    {
+        "name": "Temple de la forêt", "description": "Vous êtes",
+        "objectifs": [
+            {"type": "rubis", "description": "collecter 50 rubis", "number": 50},
+            {"type": "monstres", "description": "Vaincre 25 ennemis", "number": 25},
+            {"type": "arme", "description": "Récupérer le pot magique", "name": "pot magique"}
+        ],
+        "boss": {
+            "name": "Blob vert géant",
+            "id": "blob_vert_geant"
+        },
+        "element":{
+            "isElement": true,
+            "name": "terre"
+        }
+    }
+]

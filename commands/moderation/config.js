@@ -1,6 +1,7 @@
 const Discord = require('discord.js');
 const functions = require('../../assets/functions');
 const package = functions.package();
+const { types, correspondance, params } = require('../../assets/data/configs.json');
 
 module.exports.help = {
     name: 'set',
@@ -17,60 +18,6 @@ module.exports.help = {
  * @param {Discord.Client} client 
  */
 module.exports.run = (message, args, client, prefix) => {
-    const params = [
-        'logs_enable',// 0
-        'join_enable',// 1
-        'leave_enable',// 2
-        'join_message',// 3
-        'leave_message',// 4
-        'join_channel',// 5
-        'leave_channel',// 6
-        'logs_channel',// 7
-        'level_channel',//8
-        'level_message', //9
-        'level_enable', //10
-        'interchat_enable', //11
-        'interchat_channel', //12
-        'roles_enable', //13
-        'gban_enable', // 14
-    ]
-
-    const correspondance = {
-        joinmsg: 3,
-        leavemsg: 4,
-        logs: 0,
-        logschannel: 7,
-        joinchannel: 5,
-        leavechannel: 6,
-        joinactive: 1,
-        leaveactive: 2,
-        levelactive: 10,
-        levelchannel: 8,
-        levelmsg: 9,
-        interchatactive: 11,
-        interchatchannel: 12,
-        rolesdarrivee:13,
-        gbanactive: 14
-    };
-
-    const types = {
-        0: 'boolean',
-        1: 'boolean',
-        2: 'boolean',
-        3: 'text',
-        4: 'text',
-        5: 'channel',
-        6: 'channel',
-        7: 'channel',
-        8: 'channel',
-        9: 'text',
-        10: 'boolean',
-        11: 'boolean',
-        12: 'channel',
-        13: 'boolean',
-        14: 'boolean'
-    };
-
     const menu = package.embeds.classic(message.author)
         .setTitle("Menu")
         .setDescription(`Vous pouvez faire la liste d'actions ci-dessous en envoyant le message dans le chat :\n\n
@@ -88,7 +35,9 @@ module.exports.run = (message, args, client, prefix) => {
 \`interchatactive\` : active/désactive l'interchat.
 \`interchatchannel\` : configure le salon d'interchat.
 \`rolesdarrivee\` : Active/désactive les rôles d'arrivées.
-\`gbanactive\` : Activé/désactive le système de GBan
+\`gbanactive\` : Active/désactive le système de GBan
+\`countingactive\` : Active/désactive le système de compteur
+\`coutingchannel\` : Définit le salon du compteur
 
 
 Vous pouvez répondre par \`cancel\` pour annuler.\nVous disposez de deux minutes pour répondre`)
@@ -101,10 +50,12 @@ Vous pouvez répondre par \`cancel\` pour annuler.\nVous disposez de deux minute
         const filter = x => x.author.id === message.author.id;
         const collector = message.channel.createMessageCollector({ filter: filter, time: 120000, });
 
-        var trash = [msg, message];
-
+        let trash = new Discord.Collection()
+            .set(msg.id, msg)
+            .set(message.id, message);
+        
         collector.on('collect', (x) => {
-                        trash.push(x);
+            trash.set(x.id);
 
             if (x.content.toLowerCase() === 'cancel') return collector.stop('cancel');
 
@@ -127,7 +78,7 @@ Vous pouvez répondre par \`cancel\` pour annuler.\nVous disposez de deux minute
 
 :warning: Je ne prend pas en compte les \`"\` pour des raisons de sécurité.
                         ` : ''}`)
-                    ] }).then((y) => trash.push(y))
+                    ] }).then((y) => trash.set(y.id, y))
                 }
             } else {
                 if (types[index] == 'channel') {
@@ -142,7 +93,7 @@ Vous pouvez répondre par \`cancel\` pour annuler.\nVous disposez de deux minute
                         .setTitle(package.emojis.gsyes + "Enregistré")
                         .setDescription(`J'ai enregistré le paramètre sur le salon <#${channel.id}>`)
                         .setColor('GREEN')
-                    ] }).then((y) => trash.push(y))
+                    ] }).then((y) => trash.set(y.id, y))
 
                     collector.stop('ended')
                 } else if (types[index] == 'boolean') {
@@ -165,7 +116,7 @@ Vous pouvez répondre par \`cancel\` pour annuler.\nVous disposez de deux minute
                         .setTitle(package.emojis.gsyes + "Enregistré")
                         .setDescription(`J'ai enregistré le paramètre sur \`${choosen == 1 ? 'Oui' : 'Non'}\``)
                         .setColor('GREEN')
-                    ] }).then((y) => trash.push(y))
+                    ] }).then((y) => trash.set(y.id, y))
 
                     collector.stop('ended')
                 } else {
@@ -185,7 +136,7 @@ Vous pouvez répondre par \`cancel\` pour annuler.\nVous disposez de deux minute
                         .setTitle(package.emojis.gsyes + "Enregistré")
                         .setDescription(`J'ai enregistré le texte sur \`\`\`${text}\`\`\``)
                         .setColor('GREEN')
-                    ] }).then((y) => trash.push(y));
+                    ] }).then((y) => trash.set(y.id, y));
 
                     collector.stop('ended');
                 };
@@ -193,9 +144,7 @@ Vous pouvez répondre par \`cancel\` pour annuler.\nVous disposez de deux minute
         });
 
         collector.on('end', (collected, reason) => {
-            trash.forEach((x) => {
-                x.delete().catch(() => {});
-            });
+            message.channel.bulkDelete(trash).catch(() => {});
 
             if (!collected.size) return message.channel.send({ embeds: [ package.embeds.collectorNoMessage(message.author) ] });
             if (reason === 'cancel') return message.channel.send({ embeds: [ package.embeds.cancel() ] });

@@ -1,4 +1,4 @@
-const mysql = require('myqsl');
+const mysql = require('mysql');
 const data = require('./data.json');
 
 module.exports = (client) => {
