@@ -242,7 +242,7 @@ class GiveawayManager {
 
                 if (!data) return;
 
-                this.db.query(`SELECT user_idFROM gw_participants WHERE message_id="${interaction.message.id}" AND guild_id="${interaction.guild.id}" AND user_id="${interaction.user.id}"`, (error, request) => {
+                this.db.query(`SELECT user_id FROM gw_participants WHERE message_id="${interaction.message.id}" AND guild_id="${interaction.guild.id}" AND user_id="${interaction.user.id}"`, (error, request) => {
                     if (error) return interaction.reply({ embeds: [ embeds.errorSQL(interaction.user) ], ephemeral: true }) & console.log(error);
 
                     if (request.length === 0) {
