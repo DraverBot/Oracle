@@ -48,7 +48,7 @@ module.exports = {
             .addFields(
                 {
                     name: 'Modérateur',
-                    value: `<@${interaction.user}> ( ${interaction.user.tag} ${interaction.user.id} )`,
+                    value: `<@${interaction.user.id}> ( ${interaction.user.tag} ${interaction.user.id} )`,
                     inline: true
                 },
                 {

@@ -20,25 +20,25 @@ module.exports = {
      */
     noUser: (user) => {
         return new MessageEmbed()
-            .setTitle("Utilisateur introuvable")
+            .setTitle("🚫 Utilisateur introuvable")
             .setColor('DARK_RED')
             .setDescription(`Oops, cet utilisateur est introuvable, réessayez avec l'identifiant ou la mention.\n> Un [utilisateur](https://github.com/BotOracle/Documentation/blob/main/others/user.md) est attendu.`)
     },
     invalidNumber: (user) => {
         return generateBasic(user)
-            .setTitle("Nombre invalide")
+            .setTitle("🚫 Nombre invalide")
             .setColor('RED')
             .setDescription(`Oops, on dirait que ce n'est pas un nombre correct.\n> Un [nombre](https://github.com/BotOracle/Documentation/blob/main/others/nombre.md) est attendu`)
     },
     noReason: (user) => {
         return generateBasic(user)
-            .setTitle("Raison invalide")
+            .setTitle("🚫 Raison invalide")
             .setColor('RED')
             .setDescription(`Oops, vous avez oublié de saisir la raison.\n> Un [texte](https://github.com/BotOracle/Documentation/blob/main/others/texte.md) est attendu`)
     },
     notEnoughHiger: (user, member) => {
         return generateBasic(user)
-            .setTitle("Vous n'êtes pas assez élevé")
+            .setTitle("🚫 Vous n'êtes pas assez élevé")
             .setDescription(`Oops, <@${member.id}> est supérieur ou égal à vous dans la hiérarchie des rôles.`)
             .setColor('DARK_RED')
     },
@@ -61,7 +61,7 @@ module.exports = {
      */
     noChannel: (user) => {
         return generateBasic(user)
-            .setTitle("Salon inexistant")
+            .setTitle("🚫 Salon inexistant")
             .setDescription(`Oops, ce salon n'existe pas, réessayez avec identifiant ou la mention.\n> Un [salon](https://github.com/BotOracle/Documentation/blob/main/others/salon.md) est attendu`)
             .setColor('RED')
     },
@@ -72,19 +72,19 @@ module.exports = {
     },
     noText: (user) => {
         return generateBasic(user)
-            .setTitle("Pas de texte")
+            .setTitle("🚫 Pas de texte")
             .setColor('RED')
             .setDescription(`Oops, vous avez oublié le texte, réessayez la commande en saisissant un texte.\n> Un [texte](https://github.com/BotOracle/Documentation/blob/main/others/texte.md) est attendu`)
     },
     collectorNoMessage: (user) => {
         return generateBasic(user)
-            .setTitle("Aucune réponse")
+            .setTitle("🚫 Aucune réponse")
             .setColor('RED')
             .setDescription(`<@${user.id}>, je vous ai proposé un collecteur de messages mais il se trouve que vous n'y avez pas répondu.\nVeuillez réessayer.\n> Vous utilisez un [collecteur de messages](https://github.com/BotOracle/Documentation/blob/main/others/msg-collector.md)`)
     },
     invalidTime: (user) => {
         return generateBasic(user)
-            .setTitle("Durée invalide :x:")
+            .setTitle("🚫 Durée invalide :x:")
             .setColor('RED')
             .setDescription(`Oops, ce n'est pas une durée valide, utilisez :\n\`s\` pour secondes\n\`m\` pour minutes\n\`h\` pour heures\n\`d\` pour jours\n\`y\` pour années.\n> [Documentation](https://github.com/BotOracle/Documentation/blob/main/others/temps.md)`)
     },
@@ -95,7 +95,7 @@ module.exports = {
         collections.errorsOnInvalidArg.set(user.id, collections.errorsOnInvalidArg.get(user.id) + 1);
 
         return generateBasic(user)
-            .setTitle("Arguments invalides :x:")
+            .setTitle("🚫 Arguments invalides :x:")
             .setDescription(text)
             .setColor('RED')
     },
@@ -111,37 +111,37 @@ module.exports = {
         collections.errors.set(user.id, collections.errors.get(user.id) + 1);
 
         return generateBasic(user)
-            .setTitle("Oops")
+            .setTitle("🚫 Oops")
             .setDescription(text)
             .setColor('#ff0000')
     },
     guillement: (user) => {
         return generateBasic(user)
-            .setTitle("Oula !")
+            .setTitle("🚫 Erreur de guillemets")
             .setDescription(`Oops, vous ne pouvez pas saisir de \`"\` pour des raisons de sécurité.`)
             .setColor('#ff0000')
     },
     noRole: (user) => {
         return generateBasic(user)
-            .setTitle("Pas de rôle")
+            .setTitle("🚫 Pas de rôle")
             .setDescription(`Vous n'avez pas précisé de [**rôle**](https://github.com/BotOracle/Documentation/blob/main/others/role.md)`)
             .setColor('#ff0000')
     },
     noRoles: (user) => {
         return generateBasic(user)
-            .setTitle("Pas de rôles")
+            .setTitle("🚫 Pas de rôles")
             .setDescription(`Je n'ai pas trouvé suffisament de [**rôles**](https://github.com/BotOracle/Documentation/blob/main/others/role.md).`)
             .setColor('#ff0000')
     },
     noMember: (user) => {
         return generateBasic(user)
-            .setTitle("Pas de membres")
+            .setTitle("🚫 Pas de membres")
             .setDescription(`Je n'ai pas trouvé suffisament de [**membres**](https://github.com/BotOracle/Documentation/blob/main/others/user.md).`)
             .setColor('#ff0000')
     },
     noText: (user) => {
         return generateBasic(user)
-            .setTitle("Texte manquant")
+            .setTitle("🚫 Texte manquant")
             .setDescription(`Vous avez oublié de saisir un **texte**.\n> Un [texte](https://github.com/BotOracle/Documentation/blob/main/others/texte.md) est attendu`)
             .setColor('#ff0000')
     },
@@ -153,7 +153,7 @@ module.exports = {
     },
     missingPermission: (user, perm) => {
         return generateBasic(user)
-            .setTitle("Permission manquante")
+            .setTitle("🚫 Permission manquante")
             .setDescription(`La permission \`${perm}\` est requise pour exécuter cette commande.`)
             .setColor('#ff0000')
     },
@@ -167,14 +167,73 @@ module.exports = {
     },
     notTextChannel: (user) => {
         return generateBasic(user)
-            .setTitle("Salon invalide")
+            .setTitle("🚫 Salon invalide")
             .setDescription(`Le salon que vous avez spécifié n'est pas un salon textuel.`)
             .setColor('#ff0000')
     },
     notEnoughCoins: (user) => {
         return generateBasic(user)
-            .setTitle(`Pas assez ${data.coinsSuffix}`)
+            .setTitle(`🚫 Pas assez ${data.coinsSuffix}`)
             .setDescription(`Vous n'avez pas assez ${data.coinsSuffix} pour faire ça.\n> :bulb:\n> Les ${data.coins} sont ceux comptés **qui ne sont pas dans votre banque**`)
             .setColor('#ff0000')
+    },
+    loto: {
+        /**
+         * 
+         * @param {User} user 
+         * @param {'participate' | 'end'} type 
+         * @returns 
+         */
+        invalidLoto: (user, type) => {
+            return generateBasic(user)
+                .setTitle("❌ Loto invalide")
+                .setDescription(`Il n'y a pas de loto sur le serveur.\n${type == 'participate' ? `Il n'y a pas de loto en cours.` : `Le loto en cours n'est pas terminé`}`)
+                .setColor('#ff0000')
+        },
+        invalidNumbers: (user) => {
+            return generateBasic(user)
+                .setTitle("🚫 Nombres invalides")
+                .setDescription(`Les nombres que vous avez spécifié sont invalides.\n**Vérifiez que vous avez le même nombre de numéro que celui requis**.`)
+                .setColor('#ff0000')
+        },
+        alreadyParticipate: (user) => {
+            return generateBasic(user)
+                .setTitle("❌ Participation déjà enregistrée")
+                .setColor('#ff0000')
+                .setDescription(`Vous participez déjà à ce loto`)
+        },
+        /**
+         * @param {User} user 
+         * @param {Number[]} numbers 
+         * @param {Number[]} complementaries 
+         */
+        added: (user, numbers, complementaries) => {
+            return generateBasic(user)
+                .setTitle("✅ Participation enregistrée")
+                .setDescription(`J'ai enregistré votre participation`)
+                .addFields(
+                    {
+                        name: "Numéro gagnants",
+                        value: numbers.join(', '),
+                        inline: true
+                    },
+                    {
+                        name: "Numéro complémentaires",
+                        value: complementaries.join(', '),
+                        inline: true
+                    }
+                )
+                .setColor('#00ff00')
+        },
+        /**
+         * @param {{ numbers: Number[], complementaries: Number[], winners: [], user: User }} data 
+         */
+        end: (data) => {
+            return generateBasic(data.user)
+                .setTitle('🎉 Tirage')
+                .setDescription(`**Numéro gagnants :** ${data.numbers.join(' ')}\n**Numéro complémentaires :** ${data.complementaries.join(' ')}
+
+${data.winners.length == 0 ? 'Pas de gagnants' : data.winners.map(w => `<@${w.user_id}> : ${x}`)}`)
+        }
     }
 }

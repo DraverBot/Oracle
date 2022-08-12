@@ -27,7 +27,7 @@ module.exports = {
         dm: false,
         dev: false,
         permissions: ['manage_guild'],
-        systems: [],
+        systems: [{name: 'de logs', value: 'logs_enable', state: true}],
         cd: 5
     },
     /**

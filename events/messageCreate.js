@@ -14,6 +14,7 @@ module.exports = {
         if (message.webhookId) return;
 
         client.db.query(`SELECT * FROM configs WHERE interchat_enable="1"`, (err, req) => {
+            return;
             if (err) return console.log(err);
             
             if (req.find((x) => x.guild_id === message.guild.id)) {

@@ -32,6 +32,6 @@ module.exports = {
             
             functions.log(a.guild, embed);
         };
-        run(a);
+        // run(a);
     }
 };

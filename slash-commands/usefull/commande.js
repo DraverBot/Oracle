@@ -37,7 +37,7 @@ module.exports = {
         const ephemeral = interaction.options.get('discret') ? interaction.options.get('discret').value : true;
 
         const commandName = interaction.options.get('commande').value;
-        const commandList = require('../../assets/data/commands.json');
+        const commandList = require('../../assets/data/slashCommands');
 
         let command;
         Object.keys(commandList).forEach((key) => {
@@ -56,17 +56,17 @@ module.exports = {
             .addFields(
                 {
                     name: "Cooldown",
-                    value: `${command.help.cooldown} seconde(s)`,
+                    value: `${command.help.cd} seconde(s)`,
                     inline: true
                 },
                 {
-                    name: "Alias",
-                    value: command.help.aliases.length === 0 ? "Aucun alias" : command.help.aliases.map((alias) => `\`${alias}\``).join(', '),
+                    name: "Systèmes",
+                    value: command.help.systems?.length === 0 ? "Aucun système requis" : command.help.systems.map((system) => `Système ${system.name} : doit être **${system.state == true ? 'activé':'désactivé'}**`).join(', '),
                     inline: true
                 },
                 {
                     name: "Permissions",
-                    value: command.help.permissions.length === 0 ? 'Aucune permission nécéssaires' : command.help.permissions.map((perm) => '`' + perms[perm.toUpperCase()] + '`').join(', '),
+                    value: command.help.permissions?.length === 0 ? 'Aucune permission nécéssaires' : command.help.permissions.map((perm) => '`' + perms[perm.toUpperCase()] + '`').join(', '),
                     inline: true
                 },
                 {
@@ -77,11 +77,6 @@ module.exports = {
                 {
                     name: "Exécutable en privé ?",
                     value: command.help.dm ? "Oui" : "Non",
-                    inline: true
-                },
-                {
-                    name: "Documentation",
-                    value: `[${command.name}](https://github.com/BotOracle/Documentation/blob/main/commands/${command.name})`,
                     inline: true
                 }
             )
