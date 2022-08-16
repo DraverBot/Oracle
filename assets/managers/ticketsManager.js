@@ -25,6 +25,7 @@ class TicketsManager {
         this.client = client;
         this.db = db;
         this.tickets = new Discord.Collection();
+        this.configs = new Discord.Collection();
         this.meanGuillement = "alt3";
     }
     isTicket(id) {
@@ -77,6 +78,9 @@ class TicketsManager {
      */
     createTicket(data) {
         if (!this.validString(data.sujet)) return 'not a valid text';
+        let { roles } = this.configs.get(data.guild.id);
+        if (!roles) roles = [];
+        
         const embed = new Discord.MessageEmbed()
             .setTitle("Ticket")
             .setDescription(`Ticket ouvert par <@${data.user.id}>.\n__Sujet :__ ${data.sujet}`)
@@ -96,7 +100,14 @@ class TicketsManager {
                     .setLabel('mentionner everyone')
             )
         
-        data.guild.channels.create(`Ticket-${functions.random(9, 0)}${functions.random(9, 0)}${functions.random(9, 0)}${functions.random(9, 0)}`, {permissionOverwrites: [{id: data.user.id, allow: ['VIEW_CHANNEL', 'SEND_MESSAGES', 'ADD_REACTIONS', 'ATTACH_FILES'], deny: ['MENTION_EVERYONE', 'MUTE_MEMBERS']}, { id: data.guild.id, deny: ['VIEW_CHANNEL'] }]}).then((channel) => {
+        const permissions = [{id: data.user.id, allow: ['VIEW_CHANNEL', 'SEND_MESSAGES', 'ADD_REACTIONS', 'ATTACH_FILES'], deny: ['MENTION_EVERYONE', 'MUTE_MEMBERS']}, { id: data.guild.id, deny: ['VIEW_CHANNEL'] }];
+        if (roles.length > 0) {
+            for (const rId of roles) {
+                permissions.push({ id: rId, allow: ['VIEW_CHANNEL', 'SEND_MESSAGES', 'ADD_REACTIONS', 'ATTACH_FILES'] });
+            };
+        };
+
+        data.guild.channels.create(`Ticket-${functions.random(9, 0)}${functions.random(9, 0)}${functions.random(9, 0)}${functions.random(9, 0)}`, {permissionOverwrites: permissions}).then((channel) => {
             channel.send({ embeds: [ embed ], components: [ row ], content: `<@${data.user.id}>, votre ticket a été crée.` }).then((sent) => {
                 const dataset = {
                     guild_id: data.guild.id,
@@ -116,7 +127,7 @@ class TicketsManager {
                 if (err) throw err;
             });
             });
-        });
+        }).catch(() => {});
     }
     /**
      * @returns {String}
@@ -241,22 +252,48 @@ class TicketsManager {
     }
     resetCache() {
         this.tickets = new Discord.Collection();
+        this.configs = new Discord.Collection();
     }
     loadCache() {
         this.db.query(`SELECT * FROM tickets`, (err, req) => {
             if (err) throw err;
-            this.resetCache();
+            
+            this.db.query(`SELECT ticket_enable, ticket_roles, guild_id FROM configs`, (er, re) => {
+                if (er) throw er;
+                
+                this.resetCache();
+                re.forEach((conf) => {
+                    this.configs.set(conf.guild_id, {
+                        enable: conf.ticket_enable == "1",
+                        roles: JSON.parse(conf.ticket_roles).map(x => x.toString())
+                    });
+                });
+                req.forEach((ticket) => {
+                    this.tickets.set(ticket.message_id, ticket);
+                });
 
-            req.forEach((ticket) => {
-                this.tickets.set(ticket.message_id, ticket);
-            });
+            })
         })
+    }
+    checkForActivation(interaction) {
+        const activated = this.configs.get(interaction.guild.id).enable;
+        if (activated == false) {
+            interaction.reply({ embeds: [ pack.embeds.classic(interaction.user)
+                .setTitle("Système désactivé")
+                .setDescription(`Le système de tickets est **désactivé**.\n\nVeuillez l'activer pour utiliser les commandes de ticket.\n:bulb:\n> Utilisez la commande \`/config configurer\``)
+                .setColor('#ff0000')
+            ], ephemeral: true }).catch(() => {});
+            return false;
+        };
+        return true;
     }
     loadInteraction() {
         this.client.on('interactionCreate', /** @param {Discord.ButtonInteraction} interaction */ async(interaction) => {
             if (interaction.isButton()) {
                 const id = interaction.customId;
                 if (id == 'ticket_panel') {
+                    if (!this.checkForActivation(interaction)) return;
+                    
                     let { subject } = this.tickets.get(interaction.message.id);
 
                     await interaction.deferUpdate();
@@ -265,6 +302,7 @@ class TicketsManager {
                     this.createTicket(dataset);
                 };
                 if (id == 'mention-everyone') {
+                    if (!this.checkForActivation(interaction)) return;
                     await interaction.reply({ embeds: [ pack.embeds.classic(interaction.user)
                         .setTitle("Mention everyone")
                         .setDescription(`Êtes-vous sûr de vouloir mentionner everyone ?`)
@@ -296,11 +334,13 @@ class TicketsManager {
                     });
                 };
                 if (id == 'ticket-close') {
+                    if (!this.checkForActivation(interaction)) return;
                     await interaction.deferUpdate();
 
                     this.closeTicket({ channel: interaction.channel });
                 };
                 if (id == 'ticket-save') {
+                    if (!this.checkForActivation(interaction)) return;
                     const customId = await this.saveTicket({ channel: interaction.channel });
                     interaction.deferReply();
 
@@ -319,11 +359,13 @@ class TicketsManager {
                     }, 3000)
                 };
                 if (id == 'ticket-reopen') {
+                    if (!this.checkForActivation(interaction)) return;
                     await interaction.deferUpdate();
 
                     this.reopenTicket({ channel: interaction.channel });
                 };
                 if (id == 'ticket-delete') {
+                    if (!this.checkForActivation(interaction)) return;
                     await interaction.deferUpdate();
 
                     this.delete({ channel: interaction.channel });

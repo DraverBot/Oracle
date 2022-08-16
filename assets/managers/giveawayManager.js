@@ -1,276 +1,425 @@
-const Discord = require('discord.js');
-const functions = require('../functions.js');
-const embeds = functions.package().embeds;
+const { Client, Collection, TextChannel, GuildMember, ButtonInteraction, Guild, Message } = require('discord.js');
 const mysql = require('mysql');
-const moment = require('moment');
 
-moment.locale('fr'); 
+const embeds = require('./assets/embeds');
+const buttons = require('./assets/buttons');
 
-class GiveawayManager {
+class GiveawaysManager {
     /**
-     * @param {Discord.Client} client 
+     * @param {Client} client 
      * @param {mysql.Connection} db 
      */
     constructor(client, db) {
         this.client = client;
         this.db = db;
+        this.giveaways = new Collection();
+        this.ended = new Collection();
+        this.timeout = new Collection();
     }
-    generateEmbed(data, guild) {
-        const hoster = (guild.members.cache.get(data.hoster_id) || guild.me).user;
-
-        const embed = embeds.classic(hoster)
-            .setTitle(":tada: GIVEAWAY :tada:")
-            .setTimestamp(new Date(parseInt(data.endsAt)).toISOString())
-            .setDescription(`Appuyez sur le boutton pour participer !\n\nRécompense: \`${data.reward}\`\nOffert par: <@${data.hoster_id}>\n${data.winnerCount} gagnan${data.winnerCount > 1 ? "ts" : "t"}\nFinit le <t:${(parseInt(data.endsAt) / 1000).toFixed(0)}:R>`)
-            .setColor(guild.me.displayHexColor)
-            
-        if (data.endsAt - Date.now() < 10000) embed.setColor('#ff0000').setTitle(":tada: **G I V E A W A Y** :tada:");
-        
-        return embed
+    getUrl(data) {
+        return `https://discord.com/channels/${data.guild_id}/${data.channel_id}/${data.message_id}`;
     }
     /**
-     * @param {objectGW} data 
-     * @param {Discord.Guild} guild 
+     * @param {{ reward: String, winnerCount: Number, hosterId: String, channel: TextChannel, time: Number, ?bonusRoles: String[], ?deniedRoles: String[], ?requiredRoles: String[] }} data 
      */
-    generateEndedEmbed(data, guild) {
-        const hoster = (guild.members.cache.get(data.hoster_id) || guild.me).user;
+    start(data) {
+        if (!data.channel?.guild) return 'no guild';
 
-        const embed = embeds.classic(hoster)
-            .setTitle(":tada: **GIVEAWAY TERMINÉ** :tada:")
-            .setTimestamp(new Date(parseInt(data.endsAt)).toISOString())
-            .setColor(guild.me.displayHexColor)
-            .setDescription(`Giveaway terminé !\n\nRécompense: \`${data.reward}\`\nOffert par <@${hoster.id}>\n${data.winnerCount} gagnan${data.winnerCount > 1 ? 'ts' : "t"}`)
+        const embed = embeds.giveaway(data);
+        const row = buttons.getAsRow([ buttons.participate(), buttons.cancelParticipation() ]);
 
-        return embed;
-    }
-    edit(data, guild) {
-        const channel = guild.channels.cache.get(data.channel_id);
-        if (!channel) return;
+        data.channel.send({ embeds: [ embed ], components: [ row ] }).then((sent) => {
+            let dataset = {
+                reward: data.reward,
+                hoster_id: data.hosterId,
+                guild_id: data.channel.guild.id,
+                channel_id: data.channel.id,
+                message_id: sent.id,
+                winnerCount: data.winnerCount,
+                winners: [],
+                ended: false,
+                participants: [],
+                required_roles: data.requiredRoles ?? [],
+                bonus_roles: data.bonusRoles ?? [],
+                denied_roles: data.deniedRoles ?? [],
+                endsAt: Date.now() + data.time
+            };
 
-        const msg = channel.messages.cache.get(data.message_id);
-        if (!msg) return;
+            let sql = this.createQuery(this.formatToSql(dataset), false);
+            this.giveaways.set(sent.id, this.formatToObject(dataset));
 
-        const embed = this.generateEmbed(data, guild);
-        msg.edit({ embeds: [ embed ] }).catch((e) => console.log(e));
+            this.db.query(sql, (err) => {
+                if (err) throw err;
+            });
+        }).catch((e) => {console.log(e)});
     }
     /**
-     * @param {Discord.Guild} guild 
-     * @param {Discord.TextChannel}
-     * @param {Discord.User} user
-     * @param {String} reward 
-     * @param {Number} winnerCount 
-     * @param {Number} time 
+     * @param {GuildMember} member
      */
-    start(guild, channel, user, reward, winnerCount, time) {
-        const data = {
-            endsAt: time + Date.now(),
-            hoster_id: user.id,
-            reward: reward,
-            winnerCount: winnerCount
+    checkIfValidEntry(member, data) {
+        if (data.denied_roles && data.denied_roles?.length > 0) {
+            let has = false;
+            for (const role of data.denied_roles) {
+                if (member.roles.cache.has(role)) has = true;
+            };
+
+            if (has) {
+                return {
+                    embed: embeds.hasDeniedRoles(data.denied_roles, this.getUrl(data)),
+                    state: false
+                }
+            }
+        };
+        if (data.required_roles && data.required_roles.length > 0) {
+            let has = true;
+            for (const role of data.required_roles) {
+                if (!member.roles.cache.has(role)) has = false;
+            };
+
+            if (!has) {
+                return {
+                    embed: embeds.missingRequiredRoles(data.required_roles, this.getUrl(data)),
+                    state: false                    
+                };
+            };
+        };
+        return {
+            embed: embeds.entryAllowed(this.getUrl(data)),
+            state: true
+        };
+    }
+    /**
+     * @param {{}} data 
+     * @param {Boolean} exists
+     */
+    createQuery(data, exists) {
+        const arrays = ['participants', 'bonus_roles', 'denied_roles', 'required_roles', 'winners'];
+
+        let sql = `INSERT INTO giveaways (${Object.keys(data).join(', ')}) VALUES ( ${Object.values(data).map(x => x.toString().includes('[') ? `'${x}'` : (typeof x =="string") ? `"${x.replace(/"/g, '\\"')}"`: `"${x}"`).join(', ')} )`;
+
+        if (exists == true) {
+            sql = `UPDATE giveaways SET ${Object.keys(data).map((x => `${x}=${(typeof data[x] == "string" && arrays.includes(x)) ? `'${data[x].replace(/"/g, '\\"')}'` : `"${data[x]}"`}`)).join(', ')}`;
         };
 
-        const row = new Discord.MessageActionRow()
-            .addComponents(
-                new Discord.MessageButton()
-                    .setCustomId('giveaway-participate')
-                    .setLabel('Participer')
-                    .setEmoji('🎉')
-                    .setStyle('SUCCESS')
-            )
+        return sql;
+    }
+    formatToSql(data) {
+        let gw = data;
+        const arrays = ['participants', 'bonus_roles', 'denied_roles', 'required_roles', 'winners'];
+        
+        for (const prop of arrays) {
+            gw[prop] = JSON.stringify(gw[prop]);
+        };
+        gw.ended = gw.ended == true ? '1' : "0";
+        for (const string of Object.keys(gw).filter(x => typeof gw[x] == "string" && !arrays.includes(x))) {
+            gw[string] = gw[string].replace(/"/g, '\\"');
+        };
 
-        const embed = this.generateEmbed(data, guild);
-        channel.send({ embeds: [ embed ], components: [ row ] }).then((msg) => {
-            this.db.query(`INSERT INTO giveaways (guild_id, channel_id, message_id, hoster_id, reward, endsAt, winnerCount, path) VALUES ("${guild.id}", "${channel.id}", "${msg.id}", "${user.id}", "${reward}", "${data.endsAt}", "${winnerCount}", "https://discord.com/channels/${guild.id}/${channel.id}/${msg.id}")`, (err, req) => {
-                if (err) return console.log(err) & channel.send({ embeds: [ embeds.errorSQL(user) ] });
-            });
-        })
+        return gw;
+    }
+    formatToObject(data) {
+        let gw = data;
+        
+        for (const prop of ['participants', 'bonus_roles', 'denied_roles', 'required_roles', 'winners']) {
+            gw[prop] = JSON.parse(gw[prop]);
+        };
+
+        gw.winnerCount = parseInt(gw.winnerCount);
+        gw.endsAt = parseInt(gw.endsAt);
+        gw.ended = gw.ended == "1";
+
+        for (const string of Object.keys(data).filter(x => typeof gw[x] == "string")) {
+            gw[string] = gw[string].replace(/\\"/g, '"');
+        };
+
+        return gw;
     }
     /**
-     * @param {Discord.Guild} guild
-     * @param {objectGW} data
+     * @param {{ guild: Guild, channel: TextChannel, message: Message }} data 
      */
-    end(guild, data) {
-        const channel = guild.channels.cache.get(data.channel_id);
-        if (!channel) return;
+    async roll(gw, data) {
+        if (gw.participants.length == 0) return [];
+        let participants = [];
 
-        this.db.query(`SELECT user_id FROM gw_participants WHERE message_id="${data.message_id}" AND guild_id="${guild.id}"`, (err, req) => {
-            if (err) return channel.send({ content: "Une erreur s'est produite lors de la récupération des participants." }) & console.log(err);
+        for (const id of gw.participants) {
+            const member = await data.guild.members.fetch(id);
+            if (!member) return console.log('hey');
 
-            const users = req
-            this.db.query(`UPDATE giveaways SET ended="1" WHERE message_id="${data.message_id}" AND guild_id="${guild.id}"`, (e) => {
-                if (e) console.log(e);
-            });
-            
-            if (users.length === 0) return functions.lineReply(data.message_id, channel, `Je n'ai pu trouver aucun gagnant pour ce giveaway.`);
-            
-            let winners = [];
-            for (let i = 0; i < data.winnerCount; i++) {
-                const possible = users.filter(x => !winners.includes(x));
-                if (!possible.length === 0) return;
-
-                const index = Math.floor(Math.random() * users.length);
-                const id = users[index].user_id;
-
-                winners.push(id);
-            };
-
-            let pluriel = data.winnerCount > 1;
-
-            this.edit(data, guild);
-            functions.lineReply(data.message_id, channel, `Giveaway terminé ! L${pluriel ? 'es' : 'e'} gagnan${pluriel ? 'ts sont' : "t est"} ${winners.map(u => `<@${u}>`).join(', ')} !\n${pluriel ? 'vous avez' : 'tu as'} gagné **${data.reward}**`);
-
-        });
-    }
-    /**
-     * @param {Discord.Guild} guild 
-     * @param {objectGW} data 
-     */
-    reroll (guild, data) {
-        const channel = guild.channels.cache.get(data.channel_id);
-        if (!channel) return;
-
-        this.db.query(`SELECT user_id FROM gw_participants WHERE message_id="${data.message_id}" AND guild_id="${guild.id}"`, (err, req) => {
-            if (err) return channel.send({ content: "Une erreur s'est produite lors de la récupération des participants." }) & console.log(err);
-
-            const users = req
-            
-            if (users.length === 0) return functions.lineReply(data.message_id, channel, `Je n'ai pu trouver aucun gagnant pour ce giveaway.`);
-            
-            let winners = [];
-            for (let i = 0; i < data.winnerCount; i++) {
-                const possible = users.filter(x => !winners.includes(x));
-                if (!possible.length === 0) return;
-
-                const index = Math.floor(Math.random() * users.length);
-                const id = users[index].user_id;
-
-                winners.push(id);
-            };
-
-            let pluriel = data.winnerCount > 1;
-
-            this.edit(data, guild);
-            functions.lineReply(data.message_id, channel, `L${pluriel ? 'es' : 'e'} nouvea${pluriel ? 'ux' : 'u'} gagnan${pluriel ? 'ts sont' : "t est"} ${winners.map(u => `<@${u}>`).join(', ')} !\n${pluriel ? 'vous avez' : 'tu as'} gagné **${data.reward}**`);
-        });
-    }
-    /**
-     * @param {Discord.TextChannel} channel
-     * @param {Discord.User} user
-     */
-    list(channel, user) {
-        const guild = channel.guild;
-
-        this.db.query(`SELECT * FROM giveaways WHERE guild_id="${guild.id}" AND endsAt>"${Date.now()}"`, (err, req) => {
-            if (err) return channel.send({ embeds: [ embeds.errorSQL(user) ] });
-
-            if (req.length === 0) return channel.send({ embeds: [ embeds.classic(user)
-                .setTitle("Pas de giveaways")
-                .setDescription(`Il n'y a aucun giveaway en cours sur ce serveur.`)
-                .setColor('#ff0000')
-            ] });
-    
-            const original = require('./functions').package().embeds.classic(user)
-                .setTitle("Giveaways")
-                .setDescription(`Voici la liste des giveaways sur \`${guild.name}\`.\nIl y a actuellement **${req.length}** giveawa${req.length > 1 ? "ys" : "y"} en cours sur le serveur.`)
-                .setColor('ORANGE')
-            
-            if (req.length > 5) {
-                let now = original;
-                
-                let embeds = [];
-                let pile = false;
-                let count = 0;
-                
-                for (let i = 0; i < req.length; i++) {
-                    const warn = req[i];
-                    
-                    now.addField(`Giveaway`, `Offert par <@${warn.hoster_id}>\n> Récompense: \`${warn.reward}\`\n> Finit: ${moment(parseInt(warn.endsAt)).format('DD/MM/YYYY - hh:mm:ss')}\nDans <#${warn.channel_id}> avec ${warn.winnerCount} gagnan${warn.winnerCount > 1 ? "ts" : "t"}`, false);
-    
-                    pile = false;
-    
-                    count++;
-                    if (count === 5) {
-                        count=0;
-                        pile = true;
-                        embeds.push(now);
-    
-                        now = null;
-                        now = embeds.classic(user)
-                            .setTitle("Giveaways")
-                            .setDescription(`Voici la liste des giveaways sur \`${guild.name}\`.`)
-                            .setColor('ORANGE')
-    
-                    }
+            participants.push(id);
+            if (gw.bonus_roles?.length > 0) {
+                for (const rId of gw.bonus_roles) {
+                    if (member.roles.cache.has(rId)) participants.push(id);
                 };
-    
-                if (!pile) embeds.push(now);
-                
-                functions.pagination(user, channel, embeds, `giveaways`);
-            } else {
-                const embed = original;
-    
-                req.forEach((warn) => {    
-                    embed.addField(`Giveaway`, `Offert par <@${warn.hoster_id}>\n> Récompense: \`${warn.reward}\`\n> Finit: ${moment(parseInt(warn.endsAt)).format('DD/MM/YYYY - hh:mm:ss')}\nDans <#${warn.channel_id}> avec ${warn.winnerCount} gagnan${warn.winnerCount > 1 ? "ts" : "t"}`, false);
-                });
-    
-                channel.send({ embeds: [ embed ] });
+            };
+        };
+
+        if (participants.length == 0) return [];
+
+        let winners = [];
+        const roll = () => {
+            let winner = participants[Math.floor(Math.random() * participants.length)];
+            if (winner) {
+                participants = participants.filter(x => x !== winner);
+            };
+            return winner;
+        };
+
+        let i = 0;
+        let end = false;
+        while (end == false) {
+            i++;
+            let winner = roll();
+
+            if (winner) winners.push(winner);
+            if (participants.length == 0 || i == gw.winnerCount) end = true;
+        };
+
+        return winners;
+    }
+    /**
+     * @param {String} messageId 
+     * @returns { "no giveaway" | "no guild" | "no channel" | "no message" | "no winner" | "not ended" | String[] }
+     */
+    async reroll(messageId) {
+        let gw = this.ended.get(messageId);
+        if (!gw && this.giveaways.has(messageId)) return 'not ended';
+        if (!gw) return 'no giveaway';
+
+
+        const guild = this.client.guilds.cache.get(gw.guild_id);
+        if (!guild) return 'no guild';
+
+        const channel = guild.channels.cache.get(gw.channel_id);
+        if (!channel) return 'no channel';
+
+        const message = await channel.messages.fetch(messageId);
+        if (!message) return 'no message';
+
+        let winners = await this.roll(gw, { guild, channel, message });
+        gw.winners = winners;
+        const embed = embeds.ended(gw, winners);
+
+        message.edit({ embeds: [ embed ] }).catch(() => {});
+        channel.send({ reply: { messageReference: message }, embeds: [ embeds.winners(winners, this.getUrl(gw)) ] }).catch(() => {});
+        
+        let sql = this.createQuery(this.formatToSql(gw), true);
+        this.db.query(sql, (err) => {
+            if (err) throw err;
+        });
+        
+        this.ended.set(messageId, gw);
+
+        return winners;
+    }
+    /**
+     * @param {String} messageId 
+     * @returns { "no giveaway" | "no guild" | "no channel" | "no message" | "no winner" | "already ended" | String[] }
+     */
+    async end(messageId) {
+        let gw = this.giveaways.get(messageId);
+        if (!gw && this.ended.has(messageId)) return 'already ended';
+        if (!gw) return 'no giveaway'
+
+        const guild = this.client.guilds.cache.get(gw.guild_id);
+        if (!guild) return 'no guild';
+
+        const channel = guild.channels.cache.get(gw.channel_id);
+        if (!channel) return 'no channel';
+
+        const message = await channel.messages.fetch(messageId);
+        if (!message) return 'no message';
+
+        if (!gw.ended == false) {
+            gw = this.formatToObject(gw);
+        };
+
+        let winners = await this.roll(gw, { guild, channel, message });
+        const embed = embeds.ended(gw, winners);
+
+        gw.winners = winners;
+        message.edit({ embeds: [ embed ], components: [] }).catch((e) => {console.log(e)});
+        channel.send({ reply: { messageReference: message }, embeds: [ embeds.winners(winners, this.getUrl(gw)) ] }).catch((e) => {console.log(e)});
+        gw.ended = true;
+
+        let sql = this.createQuery(this.formatToSql(gw), true);
+        this.db.query(sql, (err) => {
+            if (err) throw err;
+        });
+
+        this.giveaways.delete(messageId);
+        this.ended.set(messageId, gw);
+
+        return winners;
+    }
+    checkGw() {
+        this.giveaways.forEach((gw) => {
+            if (!this.timeout.has(gw.message_id)) {
+                setTimeout(() => {
+                    this.end(gw.message_id);
+                    this.timeout.delete(gw.message_id);
+                }, gw.endsAt - Date.now());
+                this.timeout.set(gw.message_id, gw);
             }
         })
     }
-    updateAll(guild) {
-        this.db.query(`SELECT * FROM giveaways WHERE guild_id="${guild.id}" AND ended="0"`, (err, req) => {
-            if(err) return console.log(err);
+    addParticipation(userId, data) {
+        let gw = data;
+        gw.participants.push(userId);
 
-            req.forEach((x) => {
-                if (parseInt(x.endsAt) <= Date.now()) {
-                    this.end(guild, x);
-                } else {
-                    this.edit(x, guild);
+        let sql = this.createQuery(this.formatToSql(gw), true);
+        
+        this.db.query(sql, (err) => {
+            if (err) throw err;
+        });
+        
+        this.giveaways.set(gw.message_id, gw);
+        return gw;
+    }
+    removeParticipation(userId, data) {
+        let gw = data;
+        let index = gw.participants.indexOf(userId);
+        gw.participants.splice(index, 1);
+
+        let sql = this.createQuery(this.formatToSql(gw), true);
+        this.db.query(sql, (err) => {
+            if (err) throw err;
+        });
+
+        this.giveaways.set(gw.message_id, gw);
+        return gw;
+    }
+    setOnInteraction() {
+        this.client.on('interactionCreate', /** @param {ButtonInteraction} interaction */ (interaction) => {
+            if (interaction.isButton()) {
+                if (interaction.customId == 'gw-participate') {
+                    let gw = this.giveaways.get(interaction.message.id);
+                    if (!gw) return;
+
+                    if (gw.participants.includes(interaction.user.id)) return interaction.reply({ embeds: [ embeds.alreadyParticipate(this.getUrl(gw)) ], ephemeral: true }).catch(() => {});
+
+                    const check = this.checkIfValidEntry(interaction.member, gw);
+                    interaction.reply({ embeds: [ check.embed ], ephemeral: true }).catch(() => {});
+
+                    if (check.state == true) {
+                        gw = this.addParticipation(interaction.user.id, gw);
+                        
+                        let dataset = {
+                            reward: gw.reward,
+                            winnerCount: gw.winnerCount,
+                            participants: JSON.parse(gw.participants),
+                            winners: JSON.parse(gw.winners),
+                            requiredRoles: JSON.parse(gw.required_roles),
+                            deniedRoles: JSON.parse(gw.denied_roles),
+                            bonusRoles: JSON.parse(gw.bonus_roles),
+                            time: parseInt(gw.endsAt) - Date.now(),
+                            hosterId: gw.hoster_id
+                        };
+
+                        interaction.message.edit({ embeds: [ embeds.giveaway(dataset) ] }).catch(() => {});
+                    };
+                };
+                if (interaction.customId == 'gw-unparticipate') {
+                    let gw = this.giveaways.get(interaction.message.id);
+                    if (!gw) return;
+
+                    if (!gw.participants.includes(interaction.user.id)) return interaction.reply({ embeds: [ embeds.notParticipated(this.getUrl(gw)) ], ephemeral: true }).catch(() => {});
+                    gw = this.removeParticipation(interaction.user.id, gw);
+
+                    let dataset = {
+                        reward: gw.reward,
+                        winnerCount: gw.winnerCount,
+                        participants: gw.participants,
+                        winners: gw.winners,
+                        requiredRoles: gw.required_roles,
+                        bonusRoles: gw.bonus_roles,
+                        deniedRoles: gw.denied_roles,
+                        time: Date.now() - parseInt(gw.date),
+                        channel: interaction.channel,
+                        hosterId: gw.hoster_id
+                    };
+
+                    interaction.message.edit({ embeds: [ embeds.giveaway(this.formatToObject(dataset)) ] }).catch(() => {});
+                    interaction.reply({ embeds: [ embeds.removeParticipation(this.getUrl(gw)) ] }).catch(() => {});
                 }
-            });
+            };
         });
     }
-    init() {
-        this.client.on('interactionCreate', (interaction) => {
-            if (!interaction.isButton()) return;
+    /**
+     * @param {{ guildId: String, messageId: String }} data
+     * @description Search a specific giveaway in the server
+     * @returns {{reward: String, hoster_id: String, guild_id: String, channel_id: String, message_id: String, winnerCount: Number, winners: String[], ended: Boolean, participants: String[], required_roles: String[], bonus_roles: String[], denied_roles: String[], endsAt: Number}}
+     */
+    fetch(data) {
+        let id = data.messageId;
+        let gId = data.guildId;
+        if (!id || !gId) return 'invalid data';
 
-            if (!interaction.customId === 'giveaway-participate') return;
+        let gw = this.giveaways.find(x => x.guild_id == gId && x.message_id == id);
+        if (!gw) gw = this.ended.find(x => x.guild_id == gId && x.message_id == id);
 
-            this.db.query(`SELECT guild_id FROM giveaways WHERE guild_id="${interaction.guild.id}" AND channel_id="${interaction.channel.id}" AND message_id="${interaction.message.id}" AND ended="0"`, (err, req) => {
-                if (err) return interaction.reply({ embeds: [ embeds.errorSQL(interaction.user) ], ephemeral: true }) & console.log(err);
-                const data = req[0];
+        if (!gw) return 'giveaway not found';
+        return gw;
+    }
+    /**
+     * @description Returns the list of all giveaways in the server
+     * @param {String} guildId 
+     * @returns {{reward: String, hoster_id: String, guild_id: String, channel_id: String, message_id: String, winnerCount: Number, winners: String[], ended: Boolean, participants: String[], required_roles: String[], bonus_roles: String[], denied_roles: String[], endsAt: Number}[]}
+     */
+    list(guildId) {
+        if (!guildId) return 'invalid data';
 
-                if (!data) return;
+        let giveaways = [];
+        const notEnded = this.giveaways.filter(x => x.guild_id === guildId).toJSON();
+        const ended = this.ended.filter(x => x.guild_id === guildId).toJSON();
 
-                this.db.query(`SELECT user_id FROM gw_participants WHERE message_id="${interaction.message.id}" AND guild_id="${interaction.guild.id}" AND user_id="${interaction.user.id}"`, (error, request) => {
-                    if (error) return interaction.reply({ embeds: [ embeds.errorSQL(interaction.user) ], ephemeral: true }) & console.log(error);
+        giveaways = giveaways.concat(notEnded);
+        giveaways = giveaways.concat(ended);
 
-                    if (request.length === 0) {
-                        this.db.query(`INSERT INTO gw_participants (guild_id, channel_id, message_id, user_id) VALUES ("${interaction.guild.id}", "${interaction.channel.id}", "${interaction.message.id}", "${interaction.user.id}")`);
-                        interaction.reply({ content: `J'ai enregistré votre participation`, ephemeral: true });
-                        return;
-                    } else {
-                        this.db.query(`DELETE FROM gw_participants WHERE guild_id="${interaction.guild.id}" AND message_id="${interaction.message.id}" AND user_id="${interaction.user.id}"`);
-                        
-                        interaction.reply({ content: `J'annule votre participation à ce giveaway`, ephemeral: true });
-                    };
-                });
-            });
+        return giveaways;
+    }
+    delete(guildId, messageId) {
+        if (!guildId || !messageId) return 'invalid data';
+        const giveaway = this.fetch({ guildId, messageId });
+
+        if (!giveaway) return 'giveaway not found';
+
+        this.db.query(`DELETE FROM giveaways WHERE message_id="${messageId}"`, (err, req) => {
+            if (err) throw err;
+
+            this.fillCache();
         });
 
+        return 'deleted';
+    }
+    resetCache() {
+        this.giveaways = new Collection();
+        this.ended = new Collection();
+    }
+    fillCache() {
+        this.db.query(`SELECT * FROM giveaways`, (err, req) => {
+            if (err) throw err;
+            this.resetCache();
+
+            for (const RawGw of req) {
+                let gw = this.formatToObject(RawGw);
+
+                if (gw.ended == true || gw.date <= Date.now()) {
+                    this.ended.set(gw.message_id, gw);
+                } else {
+                    this.giveaways.set(gw.message_id, gw);
+                };
+            };
+        })
+    }
+    init() {
+        this.fillCache();
         setInterval(() => {
-            this.db.query(`SELECT * FROM giveaways WHERE ended="0"`, (err, req) => {
-                if (err) return console.log(err);
-
-                req.forEach(/**@param {objectGW} gw */(gw) => {
-                    const guild = this.client.guilds.cache.get(gw.guild_id);
-                    if (!guild) return;
-
-                    this.updateAll(guild);
-                });
-            });
+            this.checkGw();
         }, 10000);
+        this.setOnInteraction();
+
+        console.log(`Giveaways Manager is ready !`);
     }
 };
 
-module.exports = GiveawayManager;
+module.exports = GiveawaysManager;

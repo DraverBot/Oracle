@@ -23,7 +23,7 @@ module.exports = {
 
         interaction.reply({ embeds: [ package.embeds.classic(interaction.user)
             .setTitle("Récompense quotidienne")
-            .setDescription(`Vous récupérez **${reward}** ${package.configs.coins} grâce à votre récompense quotidienne`)
+            .setDescription(`Vous récupérez **${reward.toLocaleString('fr-DE')}** ${package.configs.coins} grâce à votre récompense hebdomadaire.`)
             .setColor(interaction.guild.me.displayHexColor)
         ] }).catch(() => {});
 

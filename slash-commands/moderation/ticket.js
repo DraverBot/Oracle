@@ -116,6 +116,44 @@ module.exports = {
                 name: 'reopen',
                 description: "Réouvre le ticket",
                 type: 'SUB_COMMAND'
+            },
+            {
+                name: 'modrole',
+                description: "Gère les rôles de modérateurs de tickets",
+                type: 'SUB_COMMAND_GROUP',
+                options: [
+                    {
+                        name: 'ajouter',
+                        type: 'SUB_COMMAND',
+                        description: "Ajoute un rôle de modérateur de tickets",
+                        options: [
+                            {
+                                name: "rôle",
+                                type: 'ROLE',
+                                description: "Rôle à ajouter",
+                                required: true
+                            }
+                        ]
+                    },
+                    {
+                        name: 'retirer',
+                        type: 'SUB_COMMAND',
+                        description: "Retirer un rôle de modérateur de tickets",
+                        options: [
+                            {
+                                name: "rôle",
+                                type: 'ROLE',
+                                description: "Rôle à retirer",
+                                required: true
+                            }
+                        ]
+                    },
+                    {
+                        name: "liste",
+                        description: "Affiche la liste des rôles de modérateurs de tickets",
+                        type: 'SUB_COMMAND'
+                    }
+                ]
             }
         ]
     },
@@ -123,7 +161,7 @@ module.exports = {
         dm: false,
         dev: false,
         permissions: [],
-        systems: [],
+        systems: [{name: "de tickets", value: "ticket_enable", state: true}],
         cd: 5
     },
     /**
@@ -148,6 +186,96 @@ module.exports = {
             return true;
         };
 
+        if (['ajouter', 'liste', 'retirer'].includes(subcommand)) {
+            await interaction.reply({ embeds: [ package.embeds.waitForDb(interaction.user) ] }).catch(() => {});
+            interaction.client.db.query(`SELECT ticket_roles FROM configs WHERE guild_id="${interaction.guild.id}"`, (err, req) => {
+                if (err) {
+                    functions.sendError(err, 'query fetch at /ticket modrole', interaction.user);
+                    interaction.editReply({ embeds: [ package.embeds.errorSQL(interaction.user) ] }).catch(() => {});
+                    return;
+                };
+                if (req.length > 0) req[0].ticket_roles = JSON.parse(req[0].ticket_roles);
+                // console.log(req[0]);
+    
+                if (subcommand == 'liste') {
+                    if (req[0].ticket_roles.length == 0) return interaction.editReply({ embeds: [ package.embeds.classic(interaction.user)
+                        .setTitle("Aucun rôle automatique")
+                        .setDescription(`Aucun rôle de modérateur de tickets n'a été configuré`)
+                        .setColor('#ff0000')
+                    ] }).catch(() => {});
+    
+                    const embed = package.embeds.classic(interaction.user)
+                        .setTitle("Rôles de modérateurs de tickets")
+                        .setDescription(`Les rôles configurés sur ${interaction.guild.name} en tant que modérateurs de tickets ${req[0].ticket_roles.length > 1 ? 'sont':'est'} :\n${req[0].ticket_roles.map(r => `<@&${r}>`).join(' ')}`)
+                        .setColor(interaction.member.displayHexColor)
+                    
+                    interaction.editReply({ embeds: [ embed ] }).catch(() => {});
+                };
+                if (subcommand == 'ajouter') {
+                    let role = interaction.options.getRole('rôle');
+                    if (role.position >= interaction.member.roles.highest.position) return interaction.editReply({ embeds: [ package.embeds.classic(interaction.user)
+                        .setTitle("🚫 Rôle trop haut")
+                        .setDescription(`Ce rôle est **supérieur** ou **égal** à vous dans la hiérarchie des rôles`)
+                        .setColor(role.hexColor)
+                    ] }).catch(() => {});
+    
+                    if (req[0].ticket_roles.includes(role.id)) return interaction.editReply({ embeds: [ package.embeds.classic(interaction.user)
+                        .setTitle("Rôle déjà configuré")
+                        .setDescription(`Le rôle <@&${role.id}> est déjà configuré sur ${interaction.guild.name}`)
+                        .setColor(role.hexColor)
+                    ] }).catch(() => {});
+
+                    req[0].ticket_roles.push(role.id)
+    
+                    interaction.client.db.query(`UPDATE configs SET ticket_roles='${JSON.stringify(req[0].ticket_roles)}' WHERE guild_id="${interaction.guild.id}"`, (er) => {
+                        if (er) {
+                            functions.sendError(er, 'query add at /autorole ajouter', interaction.user);
+                            interaction.editReply({ embeds: [ package.embeds.errorSQL(interaction.user) ] }).catch(() => {});
+                            return;
+                        };
+    
+                        interaction.editReply({ embeds: [ package.embeds.classic(interaction.user)
+                            .setTitle("Rôle configuré")
+                            .setDescription(`Le rôle <@&${role.id}> est maintenant un rôle de modérateurs de tickets`)
+                            .setColor(role.hexColor)
+                        ] }).catch(() => {});
+                        interaction.client.TicketsManager.loadCache();
+                    });
+                };
+                if (subcommand == 'retirer') {
+                    let role = interaction.options.getRole('rôle');
+                    if (role.position >= interaction.member.roles.highest.position) return interaction.editReply({ embeds: [ package.embeds.classic(interaction.user)
+                        .setTitle("🚫 Rôle trop haut")
+                        .setDescription(`Ce rôle est **supérieur** ou **égal** à vous dans la hiérarchie des rôles`)
+                        .setColor(role.hexColor)
+                    ] }).catch(() => {});
+    
+                    if (!req[0].ticket_roles.includes(role.id)) return interaction.editReply({ embeds: [ package.embeds.classic(interaction.user)
+                        .setTitle("Rôle non configuré")
+                        .setDescription(`Le rôle <@&${role.id}> n'est pas configuré sur ${interaction.guild.name}`)
+                        .setColor(role.hexColor)
+                    ] }).catch(() => {});
+
+                    let index = req[0].ticket_roles.indexOf(role.id);
+                    req[0].ticket_roles.splice(index, 1);
+
+                    interaction.client.db.query(`UPDATE configs SET ticket_roles='${JSON.stringify(req[0].ticket_roles)}' WHERE guild_id="${interaction.guild.id}"`, (er) => {
+                        if (er) {
+                            functions.sendError(er, 'query remove at /ticket modrole retirer', interaction.user);
+                            interaction.editReply({ embeds: [ package.embeds.errorSQL(interaction.user) ] }).catch(() => {});
+                            return;
+                        };
+    
+                        interaction.editReply({ embeds: [ package.embeds.classic(interaction.user)
+                            .setTitle("Rôle configuré")
+                            .setDescription(`Le rôle <@&${role.id}> n'est maintenant plus un rôle de modérateur de tickets`)
+                            .setColor(role.hexColor)
+                        ] }).catch(() => {});
+                        interaction.client.TicketsManager.loadCache();
+                    });
+                };
+            });
+        }
         if (subcommand == 'ticket') {
             let sujet = interaction.options.getString('sujet');
             tickets.createTicket({ guild: interaction.guild, user: interaction.user, sujet });

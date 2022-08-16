@@ -4,12 +4,12 @@ const package = functions.package();
 
 module.exports = {
     configs: {
-        name: 'contact',
-        description: "Prend contact avec mon développeur",
+        name: 'avis',
+        description: "Envoie votre avis sur le bot",
         options: [
             {
-                name: 'bug',
-                description: "Le bug à signaler",
+                name: 'avis',
+                description: "Votre avis",
                 type: 'STRING',
                 required: true,
                 autocomplete: false
@@ -27,13 +27,13 @@ module.exports = {
      * @param {Discord.CommandInteraction} interaction 
      */
     run: (interaction) => {
-        const bug = interaction.options.get('bug').value;
+        const avis = interaction.options.get('avis').value;
         const embed = package.embeds.classic(interaction.user)
-            .setTitle("Erreur")
-            .setDescription(`${interaction.user.username} ( ${interaction.user.id} ) a trouvé un bug sur Oracle :\n\`\`\`${bug}\`\`\``)
+            .setTitle("Avis")
+            .setDescription(`${interaction.user.username} ( ${interaction.user.id} ) vient de donner son avis sur Oracle :\n\`\`\`${avis}\`\`\``)
             .setColor('ORANGE')
         
-        interaction.client.channels.cache.get('954998495977291807').send({ embeds: [ embed ] }).catch(() => {});
-        interaction.reply({ content: `J'ai signalé ce bug à mes développeurs.` }).catch(() => {});
+        interaction.client.channels.cache.get('946079273335279676').send({ embeds: [ embed ] }).catch(() => {});
+        interaction.reply({ content: `Vous avez donné votre avis sur Oracle`, ephemeral: true }).catch(() => {});
     }
 }

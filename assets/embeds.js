@@ -1,5 +1,5 @@
 const emojis = require('./data/emojis.json');
-const { MessageEmbed, User, Message } = require('discord.js');
+const { MessageEmbed, User, Message, Interaction } = require('discord.js');
 const collections = require('./data/collects');
 const data = require('./data/data.json');
 
@@ -187,13 +187,13 @@ module.exports = {
         invalidLoto: (user, type) => {
             return generateBasic(user)
                 .setTitle("❌ Loto invalide")
-                .setDescription(`Il n'y a pas de loto sur le serveur.\n${type == 'participate' ? `Il n'y a pas de loto en cours.` : `Le loto en cours n'est pas terminé`}`)
+                .setDescription(`Il n'y a pas de loto sur le serveur.\n\n:warning:\n> Vous ne pouvez participer qu'a un loto en cours\n> Vous ne pouvez faire le tirage sur un loto terminé`)
                 .setColor('#ff0000')
         },
         invalidNumbers: (user) => {
             return generateBasic(user)
                 .setTitle("🚫 Nombres invalides")
-                .setDescription(`Les nombres que vous avez spécifié sont invalides.\n**Vérifiez que vous avez le même nombre de numéro que celui requis**.`)
+                .setDescription(`Les nombres que vous avez spécifié sont invalides.\n**Vérifiez que vous avez le même nombre de numéro que celui requis**.\n:warning: Vous ne pouvez pas jouer deux fois le même numéro`)
                 .setColor('#ff0000')
         },
         alreadyParticipate: (user) => {
@@ -226,14 +226,44 @@ module.exports = {
                 .setColor('#00ff00')
         },
         /**
-         * @param {{ numbers: Number[], complementaries: Number[], winners: [], user: User }} data 
+         * @param {{ numbers: Number[], complementaries: Number[], winners: [], user: User }} Edata 
          */
-        end: (data) => {
-            return generateBasic(data.user)
+        end: (Edata) => {
+            return generateBasic(Edata.user)
                 .setTitle('🎉 Tirage')
-                .setDescription(`**Numéro gagnants :** ${data.numbers.join(' ')}\n**Numéro complémentaires :** ${data.complementaries.join(' ')}
+                .setDescription(`**Numéro gagnants :** ${Edata.numbers.join(' ')}\n**Numéro complémentaires :** ${Edata.complementaries.join(' ')}
 
-${data.winners.length == 0 ? 'Pas de gagnants' : data.winners.map(w => `<@${w.user_id}> : ${x}`)}`)
+${Edata.winners.length == 0 ? 'Pas de gagnants' : Edata.winners.map(w => `<@${w.user_id}> : ${w.reward} ${data.coins}`).join('\n')}`)
+                .setColor('#00ee00')
+                .setFooter({ iconURL: undefined, text: `Les ${data.coins} ont été ajoutés au(x) gagnant(s)` })
+        },
+        started: (user, numbers, complementaries, reward, Rtime) => {
+            let time = ((parseInt(Rtime) + Date.now()) / 1000).toFixed(0);
+
+            return generateBasic(user)
+                .setTitle("🎉 Loto lancé")
+                .setDescription(`Le loto a été lancé !\nIl prendra fin le <t:${time}:F> ( <t:${time}:R> )\n\nPour participer il faut **${numbers}** numéro et **${complementaries}** numéro complémentaires.\n\nRécompense :\n${reward} ${data.coins}`)
+                .setColor('#ff0000')
+        }
+    },
+    giveaway: {
+        noGw: (user, id) => {
+            return generateBasic(user)
+                .setTitle("❌ Giveaway introuvable")
+                .setDescription(`Le giveaway avec l'identifiant \`${id}\` est introuvable.`)
+                .setColor('#ff0000')
+        },
+        alreadyEnded: (user) => {
+            return generateBasic(user)
+                .setTitle("❌ Giveaway terminé")
+                .setDescription(`Ce giveaway est déjà terminé`)
+                .setColor('#ff0000')
+        },
+        notEnded: (user) => {
+            return generateBasic(user)
+                .setTitle("❌ Giveaway en cours")
+                .setDescription(`Ce giveaway n'est pas terminé`)
+                .setColor('#ff0000')
         }
     }
 }

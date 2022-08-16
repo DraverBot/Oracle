@@ -385,7 +385,7 @@ module.exports = {
 
             const embed = package.embeds.classic(interaction.user)
                 .setTitle("Dés")
-                .setDescription(`Les dés on été lancés :\n\n\`${results.map(x => `${x}`).join(' + ')}\`\n> = ${results.reduce((a, b) => a + b)}`)
+                .setDescription(`Les dés ont été lancés :\n\n\`${results.map(x => `${x}`).join(' + ')}\`\n> = ${results.reduce((a, b) => a + b)}`)
                 .setColor('ORANGE')
             
             interaction.reply({ embeds: [ embed ] }).catch(() => {});

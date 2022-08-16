@@ -27,11 +27,26 @@ module.exports = {
             };
         }
 
-        client.db.query(`SELECT join_enable, join_channel, join_message, gban_enable FROM configs WHERE guild_id="${guild.id}"`, (err, req) => {
+        const addRoles = () => {
+            client.db.query(`SELECT role_id FROM roles_start WHERE guild_id="${guild.id}"`, (err, req) => {
+                if (err) {
+                    functions.sendError(err, 'query fetch at roles start', member.user);
+                    return;
+                };
+                (async() => {await guild.roles.fetch();})();
+                const roles = guild.roles.cache.filter(x => x.id !== guild.id && req.some(x => x.role_id==x.id));
+                if (roles.size == 0) return;
+
+                member.roles.add(roles).catch(() => {});
+            });
+        };
+        client.db.query(`SELECT join_enable, join_channel, join_message, gban_enable, roles_enable FROM configs WHERE guild_id="${guild.id}"`, (err, req) => {
             if (err) return console.log(err);
 
             const data = req[0];
             if (!data) return check(true);
+
+            if (data.roles_enable == "1") addRoles();
 
             if (data.join_enable == "0") return;
             check(data.gban_enable == '1');

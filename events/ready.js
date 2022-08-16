@@ -35,19 +35,19 @@ module.exports = {
             })
         };
         const loadSpecificsCooldowns = () => {
-            client.db.query(`SELECT * FROM cooldowns WHERE date >= "${Date.now()}"`, (err, req) => {
+            client.db.query(`SELECT * FROM cooldowns WHERE date > "${Date.now()}"`, (err, req) => {
                 if (err) throw err;
 
                 for (const cd of req) {
                     const dataset = cd;
-                    dataset.command = `/${dataset.command}`;
+                    dataset.command = `${dataset.command}`;
 
                     cooldowns.set(`${dataset.user_id}.${dataset.command}`, dataset);
                 }
             })
         };
         const managerBuilder = () => {
-            fs.readdirSync('./assets/managers').forEach((managerFileName) => {
+            fs.readdirSync('./assets/managers').filter(x => x.endsWith('.js')).forEach((managerFileName) => {
                 const file = require(`../assets/managers/${managerFileName}`);
 
                 const managerName = capitalize(managerFileName.split('.')[0]);
@@ -106,9 +106,9 @@ module.exports = {
         let statusIndex = 0;
         let status = [
             {name: 'la version ' + require('../assets/data/data.json').version, type: 'WATCHING'},
-            {name: `%users% utilisateurs`, type: 'WATCHING'},
+            {name: `%users% utilisateurs`, type: 'LISTENING'},
             {name: `%servers% serveurs`, type: 'WATCHING'},
-            {name: `Le préfixe ${default_prefix}`, type: 'WATCHING'}
+            {name: "Passage en slash commandes !", type: 'WATCHING'}
         ];
         
         setInterval(() => {

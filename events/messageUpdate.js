@@ -24,7 +24,7 @@ module.exports = {
                     },
                     {
                         name: "Après",
-                        value: b.content || '\u200b',
+                        value: a.content || '\u200b',
                         inline: false
                     }
                 )

@@ -10,11 +10,6 @@ module.exports = {
         description: "Giveaways",
         options: [
             {
-                name: 'liste',
-                description: "Affiche la liste des giveaways",
-                type: 'SUB_COMMAND'
-            },
-            {
                 name: 'create',
                 description: "Crée un giveaway",
                 type: 'SUB_COMMAND',
@@ -46,7 +41,25 @@ module.exports = {
                         required: false,
                         autocomplete: false,
                         description: "Le salon dans lequel aura lieu le giveaway"
-                    }
+                    },
+                    {
+                        name: "bonus",
+                        type: 'STRING',
+                        required: false,
+                        description: "Identifiants des rôles bonus (séparés par un espace)"
+                    },
+                    {
+                        name: "requis",
+                        type: 'STRING',
+                        required: false,
+                        description: "Identifiants des rôles requis (séparés par un espace)"
+                    },
+                    {
+                        name: "interdits",
+                        type: 'STRING',
+                        required: false,
+                        description: "Identifiants des rôles interdits (séparés par un espace)"
+                    },
                 ]
             },
             {
@@ -93,50 +106,51 @@ module.exports = {
         const client = interaction.client;
 
         const subCommand = interaction.options.getSubcommand();
-        if (subCommand === 'liste') {
-            client.GiveawayManager.list(interaction.channel, interaction.user);
-            interaction.reply({ content: "Voici la liste", ephemeral: true });
-        } else if (subCommand === 'create') {
+        if (subCommand === 'create') {
             const channel = interaction.options.get('salon') ? interaction.options.get('salon').channel : interaction.channel;
 
             const ms = require('ms');
 
             if (!ms(interaction.options.get('temps').value)) return interaction.reply({ embeds: [ package.embeds.invalidTime(interaction.user) ], ephemeral: true });
-            client.GiveawayManager.start(interaction.guild, channel, interaction.user, interaction.options.get('récompense').value, interaction.options.get('gagnants').value, ms(interaction.options.get('temps').value));
+            let bonus = interaction.options.getString('bonus');
+            let required = interaction.options.getString('requis');
+            let denied = interaction.options.getString('interdits');
+
+            if (bonus) bonus = bonus.split(' ');
+            if (required) required = required.split(' ');
+            if (denied) denied = denied.split(' ');
+            if (!bonus) bonus = [];
+            if (!required) required = [];
+            if (!denied) denied = [];
+
+            client.GiveawayManager.start({
+                reward: interaction.options.getString('récompense'),
+                winnerCount: interaction.options.get('gagnants').value,
+                hosterId: interaction.user.id,
+                channel: interaction.channel,
+                time: ms(interaction.options.get('temps').value),
+                bonusRoles: bonus,
+                requiredRoles: required,
+                deniedRoles: denied
+            });
 
             interaction.reply({ content: `Je lance un giveaway sur <#${channel.id}>`, ephemeral: true });
         } else if (subCommand === 'end') {
             let id = interaction.options.get('id').value;
             
-            client.db.query(`SELECT * FROM giveaways WHERE channel_id="${interaction.channel.id}" AND guild_id="${interaction.guild.id}" AND ended="0"`, (err, req) => {
-                if (err) return interaction.reply({ embeds: [ package.embeds.errorSQL(interaction.user) ], ephemeral: true });
-        
-                let gw = req.find(x => x.message_id === id);
-                if (!gw) return interaction.reply({ embeds: [ package.embeds.classic(interaction.user)
-                    .setTitle("Pas de giveaway")
-                    .setColor('#ff0000')
-                    .setDescription(`Je ne trouve pas de giveway avec l'id \`${id}\` qui n'est pas terminé dans <#${interaction.channel.id}>`)
-                ], ephemeral: true });
-        
-                client.GiveawayManager.end(interaction.guild, gw);
-                interaction.reply({ content: "Je met fin à ce giveaway", ephemeral: true });
-            });
+            const result = interaction.client.GiveawayManager.end(id);
+            if (result == 'already ended') return interaction.reply({ embeds: [ package.embeds.giveaway.alreadyEnded(interaction.user) ] }).catch(() => {});
+            if (['no giveaway', 'no guild', 'no channel', 'no message'].includes(result)) return interaction.reply({ embeds: [ package.embeds.giveaway.noGw(interaction.user, id) ] }).catch(() => {});
+
+            interaction.reply({ content: "Giveaway terminé", ephemeral: true }).catch(() => {});
         } else if (subCommand === 'reroll') {
             let id = interaction.options.get('id').value;
             
-            client.db.query(`SELECT * FROM giveaways WHERE channel_id="${interaction.channel.id}" AND guild_id="${interaction.guild.id}" AND ended="1"`, (err, req) => {
-                if (err) return interaction.reply({ embeds: [ package.embeds.errorSQL(interaction.user) ], ephemeral: true });
-        
-                let gw = req.find(x => x.message_id === id);
-                if (!gw) return interaction.reply({ embeds: [ package.embeds.classic(interaction.user)
-                    .setTitle("Pas de giveaway")
-                    .setColor('#ff0000')
-                    .setDescription(`Je ne trouve pas de giveway avec l'id \`${id}\` qui est terminé dans <#${interaction.channel.id}>`)
-                ], ephemeral: true });
-        
-                client.GiveawayManager.reroll(interaction.guild, gw);
-                interaction.reply({ content: "Je reroll ce giveaway", ephemeral: true });
-            });
+            const result = interaction.client.GiveawayManager.reroll(id);
+            if (result == 'not ended') return interaction.reply({ embeds: [ package.embeds.giveaway.notEnded(interaction.user) ] }).catch(() => {});
+            if (['no giveaway', 'no guild', 'no channel', 'no message'].includes(result)) return interaction.reply({ embeds: [ package.embeds.giveaway.noGw(interaction.user, id) ] }).catch(() => {});
+            
+            interaction.reply({ content: "Je reroll ce giveaway", ephemeral: true });
         }
     }
 }

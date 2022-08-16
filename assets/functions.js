@@ -464,7 +464,6 @@ module.exports = {
                 command: data.commandName,
                 date: data.time
             };
-            if (data.isSlash == true) dataset.command = `/${data.commandName}`;
 
             data.client.db.query(`INSERT INTO cooldowns (${Object.keys(dataset).join(', ')}) VALUES (${Object.values(dataset).map(x => `"${x}"`).join(', ')})`, (err) => {
                 if (err) console.log(err);

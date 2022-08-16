@@ -118,6 +118,25 @@ module.exports = {
                         type: 'CHANNEL'
                     }
                 ]
+            },
+            {
+                name: "décrire",
+                type: 'SUB_COMMAND',
+                description: "Configure la description d'un salon",
+                options: [
+                    {
+                        name: "salon",
+                        description: "Salon à décrire",
+                        type: 'CHANNEL',
+                        required: false
+                    },
+                    {
+                        name: "description",
+                        type: 'STRING',
+                        required: false,
+                        description: "Description à donner au salon (laisser vide pour réinitialiser)"
+                    }
+                ]
             }
         ]
     },
@@ -133,6 +152,24 @@ module.exports = {
      */
     run: (interaction) => {
         const subcommand = interaction.options.getSubcommand();
+
+        if (subcommand == "décrirer") {
+            let channel = interaction.options.getChannel('salon') ?? interaction.channel;
+            let description = interaction.options.getString('description');
+
+            if (channel.type !== 'GUILD_TEXT') return interaction.reply({ embeds: [ package.embeds.classic(interaction.user)
+                .setTitle("Salon invalide")
+                .setDescription(`Je ne peux modifier la description que d'un **salon textuel**${functions.random(10 == 2) ? ` (et aux dernières nouvelles, ${channel.name} n'en est pas un)`:''}`)
+                .setColor('#ff0000')
+            ] }).catch(() => {});
+
+            channel.setTopic(description ?? null).catch(() => {});
+            interaction.reply({ embeds: [ package.embeds.classic(interaction.user)
+                .setTitle("Description mise à jour")
+                .setDescription(`La description de <#${channel.id}> a été ${description ? `mise sur \`\`\`${description}\`\`\``:'réinitialisée'}`)
+                .setColor(interaction.guild.me.displayHexColor)
+            ] }).catch(() => {});
+        }
         if (subcommand == 'créer') {
             let name = interaction.options.getString('nom');
             let type = interaction.options.getString('type');
