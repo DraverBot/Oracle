@@ -4,6 +4,7 @@ const package = functions.package();
 module.exports = {
     event: 'messageCreate',
     execute: (message) => {
+        if (message.author.bot) return;
         if (message.mentions.users.has(message.client.user.id) && !message.mentions.everyone) {
             let splashes = require('../assets/data/splash.json').filter(x => !x.includes('weird'));
 

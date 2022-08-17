@@ -72,10 +72,33 @@ module.exports = {
                 channel: 'salon'
             };
 
+            let exemples = [];
+            for (const type of ['boolean', 'text', 'channel']) {
+                let selectedTypes = configs.data.filter(x => x.type == type);
+                let selected = selectedTypes[functions.random(selectedTypes.length, 0)];
+
+                if (functions.random(100, 0) >= 50) {
+                    exemples.push(selected);
+                } else {
+                    exemples.unshift(selected);
+                };
+            };
+            for (const exemple of exemples) {
+                let index = exemples.indexOf(exemple);
+                let data = {
+                    name: docTypes[exemple.type],
+                    value: `\`/config configurer paramètre: ${exemple.name} ${exemple.type == 'boolean' ? `binaire: ${functions.random(100, 0) >= 50 ? 'true':'false'}` : exemple.type == 'text' ? 'texte: Lorem ipsum' : `salon: #${interaction.guild.channels.cache.filter(x => ['GUILD_TEXT', 'GUILD_VOICE', 'GUILD_NEWS'].includes(x.type)).random()?.name ?? interaction.channel.name}`}\``,
+                    inline: false
+                };
+
+                exemples[index] = data;
+            };
+
             const embed = package.embeds.classic(interaction.user)
                 .setTitle("Paramètres")
                 .setDescription(`Voici la liste des paramètres configurables :\n${configs.data.map((conf) => `\`${conf.name}\` : ${conf.description} (type: [${types[conf.type]}](https://github.com/BotOracle/Documentation/blob/main/others/${docTypes[conf.type]}.md))`).join('\n')}`)
                 .setColor('ORANGE')
+                .addFields(exemples)
             
             interaction.reply({ embeds: [ embed ] }).catch(() => {});
         };

@@ -53,15 +53,21 @@ Finit <t:${(Date.now() / 1000).toFixed(0)}:R>`)
         return embed;
     },
     hasDeniedRoles: (deniedRoles, url) => {
+        let roles = deniedRoles;
+        if (typeof roles == 'string') roles = JSON.parse(roles);
+
         return new MessageEmbed()
             .setTitle("🚫 Accès refusé")
-            .setDescription(`L'accès à [**ce giveaway**](${url}) vous est refusé car vous avez un ou plusieurs de ces rôles :\n${deniedRoles.map(x => `<@&${x}>`).join(' ')}`)
+            .setDescription(`L'accès à [**ce giveaway**](${url}) vous est refusé car vous avez un ou plusieurs de ces rôles :\n${roles.map(x => `<@&${x}>`).join(' ')}`)
             .setColor('#ff0000')
     },
     missingRequiredRoles: (requiredRoles, url) => {
+        let roles = requiredRoles;
+        if (typeof roles == 'string') roles = JSON.parse(roles);
+
         return new MessageEmbed()
             .setTitle("🚫 Accès refusé")
-            .setDescription(`L'accès à [**ce giveaway**](${url}) vous est réfusé car vous n'avez pas un ou plusieurs de ces rôles :\n${requiredRoles.map(x => `<@&${x}>`).join(' ')}`)
+            .setDescription(`L'accès à [**ce giveaway**](${url}) vous est réfusé car vous n'avez pas un ou plusieurs de ces rôles :\n${roles.map(x => `<@&${x}>`).join(' ')}`)
             .setColor('#ff0000')
     },
     entryAllowed: (url) => {

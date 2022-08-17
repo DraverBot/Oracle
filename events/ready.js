@@ -108,7 +108,10 @@ module.exports = {
             {name: 'la version ' + require('../assets/data/data.json').version, type: 'WATCHING'},
             {name: `%users% utilisateurs`, type: 'LISTENING'},
             {name: `%servers% serveurs`, type: 'WATCHING'},
-            {name: "Passage en slash commandes !", type: 'WATCHING'}
+            {name: "Passage en slash commandes !", type: 'WATCHING'},
+            {name: "Mentionnez moi pour des informations", type: 'WATCHING'},
+            {name: "%members% membres", type: 'WATCHING'},
+            {name: 'une vidéo', type: 'STREAMING', url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'}
         ];
         
         setInterval(() => {
@@ -124,6 +127,13 @@ module.exports = {
             statut.name = statut.name
                 .replace('%users%', client.users.cache.size)
                 .replace('%servers%', client.guilds.cache.size);
+            
+            if (statut.name.includes('%members%')) {
+                (async() => {await client.guilds.fetch()});
+                let members = client.guilds.cache.map(x => x.memberCount).reduce((a, b) => a + b);
+
+                statut.name = statut.name.replace('%members%', members);
+            };
 
             client.user.setActivity(statut);
         }, 20000);

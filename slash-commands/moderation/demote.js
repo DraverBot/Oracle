@@ -59,7 +59,7 @@ module.exports = {
      */
     run: async(interaction) => {
         let member = interaction.options.getMember('utilisateur');
-        if (!functions.checkAllConditions(interaction.guild, interaction.channel, interaction.member, member, interaction)) return;
+        if (!functions.checkPerms({ member, interaction, mod: interaction.member, checkBotCompare: true, checkSelfUser: true, checkOwner: true })) return;
 
         let select = interaction.options.getSubcommand();
         await interaction.guild.roles.fetch();

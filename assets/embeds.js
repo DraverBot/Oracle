@@ -1,16 +1,18 @@
 const emojis = require('./data/emojis.json');
-const { MessageEmbed, User, Message, Interaction } = require('discord.js');
+const { MessageEmbed, User, Message, Interaction, GuildMember } = require('discord.js');
 const collections = require('./data/collects');
 const data = require('./data/data.json');
 
 /**
- * @param {User} user 
+ * @param {User | GuildMember} user 
  * @returns {MessageEmbed}
  */
 const generateBasic = (user) => {
+    let u = user;
+    if (u.guild) u = u.user;
     return new MessageEmbed()
         .setTimestamp()
-        .setFooter({ text: user.username.toString(), iconURL: user.avatarURL({dynamic: true})})
+        .setFooter({ text: u.username.toString(), iconURL: u.avatarURL({dynamic: true})})
 }
 
 module.exports = {
@@ -242,7 +244,7 @@ ${Edata.winners.length == 0 ? 'Pas de gagnants' : Edata.winners.map(w => `<@${w.
 
             return generateBasic(user)
                 .setTitle("🎉 Loto lancé")
-                .setDescription(`Le loto a été lancé !\nIl prendra fin le <t:${time}:F> ( <t:${time}:R> )\n\nPour participer il faut **${numbers}** numéro et **${complementaries}** numéro complémentaires.\n\nRécompense :\n${reward} ${data.coins}`)
+                .setDescription(`Le loto a été lancé !\nIl prendra fin le <t:${time}:F> ( <t:${time}:R> )\n\nPour participer il faut **${numbers}** numéro et **${complementaries}** numéro complémentaires.\n\nRécompense :\n${reward} ${parseInt(data.coins).toLocaleString('fr-DE')}`)
                 .setColor('#ff0000')
         }
     },

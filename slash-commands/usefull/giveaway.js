@@ -127,7 +127,7 @@ module.exports = {
                 reward: interaction.options.getString('récompense'),
                 winnerCount: interaction.options.get('gagnants').value,
                 hosterId: interaction.user.id,
-                channel: interaction.channel,
+                channel: channel,
                 time: ms(interaction.options.get('temps').value),
                 bonusRoles: bonus,
                 requiredRoles: required,

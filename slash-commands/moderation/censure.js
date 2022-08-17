@@ -34,7 +34,7 @@ module.exports = {
     run: (interaction) => {
         let member = interaction.options.getMember('membre');
         let reason = interaction.options.getString('raison');
-        if (!functions.checkAllConditions(interaction.guild, null, interaction.member, member, interaction)) return;
+        if (!functions.checkPerms({ member, interaction, mod: interaction.member, checkBotCompare: true, checkSelfUser: true, checkOwner: true })) return;
 
         const caracts = "0132456798#&@%*:/;,?!§^$*";
         let nickname = "";

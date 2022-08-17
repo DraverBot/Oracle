@@ -58,8 +58,6 @@ module.exports = {
      * @param {Discord.CommandInteraction} interaction
      */
     run: (interaction) => {
-        return interaction.reply({ embeds: [ new Discord.MessageEmbed({ title: 'Commande en développement', color: 'YELLOW' }) ] }).catch(() => {});
-
         const sub = interaction.options.getSubcommand();
         const manager = interaction.client.RemindsManager;
 
@@ -69,6 +67,14 @@ module.exports = {
             
             const remind = interaction.options.get('contenu').value;
             manager.createInteraction(interaction.user, interaction, ms(time), remind);
+        };
+        if (sub == 'liste') {
+            manager.list(interaction.user, interaction);
+        };
+        if (sub == 'retirer') {
+            let value = parseInt(interaction.options.get('numéro').value);
+
+            manager.removeInteraction(interaction.user, interaction, value);
         }
     }
 }

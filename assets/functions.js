@@ -238,6 +238,7 @@ module.exports = {
      * @param {Discord.GuildMember} modo 
      * @param {Discord.GuildMember} member 
      * @param {?Discord.CommandInteraction} interaction
+     * @deprecated Use `checkPerms` instead
      */
     checkAllConditions: (guild, channel, modo, member, interaction) => {
         const { compareRoles } = require('./functions.js')
@@ -289,6 +290,69 @@ module.exports = {
             ] });
             return false;
         };
+        return true;
+    },
+    /**
+     * @param {{ mod: Discord.GuildMember, member: Discord.GuildMember, interaction: Discord.CommandInteraction, ?checkBotCompare: Boolean ?checkSelfUser: Boolean, ?checkOwner: Boolean, ?checkBot: Boolean, ?all: Boolean }} data 
+     */
+    checkPerms(data) {
+        const send = (embed) => {
+            if (data.interaction.replied) {
+                data.interaction.editReply({ embeds: [ embed ], components: [] }).catch(() => {});
+            } else {
+                data.interaction.reply({ embeds: [ embed ] }).catch(() => {});
+            };
+        };
+        if (data.all == true) {
+            for (const x  of ['checkBot', 'checkOwner', 'checkBotCompare', 'checkSelfUser']) {
+                data[x] = true;
+            };
+        };
+
+        if (data.mod.roles.highest.position <= data.member.roles.highest.position) {
+            send(embeds.notEnoughHiger(data.mod.user, data.member));
+            return false;
+        };
+        if (data.checkBotCompare == true && data.member.roles.position >= data.member.guild.me.roles.highest.position) {
+            send(embeds.classic(data.mod.user)
+                .setTitle("Pas assez élevé")
+                .setDescription(`Oops, il semblerait que <@${data.member.id}> soit supérieur ou égal à moi dans la hiérarchie des rôles.`)
+                .setColor('#ff0000')
+            )
+            return false;
+        };
+        if (data.checkBot == true && data.member.user.bot == true) {
+            send(embeds.classic(data.mod)
+                .setTitle("Bot")
+                .setDescription(`<@${data.member.id}> est un bot (je ne peux tout de même pas blâmer un coupain)`)
+                .setColor('#ff0000')
+            );
+            return false;
+        };
+        if (data.checkOwner == true && data.member.id == data.member.guild.ownerId) {
+            send(embeds.classic(data.mod)
+                .setTitle("Propriétaire")
+                .setDescription(`<@${data.member.id}> est le propriétaire du serveur, vous n'allez quand même pas tenter un coup d'état ?`)
+                .setColor('#ff0000')
+            );
+            return false;
+        };
+        if (data.checkSelfUser == true && data.member.id == data.mod.id) {
+            send(embeds.classic(data.mod)
+                .setTitle("Narcissisme")
+                .setDescription(`La personne que vous ciblez ( <@${data.member.id}> ) est **vous**. Je suis sûr que vous n'êtes pas narcissique à ce point !`)
+                .setColor('#ff0000')
+            );
+            return false;
+        };
+        if (!data.member.moderatable) {
+            send(embeds.classic(data.mod)
+                .setTitle("Membre non-modérable")
+                .setDescription(`Je ne peux pas effectuer d'actions de modération sur <@${data.member.id}>`)
+                .setColor('#ff0000')
+            );
+            return false;
+        }
         return true;
     },
     /**

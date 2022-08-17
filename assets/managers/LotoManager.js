@@ -32,7 +32,7 @@ class LotoManager {
     createQuery(data, exists) {
         let sql = `INSERT INTO loto (${Object.keys(data).join(', ')}) VALUES (${Object.values(data).map(x => `'${x}'`).join(', ')})`;
 
-        if (exists == true) sql = `UPDATE loto SET ${Object.keys(data).map(x => `${x}='${data[x]}'`).join(', ')}`;
+        if (exists == true) sql = `UPDATE loto SET ${Object.keys(data).map(x => `${x}='${data[x]}'`).join(', ')} WHERE guild_id="${data.guild_id}"`;
 
         return sql;
     }
@@ -102,6 +102,7 @@ class LotoManager {
         if (!this.validArray(data.numbers) || !this.validArray(data.complementaries)) return 'invalid arrays';
         if (!this.validArrayCompare(data.complementaries, data.numbers)) return 'invalid compared';
 
+        if (typeof data.json == 'string') loto.json = JSON.parse(loto.json);
         if (loto.json.find(x => x.user_id == data.userId)) return 'user already exists';
 
         loto.json.push({

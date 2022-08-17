@@ -137,6 +137,25 @@ module.exports = {
                         description: "Description à donner au salon (laisser vide pour réinitialiser)"
                     }
                 ]
+            },
+            {
+                name: "identifier",
+                description: "Affiche l'identifiant d'un salon",
+                type: 'SUB_COMMAND',
+                options: [
+                    {
+                        name: "salon",
+                        description: "Salon à identifier",
+                        type: 'CHANNEL',
+                        required: false
+                    },
+                    {
+                        name: 'embed',
+                        description: "Affiche la réponse sous forme d'embed (plus compliqué pour copier/coller)",
+                        required: false,
+                        type: 'BOOLEAN'
+                    }
+                ]
             }
         ]
     },
@@ -153,7 +172,25 @@ module.exports = {
     run: (interaction) => {
         const subcommand = interaction.options.getSubcommand();
 
-        if (subcommand == "décrirer") {
+        if (subcommand == 'identifier') {
+            let channel = interaction.options.getChannel('salon') ?? interaction.channel;
+            let embed = interaction.options.getBoolean('embed') ?? false;
+
+            let id = channel.id;
+            let reply = {};
+            if (embed == true) {
+                reply.embeds = [ package.embeds.classic(interaction.user)
+                    .setTitle('Identifiant')
+                    .setDescription(`L'identifiant ${channel.type == 'GUILD_CATEGORY' ? "de la catégorie" : "du salon"} ${channel.type == "GUILD_TEXT" ? `<#${id}>`:channel.name} est \`${id}\``)
+                    .setColor('ORANGE')
+                ];
+            } else {
+                reply.content = `\`${id}\``;
+            };
+
+            interaction.reply(reply).catch(() => {});
+        };
+        if (subcommand == "décrire") {
             let channel = interaction.options.getChannel('salon') ?? interaction.channel;
             let description = interaction.options.getString('description');
 

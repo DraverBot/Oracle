@@ -54,11 +54,39 @@ class RemindsManger {
             })
         })
     }
-    list(user, channel) {
-        this.db.query(`SELECT * FROM reminds WHERE user_id="${user.id}" AND ended="0"`, (err, req) => {
-            if (err) return channel.send({ embeds: [ pack.embeds.errorSQL(user) ] });
+    removeInteraction(user, interaction, number) {
+        if (isNaN(number)) return interaction.reply({ content: pack.embeds.invalidNumber(user) }).catch(() => {});
+        
+        this.db.query(`SELECT * FROM reminds WHERE user_id="${user.id}" AND ended="0" ORDER BY createdAt DESC`, (err, req) => {
+            if (err) return interaction.reply({ embeds: [ pack.embeds.errorSQL(user) ] }).catch(() => {});
 
-            if (req.length === 0) return channel.send({ content: `Vous n'avez aucun rappel.` });
+            const index = number - 1;
+            if (!req[index]) return interaction.reply({ content: `Vous n'avez aucun rappel de numéro \`${number}\`` }).catch(() => {});
+
+            const date = req[index].createdAt;
+            this.db.query(`DELETE FROM reminds WHERE user_id="${user.id}" AND createdAt="${date}" AND ended="0"`, (e) => {
+                if (e) return interaction.reply({ embeds: [ pack.embeds.errorSQL(user) ] }).catch(() => {});
+
+                interaction.reply({ content: `Je supprime le rappel numéro \`${number}\`` }).catch(() => {});
+            });
+        });
+    }
+    /**
+     * @param {Discord.User} user 
+     * @param {Discord.TextChannel | Discord.CommandInteraction} channel 
+     */
+    list(user, channel) {
+        const fnt = (params) => {
+            if (channel.commandName) {
+                channel.reply(params).catch(() => {});
+            } else {
+                channel.send(params).catch(() => {});
+            };
+        };
+        this.db.query(`SELECT * FROM reminds WHERE user_id="${user.id}" AND ended="0"`, (err, req) => {
+            if (err) return fnt({ embeds: [ pack.embeds.errorSQL(user) ] });
+
+            if (req.length === 0) return fnt({ content: `Vous n'avez aucun rappel.` });
             if (req.length > 5) {
                 let now = pack.embeds.classic(user)
                     .setTitle("Rappels")
@@ -72,7 +100,7 @@ class RemindsManger {
                 for (let i = 0; i < req.length; i++) {
                     const warn = req[i];
                     
-                    now.addField(`${i + 1})Rappel`, `\`\`\`${warn.content}\`\`\`\n> ${moment(parseInt(warn.date)).fromNow()}`, false);
+                    now.addField(`${i + 1})Rappel`, `\`\`\`${warn.content}\`\`\`\n> <t:${moment(parseInt(warn.date)).unix()}:R>`, false);
     
                     pile = false;
     
@@ -92,8 +120,12 @@ class RemindsManger {
                 };
     
                 if (!pile) embeds.push(now);
-                
-                functions.pagination(user, channel, embeds, `rappels`);
+
+                if (channel.commandName) {
+                    functions.pagination(user, 'none', embeds, 'rappels', channel);
+                } else {
+                    functions.pagination(user, channel, embeds, `rappels`);
+                };
             } else {
                 const embed = pack.embeds.classic(user)
                     .setTitle("Rappels")
@@ -102,10 +134,10 @@ class RemindsManger {
     
                 req.forEach((warn) => {
                     const id = req.indexOf(warn) + 1;
-                    embed.addField(`${id}) Rappel`, `\`\`\`${warn.content}\`\`\`\n> ${moment(parseInt(warn.date)).fromNow()}`, false);
+                    embed.addField(`${id}) Rappel`, `\`\`\`${warn.content}\`\`\`\n> <t:${moment(parseInt(warn.date)).unix()}:R>`, false);
                 });
     
-                channel.send({ embeds: [ embed ] });
+                fnt({ embeds: [ embed ] });
             }
         })
     }

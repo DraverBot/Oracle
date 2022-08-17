@@ -38,7 +38,7 @@ module.exports = {
         const reason = interaction.options.get('raison').value;
 
         if (reason.includes('"')) return interaction.reply({ embeds: [ package.embeds.errorSQL(interaction.user) ] });
-        if (!functions.checkAllConditions(interaction.guild, interaction, interaction.member, member, interaction)) return;
+        if (!functions.checkPerms({ member, interaction, mod: interaction.member, checkBotCompare: true, checkSelfUser: true, checkOwner: true })) return;
 
         const kicked = package.embeds.classic(interaction.user)
             .setTitle("Expulsion")

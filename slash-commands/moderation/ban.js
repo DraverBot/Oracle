@@ -38,7 +38,7 @@ module.exports = {
         const reason = interaction.options.get('raison').value;
         if (reason.includes('"')) return interaction.reply({ embeds: [ package.embeds.guillement(interaction.user) ] });
 
-        if (!functions.checkAllConditions(interaction.guild, interaction.channel, interaction.member, member, interaction)) return;
+        if (!functions.checkPerms({ interaction, member, mod: interaction.member, checkBotCompare: true, checkOwner: true, checkSelfUser: true })) return;
 
         const banned = package.embeds.classic(interaction.user)
             .setTitle("Bannissement")

@@ -34,25 +34,20 @@ module.exports = {
      * @param {Discord.CommandInteraction} interaction 
      */
     run: (interaction) => {
-        const ephemeral = interaction.options.get('discret') ? interaction.options.get('discret').value : true;
+        const ephemeral = interaction.options.get('discret') ? interaction.options.get('discret').value : false;
 
         const commandName = interaction.options.get('commande').value;
         const commandList = require('../../assets/data/slashCommands');
 
-        let command;
-        Object.keys(commandList).forEach((key) => {
-            const test = commandList[key].find((x) => x.help.name === commandName.toLowerCase() || (x.help.aliases && x.help.aliases.includes(commandName.toLowerCase())));
-
-            if (test) command = test;
-        });
+        let command = commandList.get(commandName);
 
         if (!command || command.help.private || (command.help.appear !== undefined && command.help.appear === false)) return interaction.reply({ content: "Cette commande n'existe pas.", ephemeral: ephemeral });
 
         const perms = package.perms;
         
         const embed = package.embeds.classic(interaction.user)
-            .setTitle(`Commande ${command.name}`)
-            .setDescription(`**Description:** \`\`\`${command.help.description}\`\`\``)
+            .setTitle(`Commande ${command.configs.name}`)
+            .setDescription(`**Description:** \`\`\`${command.configs.description}\`\`\``)
             .addFields(
                 {
                     name: "Cooldown",
