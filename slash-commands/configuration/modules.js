@@ -83,7 +83,7 @@ module.exports = {
             );
         };
         if (subcommand == 'afficher') {
-            let data = modules.map(x => ({ name: x.name, value: interaction.client.ModulesManager.checkModule({ module: x.value, guildId: interaction.guild.id }) == true ? '✅ activé':'❌ désactivé', inline: false }));
+            let data = modules.map(x => ({ name: x.name, value: interaction.client.ModulesManager.checkModule({ module: x.value, guildId: interaction.guild.id }) == false ? '✅ activé':'❌ désactivé', inline: false }));
 
             const embed = package.embeds.classic(interaction.user)
                 .setTitle("Modules")
