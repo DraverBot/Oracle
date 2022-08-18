@@ -19,11 +19,11 @@ module.exports = {
 
             const reponse = package.embeds.classic(message.author)
                 .setTitle(splash)
-                .setDescription(`Bonjour ! Je suis fait en slash commandes, alors mon préfixe est (\`/\`) comme beaucoup d'autres bots !\n\nFaites \`/help\` pour obtenir de l'aide.\n\n:bulb: <@${message.client.user.id}> est désormais disponible en slash commands !\n> Si vous ne voyez pas mes slash commands, réinvitez moi par le lien de la commande \`/invite\`.`)
+                .setDescription(`Bonjour ! Je suis fait en slash commandes, alors mon préfixe est \`/\` (comme beaucoup d'autres bots !)\n\nFaites \`/help\` pour obtenir de l'aide.\n\n:bulb: <@${message.client.user.id}> est désormais disponible en slash commands !\n> Si vous ne voyez pas mes slash commands, réinvitez moi par le lien de la commande \`/invite\`.`)
                 .setColor(message.guild.me.displayHexColor)
                 .setAuthor({ name: message.guild ? message.guild.me.nickname ? message.guild.me.nickname :'Oracle' : "Oracle", iconURL: message.author.displayAvatarURL({ dynamic: true }) })
 
-            if (splash === "Click on the link") {
+            if (["Click on the link", "We finally published the source code !", "Don't click"].includes('splash')) {
                 reponse.setURL('https://www.youtube.com/watch?v=dQw4w9WgXcQ');
             }; 
             

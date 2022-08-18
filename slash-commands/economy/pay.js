@@ -4,7 +4,7 @@ const package = functions.package();
 
 module.exports = {
     help: {
-        systems: [{name: "d'économie", value: "economy_enable", state: true}],
+        systems: [],
         cd: 5,
         dm: false,
         dev: false,

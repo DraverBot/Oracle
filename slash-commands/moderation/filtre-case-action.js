@@ -20,7 +20,7 @@ module.exports = {
                     },
                     {
                         name: 'Avertissements',
-                        value: 'warn'
+                        value: 'avertissement'
                     },
                     {
                         name: 'Réduction au silence',

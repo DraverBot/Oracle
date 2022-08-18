@@ -26,9 +26,9 @@ module.exports = {
 
         const run = (prefix) => {
             const lowerContent = message.content.toLowerCase();
-            if (!lowerContent.startsWith(prefix) && !lowerContent.startsWith("gs")) return;
+            if (!lowerContent.startsWith(prefix)) return;
 
-            var args = message.content.trim().slice(lowerContent.startsWith('gs') ? 2 : prefix.length).split(' ');
+            var args = message.content.trim().slice(prefix.length).split(' ');
             const commandName = args.shift().toLowerCase();
 
             const next = () => {
@@ -42,7 +42,7 @@ module.exports = {
                         command = array.find(x => (x.name === commandName || (x.help.aliases && x.help.aliases.includes(commandName))));
                     };
                 });
-    
+                
                 if (!command) return;
     
                 const file = require(`../${command.path}`);
@@ -91,10 +91,10 @@ module.exports = {
                     };
     
                     suite();
-                })
-
+                });
             };
-            if (message.guild) {    
+            if (message.guild) {
+                next();
             } else {
                 next();
             }
@@ -104,7 +104,7 @@ module.exports = {
         if (message.guild) {
             client.db.query(`SELECT prefix FROM prefixes WHERE guild_id = "${message.guild.id}"`, (err, req) => {
                 if (err) return console.log(err);
-                prefix = req[0] ? req[0].prefix : require('./data/data.json').default_prefix;
+                prefix = req[0]?.prefix ?? require('./data/data.json').default_prefix;
 
                 run(prefix);
             });

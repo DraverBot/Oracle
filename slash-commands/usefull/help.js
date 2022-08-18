@@ -34,7 +34,10 @@ module.exports = {
             {name: 'Divers', emoji: '🎈', value: 'misc', description: "Commandes diverses"},
             {name: 'Fun', emoji: '🥳', value: 'fun', description: "Commandes d'amusement"},
             {name: 'Utilitaires', emoji: '⚙', description: "Commandes utiles", value: 'usefull'},
-            {name: "Économie", emoji: '🪙', description: "Commandes d'économie", value: 'economy'}
+            {name: "Économie", emoji: '🪙', description: "Commandes d'économie", value: 'economy'},
+            {name: 'Information', emoji: 'ℹ️', description: "Commandes d'information", value: 'information'},
+            {name: "Configuration", emoji: '🔨', description: "Commandes de configuration d'Oracle", value: 'configuration'},
+            {name: "Niveaux", emoji: '🆙', description: "Commandes de niveaux", value: 'levels'}
         ];
 
         correspondance.push({value: 'close', name: "Fermer", emoji: '❌', description: "Ferme le menu"});

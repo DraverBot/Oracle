@@ -7,7 +7,7 @@ module.exports = {
         cd: 5,
         dev: false,
         dm: false,
-        systems: [{name: "de niveau", value: "level_enable", state: true}],
+        systems: [],
         permissions: []
     },
     configs: {

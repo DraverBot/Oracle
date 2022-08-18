@@ -121,12 +121,6 @@
             "param": "level_message"
         },
         {
-            "name": "Système de niveaux",
-            "type": "boolean",
-            "description": "Active ou désactive le système de niveaux",
-            "param": "level_enable"
-        },
-        {
             "name": "Roles d'arrivée",
             "type": "boolean",
             "description": "Active ou désactive les rôles donnés à l'arrivée des membres",
@@ -149,12 +143,6 @@
             "type": "channel",
             "description": "Configure le salon de comptage",
             "param": "counting_channel"
-        },
-        {
-            "name": "Système d'économie",
-            "type": "boolean",
-            "description": "Active ou désactive le système d'économie",
-            "param": "economy_enable"
         },
         {
             "name": "Système de tickets",

@@ -102,7 +102,7 @@ class LotoManager {
         if (!this.validArray(data.numbers) || !this.validArray(data.complementaries)) return 'invalid arrays';
         if (!this.validArrayCompare(data.complementaries, data.numbers)) return 'invalid compared';
 
-        if (typeof data.json == 'string') loto.json = JSON.parse(loto.json);
+        if (typeof loto.json == 'string') loto.json = JSON.parse(loto.json);
         if (loto.json.find(x => x.user_id == data.userId)) return 'user already exists';
 
         loto.json.push({

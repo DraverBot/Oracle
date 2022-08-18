@@ -9,7 +9,7 @@ module.exports = {
         permissions: [],
         dm: false,
         dev: false,
-        systems: [{ name: "d'économie", value: "economy_enable", state: true }]
+        systems: [],
     },
     configs: {
         name: 'daily',

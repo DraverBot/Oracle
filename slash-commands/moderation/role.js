@@ -143,7 +143,7 @@ module.exports = {
                     {
                         name: "rôle",
                         description: "Rôle à identifier",
-                        type: 'CHANNEL',
+                        type: 'ROLE',
                         required: true
                     },
                     {

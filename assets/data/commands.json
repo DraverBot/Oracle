@@ -1,1 +1,117 @@
-{}
+{
+ ".devs": [
+  {
+   "name": "dev",
+   "help": {
+    "name": "dev",
+    "description": "dev",
+    "aliases": [],
+    "permissions": [],
+    "private": true,
+    "dm": true,
+    "cooldown": 0
+   },
+   "path": "./commands/.devs/dev.js"
+  },
+  {
+   "name": "eval",
+   "help": {
+    "name": "eval",
+    "private": true,
+    "exemples": [
+     "isNaN('-31');",
+     "message.channel.send('Hello');"
+    ],
+    "description": "Éxecute le code passé en arguments. Renvoie `undefined` si il n'y a pas de sortie",
+    "cooldown": 5,
+    "aliases": [],
+    "dm": true,
+    "permissions": []
+   },
+   "path": "./commands/.devs/eval.js"
+  },
+  {
+   "name": "exportdb",
+   "help": {
+    "name": "exportdb",
+    "description": "Exporte la base de données",
+    "aliases": [],
+    "permissions": [],
+    "private": true,
+    "dm": false,
+    "cooldown": 0
+   },
+   "path": "./commands/.devs/exportdb.js"
+  },
+  {
+   "name": "gban",
+   "help": {
+    "name": "gban",
+    "description": "Gère les gbans",
+    "aliases": [
+     "dev-ban"
+    ],
+    "permissions": [],
+    "private": true,
+    "dm": false,
+    "cooldown": 0
+   },
+   "path": "./commands/.devs/gban.js"
+  },
+  {
+   "name": "sendglobalmail",
+   "help": {
+    "name": "sendglobalmail",
+    "description": "Envoie un mail à tous les utilisateurs",
+    "aliases": [],
+    "permissions": [],
+    "private": true,
+    "dm": false,
+    "cooldown": 10
+   },
+   "path": "./commands/.devs/sendglobalmail.js"
+  },
+  {
+   "name": "sql",
+   "help": {
+    "name": "sql",
+    "description": "Fait une requete sql",
+    "aliases": [
+     "mysql"
+    ],
+    "permissions": [],
+    "private": true,
+    "dm": true,
+    "cooldown": 0
+   },
+   "path": "./commands/.devs/sql.js"
+  },
+  {
+   "name": "switch",
+   "help": {
+    "name": "switch",
+    "description": "Alterne beta/finale",
+    "aliases": [],
+    "permissions": [],
+    "private": true,
+    "dm": false,
+    "cooldown": 0
+   },
+   "path": "./commands/.devs/switch.js"
+  },
+  {
+   "name": "test",
+   "help": {
+    "name": "test",
+    "description": "Test",
+    "private": true,
+    "aliases": [
+     "tset"
+    ],
+    "permissions": [],
+    "dm": false
+   },
+   "path": "./commands/.devs/test.js"
+  }
+ ]
+}

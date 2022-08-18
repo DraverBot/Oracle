@@ -98,7 +98,8 @@ module.exports = {
                 };
             
                 if (interaction.customId === 'select') {
-                    const msgCollector = channel.createMessageCollector({ filter: (m) => m.author.id == user.id , time: 120000});
+                    let channelCollector = (channel !== 'none' ? interaction.channel : channel);
+                    const msgCollector = channelCollector.createMessageCollector({ filter: (m) => m.author.id == user.id , time: 120000});
  
                     var trash = new Discord.Collection();
                     
@@ -118,9 +119,9 @@ module.exports = {
                         };
  
                         let number = parseInt(m.content);
-                        if (isNaN(number)) return msg.channel.send({ embeds: [ embeds.invalidNumber(user) ] }).then(x => trash.set(x.id, x));
+                        if (isNaN(number)) return msg.channelCollector.send({ embeds: [ embeds.invalidNumber(user) ] }).then(x => trash.set(x.id, x));
                         number--;
-                        if (number < 0 || number > pages.length) return channel.send({ content: 'Cette page n\'existe pas' }).then(x => trash.set(x.id, x));
+                        if (number < 0 || number > pages.length) return channelCollector.send({ content: 'Cette page n\'existe pas' }).then(x => trash.set(x.id, x));
  
                         const selected = pages[number];
  
@@ -177,8 +178,8 @@ module.exports = {
     },
     getNumbersEmoji: () => {
         return [
-            '0️⃣', '1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣', '9️⃣'
-        ]
+            '0️⃣', '1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣', '9️⃣', '🔟'
+        ];
     },
    /**
     * @returns {Number}
@@ -308,8 +309,9 @@ module.exports = {
                 data[x] = true;
             };
         };
+        let owner = data.member.id == data.member.guild.ownerId;
 
-        if (data.mod.roles.highest.position <= data.member.roles.highest.position) {
+        if (data.mod.roles.highest.position <= data.member.roles.highest.position && !owner) {
             send(embeds.notEnoughHiger(data.mod.user, data.member));
             return false;
         };
@@ -329,7 +331,7 @@ module.exports = {
             );
             return false;
         };
-        if (data.checkOwner == true && data.member.id == data.member.guild.ownerId) {
+        if (data.checkOwner == true && owner) {
             send(embeds.classic(data.mod)
                 .setTitle("Propriétaire")
                 .setDescription(`<@${data.member.id}> est le propriétaire du serveur, vous n'allez quand même pas tenter un coup d'état ?`)

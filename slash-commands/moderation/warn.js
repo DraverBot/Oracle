@@ -39,7 +39,7 @@ module.exports = {
 
         if (!functions.checkPerms({ member, interaction, mod: interaction.member, checkBotCompare: true, checkSelfUser: true, checkOwner: true })) return;
 
-        functions.addCase(interaction.guild.id, member.id, interaction.user.id, reason, 'warn');
+        functions.addCase(interaction.guild.id, member.id, interaction.user.id, reason, 'avertissement');
         const warn = package.embeds.classic(interaction.user)
             .setTitle("Avertissement")
             .setColor('#ff0000')

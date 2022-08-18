@@ -36,8 +36,32 @@ module.exports = {
         await interaction.channel.bulkDelete(number).catch(() => {});
         interaction.reply({ embeds: [ package.embeds.classic(interaction.user)
             .setTitle("✅ Messages supprimés")
-            .setDescription(`**${number}** message${number > 1 ? 's a été supprimé':' ont été supprimés'}.`)
+            .setDescription(`**${number}** message${number > 1 ? 's ont été supprimés':' a été supprimé'}.`)
             .setColor('#00ff00')
         ] }).catch(() => {});
+
+        const logEmbed = package.embeds.classic(interaction.user)
+            .setTitle("Messages supprimés")
+            .setDescription(`**${number}** message${number > 1 ? 's ont été supprimés' : ' a été supprimé'}.`)
+            .addFields(
+                {
+                    name: "Modérateur",
+                    value: `<@${interaction.user.id}> ( ${interaction.user.tag} \`${interaction.user.id}\` )`,
+                    inline: true
+                },
+                {
+                    name: "Salon",
+                    value: `<#${interaction.channel.id}> ( ${interaction.channel.name} \`${interaction.channel.id}\` )`,
+                    inline: true
+                },
+                {
+                    name: "Messages",
+                    value: `${number} message${number > 1 ? 's':''}`,
+                    inline: true
+                }
+            )
+            .setColor('#ff0000')
+        
+        functions.log(interaction.guild, logEmbed);
     }
 }

@@ -19,6 +19,8 @@ module.exports = {
             fs.readdirSync('./slash-commands').forEach((dir) => {
                 fs.readdirSync(`./slash-commands/${dir}`).filter((x) => x.endsWith('.js')).forEach((fileName) => {
                     const file = require(`../slash-commands/${dir}/${fileName}`);
+
+                    if (commands.has(file.configs.name)) throw `command ${file.configs.name} already exists`;
     
                     if (file.guild) {
                         client.application.commands.create(file.configs, file.guild).catch((e) => console.log(e));

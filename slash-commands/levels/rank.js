@@ -27,7 +27,7 @@ module.exports = {
         dm: false,
         dev: false,
         permissions: [],
-        systems: [{name: 'de niveaux', value: 'level_enable', state: true}],
+        systems: [],
         cd: 5
     },
     /**
@@ -49,17 +49,17 @@ module.exports = {
                 .addFields(
                     {
                         name: "Niveau",
-                        value: `Niveau **${r[0].level}**`,
+                        value: `Niveau **${r[0].level.toLocaleString('fr-DE')}**`,
                         inline: false
                     },
                     {
                         name: "Messages",
-                        value: `Messages totaux : ${r[0].total}`,
+                        value: `Messages totaux : ${r[0].total.toLocaleString('fr-DE')}`,
                         inline: false
                     },
                     {
                         name: 'Messages restants',
-                        value: `**${parseInt(r[0].objectif) - parseInt(r[0].messages)} messages** restants avant de passer au niveau supérieur`,
+                        value: `**${(parseInt(r[0].objectif) - parseInt(r[0].messages)).toLocaleString('fr-DE')} messages** restants avant de passer au niveau supérieur`,
                         inline: false
                     }
                 )

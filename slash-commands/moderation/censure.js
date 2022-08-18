@@ -34,7 +34,7 @@ module.exports = {
     run: (interaction) => {
         let member = interaction.options.getMember('membre');
         let reason = interaction.options.getString('raison');
-        if (!functions.checkPerms({ member, interaction, mod: interaction.member, checkBotCompare: true, checkSelfUser: true, checkOwner: true })) return;
+        if (!functions.checkPerms({ member, interaction, mod: interaction.member, all: true })) return;
 
         const caracts = "0132456798#&@%*:/;,?!§^$*";
         let nickname = "";
@@ -45,13 +45,13 @@ module.exports = {
             nickname+=caract;
         };
 
-        const embed = package.embeds.classic(message.author)
+        const embed = package.embeds.classic(interaction.user)
             .setTitle("Censure")
             .setColor('#ff0000')
             .addFields(
                 {
                     name: "Modérateur",
-                    value: `<@${message.author.id}> (${message.author.tag})`,
+                    value: `<@${interaction.user.id}> (${interaction.user.tag})`,
                     inline: true
                 },
                 {

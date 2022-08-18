@@ -23,17 +23,17 @@ fs.readdirSync('./events').filter(x => x.endsWith('.js')).forEach((fileName) => 
 module.exports.client = client;
 var obj = {};
 
-// fs.readdirSync('./commands').forEach((dirName) => {
-//     obj[dirName] = [];
-//     fs.readdirSync(`./commands/${dirName}`).filter((x) => x.endsWith('.js')).forEach((fileName) => {
-//         let commandFile = require(`./commands/${dirName}/${fileName}`);
-//         obj[dirName].push({
-//             name: commandFile.help.name,
-//             help: commandFile.help,
-//             path: `./commands/${dirName}/${fileName}`
-//         });
-//     });
-// });
+fs.readdirSync('./commands').filter(x => x.startsWith('.')).forEach((dirName) => {
+    obj[dirName] = [];
+    fs.readdirSync(`./commands/${dirName}`).filter((x) => x.endsWith('.js')).forEach((fileName) => {
+        let commandFile = require(`./commands/${dirName}/${fileName}`);
+        obj[dirName].push({
+            name: commandFile.help.name,
+            help: commandFile.help,
+            path: `./commands/${dirName}/${fileName}`
+        });
+    });
+});
 
 fs.writeFileSync(`./assets/data/commands.json`, JSON.stringify(obj, '', 1));
 

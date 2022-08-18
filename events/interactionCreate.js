@@ -20,7 +20,6 @@ module.exports = {
                 .setDescription(`Je n'ai pas trouvé cette commande parmi mes commandes.\nVeuillez patienter un peu.\n\n:bulb:\n> Si l'erreur persiste, contactez [mes développeurs](${require('../assets/data/data.json').support})`)
                 .setColor('ORANGE')
             ], ephemeral: true });*/
-
             if (cmd.guild) {
                 const file = require(`../private-slash-commands/${interaction.guild.id}-${interaction.commandName}.js`);
 
@@ -84,6 +83,16 @@ module.exports = {
                     return interaction.reply({ embeds: [ package.embeds.missingPermission(interaction.user, missing.map((x) => package.perms[x]).join(', ')) ] }).catch(() => {});
                 }
             };
+            if (interaction.guild && cmd.help.category !== 'configuration') {
+                const category = cmd.help.category;
+                const manager = interaction.client.ModulesManager;
+
+                if (!manager.checkModule({ module: category, guildId: interaction.guild.id })) return interaction.reply({ embeds: [ package.embeds.classic(interaction.user)
+                    .setTitle("Module désactivé")
+                    .setDescription(`Vous ne pouvez pas utiliser cette commande, car le module **${require('../assets/data/modules.json').find(x => x.value == category).name}** est désactivé sur ${interaction.guild.name}`)
+                    .setColor('#ff0000')
+                ] }).catch(() => {});
+            }
             const runCmd = () => {
                 const run = new Promise((resolve) => resolve(cmd.run(interaction)));
                 run.catch((error) => {

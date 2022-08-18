@@ -73,13 +73,13 @@ module.exports = {
 
         if (message.author.bot) return;
 
-        client.db.query(`SELECT level_enable, level_message, level_channel, economy_enable FROM configs WHERE guild_id="${message.guild.id}"`, (err, req) => {
+        client.db.query(`SELECT level_message, level_channel FROM configs WHERE guild_id="${message.guild.id}"`, (err, req) => {
             if (err) return console.log(err);
 
             if (req.length === 0) return;
             const gdata = req[0];
 
-            if (gdata.level_enable === 0) return;
+            if (!message.client.ModulesManager.checkModule({ module: 'levels', guildId: message.guild.id })) return;
             client.db.query(`SELECT * FROM levels WHERE guild_id="${message.guild.id}" AND user_id="${message.author.id}"`, (error, request) => {
                 if (error) return console.log(error);
 
@@ -108,7 +108,7 @@ module.exports = {
                         replace(/{user.level}/g, data.level);
 
                         channel.send({ content: text }).catch(() => {});
-                        if (gdata.economy_enable == "1") {
+                        if (message.client.ModulesManager.checkModule({ module: 'economy', guildId: message.guild.id })) {
                             message.client.CoinsManager.addCoins({ user_id: message.author.id, guild_id: message.guild.id }, parseInt(data.level) * 100);
                             channel.send({ embeds: [ package.embeds.classic(message.author)
                                 .setTitle("Récompense de niveau")

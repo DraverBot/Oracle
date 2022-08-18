@@ -98,7 +98,7 @@ class GiveawaysManager {
         let sql = `INSERT INTO giveaways (${Object.keys(data).join(', ')}) VALUES ( ${Object.values(data).map(x => x.toString().includes('[') ? `'${x}'` : (typeof x =="string") ? `"${x.replace(/"/g, '\\"')}"`: `"${x}"`).join(', ')} )`;
 
         if (exists == true) {
-            sql = `UPDATE giveaways SET ${Object.keys(data).map((x => `${x}=${(typeof data[x] == "string" && arrays.includes(x)) ? `'${data[x].replace(/"/g, '\\"')}'` : `"${data[x]}"`}`)).join(', ')}`;
+            sql = `UPDATE giveaways SET ${Object.keys(data).map((x => `${x}=${(typeof data[x] == "string" && arrays.includes(x)) ? `'${data[x].replace(/"/g, '\\"')}'` : `"${data[x]}"`}`)).join(', ')} WHERE message_id="${data.message_id}"`;
         };
 
         return sql;
@@ -264,6 +264,7 @@ class GiveawaysManager {
     }
     addParticipation(userId, data) {
         let gw = data;
+        if (typeof gw.participants == 'string') gw.participants = JSON.parse(gw.participants);
         gw.participants.push(userId);
 
         let sql = this.createQuery(this.formatToSql(gw), true);
@@ -277,6 +278,7 @@ class GiveawaysManager {
     }
     removeParticipation(userId, data) {
         let gw = data;
+        if (typeof gw.participants == 'string') gw.participants = JSON.parse(gw.participants);
         let index = gw.participants.indexOf(userId);
         gw.participants.splice(index, 1);
 

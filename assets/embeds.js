@@ -235,7 +235,7 @@ module.exports = {
                 .setTitle('🎉 Tirage')
                 .setDescription(`**Numéro gagnants :** ${Edata.numbers.join(' ')}\n**Numéro complémentaires :** ${Edata.complementaries.join(' ')}
 
-${Edata.winners.length == 0 ? 'Pas de gagnants' : Edata.winners.map(w => `<@${w.user_id}> : ${w.reward} ${data.coins}`).join('\n')}`)
+${Edata.winners.length == 0 ? 'Pas de gagnants' : Edata.winners.map(w => `<@${w.user_id}> : ${w.reward} ${data.coins.toLocaleString('fr-DE')}`).join('\n')}`)
                 .setColor('#00ee00')
                 .setFooter({ iconURL: undefined, text: `Les ${data.coins} ont été ajoutés au(x) gagnant(s)` })
         },
@@ -245,6 +245,13 @@ ${Edata.winners.length == 0 ? 'Pas de gagnants' : Edata.winners.map(w => `<@${w.
             return generateBasic(user)
                 .setTitle("🎉 Loto lancé")
                 .setDescription(`Le loto a été lancé !\nIl prendra fin le <t:${time}:F> ( <t:${time}:R> )\n\nPour participer il faut **${numbers}** numéro et **${complementaries}** numéro complémentaires.\n\nRécompense :\n${reward} ${parseInt(data.coins).toLocaleString('fr-DE')}`)
+                .addFields(
+                    {
+                        name: "Participer",
+                        value: `Utilisez la commande \`/loto participer\` pour participer`,
+                        inline: false
+                    }
+                )
                 .setColor('#ff0000')
         }
     },

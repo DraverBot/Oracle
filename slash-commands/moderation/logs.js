@@ -69,7 +69,7 @@ module.exports = {
                     for (let i = 0; i < req.length; i++) {
                         const warn = req[i];
                                 
-                        now.addField(`${warn.action}`, `<@${warn.user_id}>\n> Donné par <@${warn.mod_id}>\n> Raison: \`${warn.reason}\`\n> Date: <t:${moment(warn.date).unix()}:R>\n*Log id: ${warn.case_id}*`, false);
+                        now.addField(`${warn.action}`, `<@${warn.user_id}>\n> Donné par <@${warn.mod_id}>\n> Raison: \`${warn.reason}\`\n> Date: <t:${moment(warn.date).unix()}:F>\n*Log id: ${warn.case_id}*`, false);
         
                         pile = false;
             
@@ -97,7 +97,7 @@ module.exports = {
                         .setDescription(`voici les logs de modération.`)
         
                     req.forEach((warn) => {
-                        embed.addField(`${warn.action}`, `<@${warn.user_id}>\n> Donné par <@${warn.mod_id}> <t:${moment(warn.date).unix()}:R>\n> Raison: \`${warn.reason}\`\n> Date: <t:${moment(warn.date).unix()}:R>\n*Log id: ${warn.case_id}*`, false);
+                        embed.addField(`${warn.action}`, `<@${warn.user_id}>\n> Donné par <@${warn.mod_id}> <t:${moment(warn.date).unix()}:R>\n> Raison: \`${warn.reason}\`\n> Date: <t:${moment(warn.date).unix()}:F>\n*Log id: ${warn.case_id}*`, false);
                     });
         
                     interaction.editReply({ embeds: [ embed ] }).catch(() => {});
