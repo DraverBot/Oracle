@@ -56,7 +56,8 @@ class GiveawaysManager {
     /**
      * @param {GuildMember} member
      */
-    checkIfValidEntry(member, data) {
+    checkIfValidEntry(member, x) {
+        let data = this.formatToObject(x);
         if (data.denied_roles && data.denied_roles?.length > 0) {
             let has = false;
             for (const role of data.denied_roles) {
@@ -108,7 +109,7 @@ class GiveawaysManager {
         const arrays = ['participants', 'bonus_roles', 'denied_roles', 'required_roles', 'winners'];
         
         for (const prop of arrays) {
-            gw[prop] = JSON.stringify(gw[prop]);
+            if (typeof gw[prop] == 'object') gw[prop] = JSON.stringify(gw[prop]);
         };
         gw.ended = gw.ended == true ? '1' : "0";
         for (const string of Object.keys(gw).filter(x => typeof gw[x] == "string" && !arrays.includes(x))) {
@@ -121,7 +122,7 @@ class GiveawaysManager {
         let gw = data;
         
         for (const prop of ['participants', 'bonus_roles', 'denied_roles', 'required_roles', 'winners']) {
-            gw[prop] = JSON.parse(gw[prop]);
+            if (typeof gw[prop] == 'string') gw[prop] = JSON.parse(gw[prop]);
         };
 
         gw.winnerCount = parseInt(gw.winnerCount);
