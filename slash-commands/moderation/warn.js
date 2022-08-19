@@ -64,6 +64,7 @@ module.exports = {
         interaction.reply({ embeds: [ warn ] });
         member.user.send({ embeds: [ warn ] }).catch(() => {});
 
+        
         functions.log(interaction.guild, warn);
     }
 }

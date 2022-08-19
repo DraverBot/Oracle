@@ -50,11 +50,11 @@ module.exports = {
                     return;
                 };
                 
-                if (req.length === 0) return interaction.editReply({ embeds: [ package.embeds.classic(interaction.user)
+                if (req.length == 0) return interaction.editReply({ embeds: [ package.embeds.classic(interaction.user)
                     .setTitle("🚫 Logs de modération")
                     .setDescription(`Il n'y a aucun log de modération.`)
                     .setColor('ORANGE')
-                ] });
+                ] }).catch(() => {});
         
                 if (req.length > 5) {
                     let now = package.embeds.classic(interaction.user)
@@ -84,7 +84,7 @@ module.exports = {
                                 .setTitle("Logs de modération")
                                 .setDescription(`Voici les logs de modération (**${req.length.toLocaleString('fr-DE')}** logs).`)
                                 .setColor('ORANGE')
-                        }
+                        };
                     };
             
                     if (!pile) embeds.push(now);
@@ -120,7 +120,7 @@ module.exports = {
 
                 const log = req[0];
                 const modlog = package.embeds.classic(interaction.user)
-                    .setTitle(modlog.action)
+                    .setTitle(log.action)
                     .addFields(
                         {
                             name: "Membre",

@@ -69,6 +69,6 @@ module.exports = {
         member.kick(reason).catch(() => {});
 
         functions.log(interaction.guild, kicked);
-        functions.addCase(interaction.guild, member.id, interaction.user.id, reason, 'kick');
+        functions.addCase(interaction.guild.id, member.id, interaction.user.id, reason, 'kick');
     }
 }

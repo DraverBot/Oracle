@@ -144,7 +144,7 @@ module.exports = {
 
         if (channel == "none") {
             if (interaction.replied) {
-                await interaction.editReply({ embeds: [ list[0] ], content: '', components: [ row ] }).catch(() => {});
+                await interaction.editReply({ embeds: [ list[0] ], content: '** **', components: [ row ] }).catch((e) => {console.log(e)});
             } else {
                 await interaction.reply({ embeds: [ list[0] ], components: [ row ] }).catch(() => {});
             };
@@ -206,7 +206,7 @@ module.exports = {
     addCase: (guild_id, user_id, mod_id, reason, action) => {
         const { client } = require('../index');
 
-        client.db.query(`INSERT INTO mod_cases (guild_id, user_id, mod_id, action, reason) VALUES ("${guild_id}", "${user_id}", "${mod_id}", "${action}", "${reason}")`, (error, request) => {
+        client.db.query(`INSERT INTO mod_cases (guild_id, user_id, mod_id, action, reason) VALUES ("${guild_id?.id ?? guild_id}", "${user_id}", "${mod_id}", "${action}", "${reason}")`, (error, request) => {
             if (error) console.error(error);
         });
     },
@@ -218,7 +218,6 @@ module.exports = {
      */
     log: (guild, embed) => {
         const client = guild.client;
-        let action = capitalize(embed.title);
 
         client.db.query(`SELECT logs_enable, logs_channel FROM configs WHERE guild_id="${guild.id}"`, (err, req) => {
             if (err) return console.log(err);
@@ -294,7 +293,7 @@ module.exports = {
         return true;
     },
     /**
-     * @param {{ mod: Discord.GuildMember, member: Discord.GuildMember, interaction: Discord.CommandInteraction, ?checkBotCompare: Boolean ?checkSelfUser: Boolean, ?checkOwner: Boolean, ?checkBot: Boolean, ?all: Boolean }} data 
+     * @param {{ mod: Discord.GuildMember, member: Discord.GuildMember, interaction: Discord.CommandInteraction, ?checkBotCompare: Boolean ?checkSelfUser: Boolean, ?checkOwner: Boolean, ?checkBot: Boolean, ?ownerValid: Boolean, ?all: Boolean }} data 
      */
     checkPerms(data) {
         const send = (embed) => {
@@ -308,10 +307,11 @@ module.exports = {
             for (const x  of ['checkBot', 'checkOwner', 'checkBotCompare', 'checkSelfUser']) {
                 data[x] = true;
             };
+            data.ownerValid = false;
         };
         let owner = data.member.id == data.member.guild.ownerId;
 
-        if (data.mod.roles.highest.position <= data.member.roles.highest.position && !owner) {
+        if (data.mod.id !== data.member.guild.ownerId && data.mod.roles.highest.position <= data.member.roles.highest.position) {
             send(embeds.notEnoughHiger(data.mod.user, data.member));
             return false;
         };
@@ -331,7 +331,7 @@ module.exports = {
             );
             return false;
         };
-        if (data.checkOwner == true && owner) {
+        if (data.checkOwner == true && owner && (data.mod.id !== data.mod.guild.ownerId && data.ownerValid == true)) {
             send(embeds.classic(data.mod)
                 .setTitle("Propriétaire")
                 .setDescription(`<@${data.member.id}> est le propriétaire du serveur, vous n'allez quand même pas tenter un coup d'état ?`)

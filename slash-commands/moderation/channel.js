@@ -235,9 +235,9 @@ module.exports = {
                         .setTitle("Salon crée")
                         .setDescription(`Salon crée par <@${interaction.user.id}>`)
                         .setColor('ORANGE')
-                    ] });
+                    ] }).catch(() => {});
                 };
-            });
+            }).catch(() => {});
         };
         if (subcommand == 'supprimer') {
             let channel = interaction.options.get('salon')?.channel || interaction.channel;

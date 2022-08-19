@@ -255,14 +255,15 @@ module.exports = {
             };
 
             const filter = (m) => {
+                if (game == 'solo') {
+                    if (m.author.id !== interaction.user.id) return false;
+                };
+                if (m.content.toLowerCase() == 'haut haut bas bas gauche droite gauche droite b a') return true;
                 let n = parseInt(m.content);
                 if (isNaN(n)) return false;
                 if (n < min) return false;
                 if (n > max) return false;
 
-                if (game == 'solo') {
-                    if (m.author.id !== interaction.user.id) return false;
-                };
 
                 return true;
             };
@@ -278,10 +279,17 @@ module.exports = {
 
             const number = functions.random(max, min);
             let count = 0;
+            let konami = {};
             
             collector.on('collect', (message) => {
                 count++;
                 let num = parseInt(message.content);
+                if (konami[message.author.id] == true) num = number;
+                if (message.content.toLowerCase() == 'haut haut bas bas gauche droite gauche droite b a') {
+                    functions.reply(message, 'KONAMI MODE ACTIVATED !');
+                    konami[message.author.id] = true;
+                    return;
+                }
 
                 if (num > number) {
                     functions.reply(message, 'Mon nombre est plus petit');

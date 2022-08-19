@@ -92,7 +92,7 @@ module.exports = {
             if (amount < 0) amount = parseInt(amount.toString().slice(1));
             amount = amount.toFixed(0);
             if (isNaN(amount)) return interaction.reply({ embeds: [ package.embeds.invalidNumber(interaction.user) ] }).catch(() => {});
-            if (!functions.checkPerms({ interaction, member, mod: interaction.member, checkBot: true, checkBotCompare: true, checkOwner: true })) return;
+            if (!functions.checkPerms({ interaction, member, mod: interaction.member, checkBot: true, checkBotCompare: true })) return;
 
             interaction.client.CoinsManager.addCoins({ user_id: member.id, guild_id: interaction.guild.id }, amount);
 
@@ -109,7 +109,7 @@ module.exports = {
             if (amount < 0) amount = parseInt(amount.toString().slice(1));
             amount = amount.toFixed(0);
             if (isNaN(amount)) return interaction.reply({ embeds: [ package.embeds.invalidNumber(interaction.user) ] }).catch(() => {});
-            if (!functions.checkPerms({ mod: interaction.member, member: member, checkBot: true, checkBotCompare: true, checkOwner: true, interaction: interaction })) return;
+            if (!functions.checkPerms({ mod: interaction.member, member: member, checkBot: true, checkBotCompare: true, interaction: interaction })) return;
 
             const result = interaction.client.CoinsManager.removeCoins({ user_id: member.id, guild_id: interaction.guild.id }, amount);
             if (result == 'not enough coins' || result == false) return interaction.reply({ embeds: [ package.embeds.notEnoughCoins(member.user) ] }).catch(() => {});

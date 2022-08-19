@@ -109,7 +109,7 @@ module.exports = {
     errorSQL: (user) => {
         let text = "Vous ne devriez pas rencontrer ce problème, une erreur a eu lieu lors de l'interaction avec la base de données.";
         if (!collections.errors.has(user.id)) collections.errors.set(user.id, 0);
-        if (collections.errors.get(user.id) > 3) text += "\nPrévenez mon développeur si cela persiste."
+        if (collections.errors.get(user.id) > 3) text += `\nPrévenez mon développeur via la commande \`/contact\` ou par le [serveur de support](${data.support}) si l'erreur persiste.`
         collections.errors.set(user.id, collections.errors.get(user.id) + 1);
 
         return generateBasic(user)
@@ -244,7 +244,7 @@ ${Edata.winners.length == 0 ? 'Pas de gagnants' : Edata.winners.map(w => `<@${w.
 
             return generateBasic(user)
                 .setTitle("🎉 Loto lancé")
-                .setDescription(`Le loto a été lancé !\nIl prendra fin le <t:${time}:F> ( <t:${time}:R> )\n\nPour participer il faut **${numbers}** numéro et **${complementaries}** numéro complémentaires.\n\nRécompense :\n${reward} ${parseInt(data.coins).toLocaleString('fr-DE')}`)
+                .setDescription(`Le loto a été lancé !\nIl prendra fin le <t:${time}:F> ( <t:${time}:R> )\n\nPour participer il faut **${numbers}** numéro et **${complementaries}** numéro complémentaires.\n\nRécompense :\n${reward} ${data.coins}`)
                 .addFields(
                     {
                         name: "Participer",

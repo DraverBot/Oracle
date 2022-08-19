@@ -89,7 +89,7 @@ module.exports = {
 
                 if (!manager.checkModule({ module: category, guildId: interaction.guild.id })) return interaction.reply({ embeds: [ package.embeds.classic(interaction.user)
                     .setTitle("Module désactivé")
-                    .setDescription(`Vous ne pouvez pas utiliser cette commande, car le module **${require('../assets/data/modules.json').find(x => x.value == category).name}** est désactivé sur ${interaction.guild.name}`)
+                    .setDescription(`Vous ne pouvez pas utiliser cette commande, car le module **${require('../assets/data/modules.json').find(x => x.value == category).name}** est désactivé sur ${interaction.guild.name}.\n\nUtilisez \`/modules configurer module: ${require('../assets/data/modules.json').find(x => x.value == category).name} état: true\` pour l'activer`)
                     .setColor('#ff0000')
                 ] }).catch(() => {});
             }

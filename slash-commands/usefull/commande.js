@@ -129,7 +129,7 @@ module.exports = {
                 embed.addFields(
                     {
                         name: "Options",
-                        value: command.configs.options.map(opt => `\`${opt.name}\` (${optionsTypes[opt.type]}) : ${opt.description}${opt.required == true ? ' - **requis**':''}`).join('\n'),
+                        value: command.configs.options.map(opt => `\`${opt.name}\` (${optionsTypes[opt.type]}) : ${opt.description}${opt.required == true ? ' - **requis**':' - **optionnel**'}`).join('\n'),
                         inline: true
                     }
                 );
@@ -173,7 +173,7 @@ module.exports = {
                         },
                         {
                             name: 'Options',
-                            value: subCommand.options?.length > 0 ? subCommand.options.map(opt => `\`${opt.name}\` (${optionsTypes[opt.type]}) : ${opt.description}${opt.required == true ? ' - **requis**':''}`).join('\n') : "Pas d'options",
+                            value: subCommand.options?.length > 0 ? subCommand.options.map(opt => `\`${opt.name}\` (${optionsTypes[opt.type]}) : ${opt.description}${opt.required == true ? ' - **requis**':' - **optionnel**'}`).join('\n') : "Pas d'options",
                             inline: false
                         }
                     );
@@ -241,7 +241,7 @@ module.exports = {
                             embed.addFields(
                                 {
                                     name: "Options",
-                                    value: command.configs.options.map(opt => `\`${opt.name}\` (${optionsTypes[opt.type]}) : ${opt.description}${opt.required == true ? ' - **requis**':''}`).join('\n'),
+                                    value: command.configs.options.map(opt => `\`${opt.name}\` (${optionsTypes[opt.type]}) : ${opt.description}${opt.required == true ? ' - **requis**':' - **optionnel**'}`).join('\n'),
                                     inline: true
                                 }
                             );
