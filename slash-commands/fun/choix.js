@@ -33,14 +33,13 @@ module.exports = {
      */
     run: (interaction) => {
         let props = [];
-        for (let i = 0; i < 9; i++) {
-            let name = `proposition${i + 1}`;
-
-            if (interaction.options.get(name)) props.push(interaction.options.get(name).value);
+        for (let i = 0; i < 10; i++) {
+            props.push(interaction.options.get(`proposition${i + 1}`)?.value);
         };
+        props = props.filter(x => ![undefined, null].includes(x));
 
-        let choice = props[functions.random(0, props.length)];
+        let choice = props[functions.random(props.length, 0)];
 
-        interaction.reply({ content: `Mon choix est **${choice}**` });
+        interaction.reply({ content: `Mon choix est **${choice}**` }).catch(() => {});
     }
 }

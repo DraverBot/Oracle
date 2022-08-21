@@ -23,5 +23,16 @@ module.exports = {
                 channel.client.db.query(`UPDATE configs SET herobrine_channel="${chan.id}" WHERE guild_id="${channel.guild.id}"`, (e) => e?console.log:null);
             });
         });
+
+        channel.guild.fetchAuditLogs({ type: 'CHANNEL_DELETE' }).then((entries) => {
+            let log = package.embeds.log(channel.guild)
+                .setTitle("Salon supprimé")
+            if (entries.entries.first().target.id == channel.id) {
+                log.setDescription(`Un salon a été supprimé`)
+                .setColor('#ff0000')
+            } else {
+                
+            }
+        })
     }
 };

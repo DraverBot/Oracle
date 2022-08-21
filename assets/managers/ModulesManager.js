@@ -125,7 +125,7 @@ class ModulesManager {
     checkModule(data) {
         if (!this.cache.has(data.guildId)) {
             this.checkIfExists(data.guildId);
-            return false;
+            return this.params.find(x => x.name == data.module).state;
         };
 
         let x = this.cache.get(data.guildId);

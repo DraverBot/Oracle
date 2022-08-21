@@ -1,5 +1,5 @@
 const emojis = require('./data/emojis.json');
-const { MessageEmbed, User, Message, Interaction, GuildMember } = require('discord.js');
+const { MessageEmbed, User, Message, Interaction, GuildMember, Guild } = require('discord.js');
 const collections = require('./data/collects');
 const data = require('./data/data.json');
 
@@ -55,6 +55,7 @@ module.exports = {
             .setTimestamp()
         
         if (guild.icon) embed.setFooter({ text: guild.name, iconURL: guild.iconURL({ dynamic: true })})
+        else embed.setFooter({ text: guild.name })
         return embed; 
     },
     /**
@@ -274,5 +275,13 @@ ${Edata.winners.length == 0 ? 'Pas de gagnants' : Edata.winners.map(w => `<@${w.
                 .setDescription(`Ce giveaway n'est pas terminé`)
                 .setColor('#ff0000')
         }
+    },
+    /**
+     * @param {Guild} guild 
+     */
+    logs: (guild) => {
+        return new MessageEmbed()
+            .setFooter({ text: guild.name, iconURL: guild.icon ? guild.iconURL({ dynamic: true }) : guild.client.user.avatarURL() })
+            .setTimestamp()
     }
 }

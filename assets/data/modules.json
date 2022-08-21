@@ -22,7 +22,7 @@
     {
         "name": "Informations",
         "value": "information",
-        "default": false
+        "default": true
     },
     {
         "name": "Divers",

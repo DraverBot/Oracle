@@ -33,7 +33,7 @@ module.exports = {
                         choices: configs.data.map((conf) => ({name: conf.name, value: conf.param}))
                     },
                     {
-                        name: "binaire",
+                        name: "état",
                         description: "État binaire du paramètre (si binaire)",
                         required: false,
                         type: 'BOOLEAN'
@@ -60,7 +60,7 @@ module.exports = {
     run: (interaction) => {
         const subcommand = interaction.options.getSubcommand();
         let types = {
-            boolean: 'binaire',
+            boolean: 'état',
             text: 'texte',
             channel: 'salon'
         };

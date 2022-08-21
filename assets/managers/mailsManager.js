@@ -319,20 +319,28 @@ class MailManager {
     }
     /**
      * @param {Discord.User} user 
-     * @param {Discord.TextChannel} channel 
+     * @param {Discord.TextChannel | 'none'} channel 
+     * @param {Discord.CommandInteraction} interaction
      */
-    mailbox(user, channel) {
+    mailbox(user, channel, interaction) {
+        let sendFnt = async(params) => {
+            if (channel !== 'none') {
+                return await channel.send(params).catch(() => {});
+            } else {
+                if (interaction.replied) {
+                    await interaction.editReply(params).catch(() => {});
+                } else {
+                    await interaction.reply(params).catch(() => {});
+                }
+                return await interaction.fetchReply();
+            };
+        };
         this.db.query(`SELECT * FROM mails WHERE user_id="${user.id}"`, (err, mails) => {
-            if (err) return channel.send({ embeds: [ pack.embeds.errorSQL(user) ] }) & console.log(err);
-            if (mails.length === 0) return channel.send({ embeds: [ pack.embeds.classic(user)
-                .setTitle("Pas de mails")
-                .setDescription(`Vous n'avez aucun mails`)
-                .setColor('ORANGE')
-            ] });
+            if (err) return sendFnt({ embeds: [ pack.embeds.errorSQL(user) ] }) & console.log(err);
 
             const row = this.generateMailBoxButtons();                
 
-            channel.send({ embeds: [ pack.embeds.classic(user)
+            sendFnt({ embeds: [ pack.embeds.classic(user)
                 .setTitle("Boite mail")
                 .setDescription(`Bienvenue dans votre boite mail`)
                 .setColor('ORANGE')
@@ -372,16 +380,11 @@ class MailManager {
                             text = `\n\n:bulb: Vous pouvez désactiver les notifications de mail avec \`/mail-notifs disable\``;
                         }
                         
-                        this.db.query(`SELECT prefix FROM prefixes WHERE guild_id="${message.guild ? message.guild.id : 'no guild'}"`, (er, re) => {
-                            if (er) return functions.sendError(er, 'mail notif select prefix', message.author);
-        
-                            let prefix = re.length > 0 ? re[0].prefix : pack.configs.default_prefix;
-                            message.channel.send({ embeds: [ pack.embeds.classic(message.author)
-                                .setTitle("Nouveau mail")
-                                .setDescription(`Vous avez ${req.length} mail${req.length > 1 ? 's':''} non-lu.\n\nUtilisez la commande \`${prefix}mail\` pour le${req.length > 1 ? 's':''} consulter.${text}`)
-                                .setColor('ORANGE')
-                            ] }).catch(() => {});
-                        })
+                        message.channel.send({ embeds: [ pack.embeds.classic(message.author)
+                            .setTitle("Nouveau mail")
+                            .setDescription(`Vous avez ${req.length} mail${req.length > 1 ? 's':''} non-lu.\n\nUtilisez la commande \`/mailbox\` pour le${req.length > 1 ? 's':''} consulter.${text}`)
+                            .setColor('ORANGE')
+                        ] }).catch(() => {});
                     };
                 })
             });

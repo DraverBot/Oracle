@@ -466,7 +466,7 @@ module.exports = {
         if (typeof content == "string") data.content = content;
         else data.embeds = [ content ];
 
-        if (row !== undefined) data.components = [ row ];
+        if (row !== undefined && row.components.length > 0) data.components = [ row ];
 
         return await message.channel.send(data).catch(() => {});
     },

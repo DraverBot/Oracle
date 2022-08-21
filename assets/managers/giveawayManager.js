@@ -183,6 +183,8 @@ class GiveawaysManager {
      */
     async reroll(messageId) {
         let gw = this.ended.get(messageId);
+        if (typeof gw.participants == 'string') gw = this.formatToObject(gw);
+        
         if (!gw && this.giveaways.has(messageId)) return 'not ended';
         if (!gw) return 'no giveaway';
 
