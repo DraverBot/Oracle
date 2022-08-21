@@ -237,6 +237,29 @@ module.exports = {
                         .setColor('ORANGE')
                     ] }).catch(() => {});
                 };
+
+                functions.log(interaction.guild, package.embeds.classic(interaction.user)
+                    .setTitle("Salon crée")
+                    .setDescription(`Le salon <#${channel.id}> a été crée par <@${interaction.user.id}> **(avec la commande \`/salon créer\`)**`)
+                    .setColor('#00ff00')
+                    .addFields(
+                        {
+                            name: "Modérateur",
+                            value: `<@${interaction.user.id}> ( ${interaction.user.tag} \`${interaction.user.id}\` )`,
+                            inline: true
+                        },
+                        {
+                            name: "Salon",
+                            value: `<#${channel.id}> ( ${package.channelTypes[channel.type]} \`${channel.id}\` )`,
+                            inline: true
+                        },
+                        {
+                            name: "Date",
+                            value: `<t:${(Date.now() / 1000).toFixed(0)}:F> ( ${(Date.now() / 1000).toFixed(0)}:R> )`,
+                            inline: true
+                        }
+                    )
+                );
             }).catch(() => {});
         };
         if (subcommand == 'supprimer') {
@@ -258,6 +281,24 @@ module.exports = {
                                 .setDescription(`Le salon ${channel.name} a été supprimé`)
                                 .setColor('ORANGE')
                             ], components: [] });
+
+                            functions.log(interaction.guild, package.embeds.classic(interaction.user)
+                                .setTitle("Salon supprimé")
+                                .setDescription(`Le salon ${channel.name} ( ${package.channelTypes[channel.type]} \`${channel.id}\` ) a été supprimé **(avec la commande \`/salon supprimer\`)**`)
+                                .addFields(
+                                    {
+                                        name: "Modérateur",
+                                        value: `<@${interaction.user.id}> ( ${interaction.user.tag} \`${interaction.user.id}\` )`,
+                                        inline: true
+                                    },
+                                    {
+                                        name: 'Salon',
+                                        value: `${channel.name} ( ${package.channelTypes[channel.type]} \`${channel.id}\` )`,
+                                        inline: true
+                                    }
+                                )
+                                .setColor('#ff0000')
+                            );
                         } else {
                             reply.edit({ embeds: [ package.embeds.cancel() ], components: [] }).catch(() => {});
                         };

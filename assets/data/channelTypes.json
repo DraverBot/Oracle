@@ -1,0 +1,10 @@
+{
+    "GUILD_TEXT": "salon textuel",
+    "GUILD_NEWS": "salon des annonces",
+    "GUILD_VOICE": "salon vocal",
+    "GUILD_STAGE_VOICE": "salon des conférences",
+    "GUILD_PRIVATE_THREAD": "fil privé",
+    "GUILD_PUBLIC_THREAD": "fil public",
+    "GUILD_NEWS_THREAD": "fil de salon des annonces",
+    "GUILD_CATEGORY": "catégorie"
+}

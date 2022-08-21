@@ -113,7 +113,8 @@ module.exports = {
             {name: "Passage en slash commandes !", type: 'WATCHING'},
             {name: "Mentionnez moi pour des informations", type: 'WATCHING'},
             {name: "%members% membres", type: 'WATCHING'},
-            {name: 'une vidéo', type: 'STREAMING', url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'}
+            {name: 'une vidéo', type: 'STREAMING', url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'},
+            {name: "ma page top.gg", type: 'WATCHING'}
         ];
         
         setInterval(() => {

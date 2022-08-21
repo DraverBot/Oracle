@@ -25,7 +25,8 @@ module.exports = {
             perms: require('./data/perms.json'),
             personnages: require('./rpg/personnages.json'),
             configs: require('./data/data.json'),
-            rubis: require('./rpg/rubis.json')
+            rubis: require('./rpg/rubis.json'),
+            channelTypes: require('./data/channelTypes.json')
         }
 
         return package;

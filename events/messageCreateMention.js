@@ -15,8 +15,8 @@ module.exports = {
             };
             let size = require('../assets/data/splash.json').length;
             
-            let splash = splashes[functions.random(splashes.length, 0)].replace('{username}', message.author.username);
-            splash.replace('{size}', size);
+            let splash = splashes[functions.random(splashes.length, 0)].replace('{username}', message.author.username)
+            .replace('{size}', size);
 
             const reponse = package.embeds.classic(message.author)
                 .setTitle(splash)
@@ -53,6 +53,22 @@ module.exports = {
                     };
                 };
             };
+            if (functions.random(10, 0) == 5 && buttons.length < 2) {
+                let topgg = new MessageButton()
+                    .setLabel('Page top.gg')
+                    .setStyle('LINK')
+                    .setURL(package.configs.topgg)
+                    
+                if (buttons.length == 0) {
+                    buttons.push(topgg)
+                } else {
+                    if (functions.random(100, 0) >= 50) {
+                        buttons.push(topgg);
+                    } else {
+                        buttons.unshift(topgg);
+                    };
+                };
+            }
             row.addComponents(buttons);
             functions.reply(message, reponse, row);
 

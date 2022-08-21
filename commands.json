@@ -1,0 +1,2597 @@
+[
+    [
+        {
+            "name": "config",
+            "description": "Configure Oracle sur votre serveur",
+            "options": [
+                {
+                    "name": "paramètres",
+                    "description": "Affiche les paramètres configurables",
+                    "type": "SUB_COMMAND"
+                },
+                {
+                    "name": "configurer",
+                    "description": "Configure un paramètre",
+                    "type": "SUB_COMMAND",
+                    "options": [
+                        {
+                            "name": "paramètre",
+                            "description": "Paramètre à configurer",
+                            "type": "STRING",
+                            "required": true,
+                            "choices": [
+                                {
+                                    "name": "Logs",
+                                    "value": "logs_enable"
+                                },
+                                {
+                                    "name": "Messages d'arrivées",
+                                    "value": "join_enable"
+                                },
+                                {
+                                    "name": "Messages de départs",
+                                    "value": "leave_enable"
+                                },
+                                {
+                                    "name": "Salon d'arrivée",
+                                    "value": "join_channel"
+                                },
+                                {
+                                    "name": "Salon de départ",
+                                    "value": "leave_channel"
+                                },
+                                {
+                                    "name": "Message d'arrivée",
+                                    "value": "join_message"
+                                },
+                                {
+                                    "name": "Message de départ",
+                                    "value": "leave_message"
+                                },
+                                {
+                                    "name": "Salon des logs",
+                                    "value": "logs_channel"
+                                },
+                                {
+                                    "name": "Salon de niveaux",
+                                    "value": "level_channel"
+                                },
+                                {
+                                    "name": "Message de niveau",
+                                    "value": "level_message"
+                                },
+                                {
+                                    "name": "Roles d'arrivée",
+                                    "value": "roles_enable"
+                                },
+                                {
+                                    "name": "Système de GBan",
+                                    "value": "gban_enable"
+                                },
+                                {
+                                    "name": "Système de compteur",
+                                    "value": "counting_enable"
+                                },
+                                {
+                                    "name": "Salon de comptage",
+                                    "value": "counting_channel"
+                                },
+                                {
+                                    "name": "Système de tickets",
+                                    "value": "ticket_enable"
+                                },
+                                {
+                                    "name": "Salon des suggestions",
+                                    "value": "suggest_channel"
+                                }
+                            ]
+                        },
+                        {
+                            "name": "état",
+                            "description": "État binaire du paramètre (si binaire)",
+                            "required": false,
+                            "type": "BOOLEAN"
+                        },
+                        {
+                            "name": "texte",
+                            "description": "Texte du paramètre (si texte)",
+                            "required": false,
+                            "type": "STRING"
+                        },
+                        {
+                            "name": "salon",
+                            "description": "Salon du paramètre (si salon)",
+                            "type": "CHANNEL",
+                            "required": false
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "modules",
+            "description": "Gère les modules",
+            "options": [
+                {
+                    "name": "configurer",
+                    "description": "Configure un module",
+                    "type": "SUB_COMMAND",
+                    "options": [
+                        {
+                            "name": "module",
+                            "description": "Module à configurer",
+                            "type": "STRING",
+                            "required": true,
+                            "choices": [
+                                {
+                                    "name": "Économie",
+                                    "value": "economy"
+                                },
+                                {
+                                    "name": "Modération",
+                                    "value": "moderation"
+                                },
+                                {
+                                    "name": "Utilitaires",
+                                    "value": "usefull"
+                                },
+                                {
+                                    "name": "Amusement",
+                                    "value": "fun"
+                                },
+                                {
+                                    "name": "Informations",
+                                    "value": "information"
+                                },
+                                {
+                                    "name": "Divers",
+                                    "value": "misc"
+                                },
+                                {
+                                    "name": "Niveaux",
+                                    "value": "levels"
+                                }
+                            ]
+                        },
+                        {
+                            "name": "état",
+                            "description": "État du module",
+                            "type": "BOOLEAN",
+                            "required": true
+                        }
+                    ]
+                },
+                {
+                    "name": "afficher",
+                    "description": "Affiche l'état des modules sur le serveur",
+                    "type": "SUB_COMMAND"
+                }
+            ]
+        }
+    ],
+    [
+        {
+            "name": "admin-coins",
+            "description": "Gère les OraCoins sur le serveur",
+            "options": [
+                {
+                    "name": "ajouter",
+                    "description": "Ajoute des OraCoins à un utilisateur",
+                    "type": "SUB_COMMAND",
+                    "options": [
+                        {
+                            "name": "utilisateur",
+                            "description": "Utilisateur à qui ajouter des OraCoins",
+                            "type": "USER",
+                            "required": true
+                        },
+                        {
+                            "name": "montant",
+                            "description": "Montant d'OraCoins à ajouter",
+                            "type": "INTEGER",
+                            "required": true
+                        }
+                    ]
+                },
+                {
+                    "name": "retirer",
+                    "description": "Retire des OraCoins à un utilisateur",
+                    "type": "SUB_COMMAND",
+                    "options": [
+                        {
+                            "name": "utilisateur",
+                            "description": "Utilisateur à qui retirer des OraCoins",
+                            "type": "USER",
+                            "required": true
+                        },
+                        {
+                            "name": "montant",
+                            "description": "Montant d'OraCoins à ajouter",
+                            "type": "INTEGER",
+                            "required": true
+                        }
+                    ]
+                },
+                {
+                    "name": "réinitialiser",
+                    "description": "Réinitialiser des OraCoins",
+                    "type": "SUB_COMMAND_GROUP",
+                    "options": [
+                        {
+                            "name": "utilisateur",
+                            "description": "Réinitialiser des OraCoins à un utilisateur",
+                            "type": "SUB_COMMAND",
+                            "options": [
+                                {
+                                    "name": "utilisateur",
+                                    "description": "Utilisateur à qui ajouter des OraCoins",
+                                    "type": "USER",
+                                    "required": true
+                                }
+                            ]
+                        },
+                        {
+                            "name": "serveur",
+                            "description": "Réinitialiser les OraCoins du serveur",
+                            "type": "SUB_COMMAND"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "banque",
+            "description": "Utilisez votre banque",
+            "options": [
+                {
+                    "name": "déposer",
+                    "description": "Déposer des OraCoins dans votre banque",
+                    "type": "SUB_COMMAND",
+                    "options": [
+                        {
+                            "name": "montant",
+                            "description": "Montant d'OraCoins à déposer",
+                            "type": "INTEGER",
+                            "required": true
+                        }
+                    ]
+                },
+                {
+                    "name": "retirer",
+                    "description": "Retirer des OraCoins de votre banque",
+                    "type": "SUB_COMMAND",
+                    "options": [
+                        {
+                            "name": "montant",
+                            "description": "Montant d'OraCoins à retirer",
+                            "type": "INTEGER",
+                            "required": true
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "daily",
+            "description": "Récupère votre récompense quotidienne"
+        },
+        {
+            "name": "inventaire",
+            "description": "Affiche votre inventaire"
+        },
+        {
+            "name": "leaderboard",
+            "description": "Affiche le classement des OraCoins du serveur"
+        },
+        {
+            "name": "loto",
+            "description": "Gère un loto sur le serveur",
+            "options": [
+                {
+                    "name": "gérer",
+                    "description": "Gère le loto",
+                    "type": "SUB_COMMAND_GROUP",
+                    "options": [
+                        {
+                            "name": "démarrer",
+                            "description": "Lance le loto sur le serveur",
+                            "type": "SUB_COMMAND",
+                            "options": [
+                                {
+                                    "name": "récompense",
+                                    "description": "Récompense en OraCoins du loto",
+                                    "type": "INTEGER",
+                                    "required": true
+                                },
+                                {
+                                    "name": "gagnants",
+                                    "description": "Nombre de numéro gagnants à tirer (minimum 5)",
+                                    "type": "INTEGER",
+                                    "required": true
+                                },
+                                {
+                                    "name": "complémentaires",
+                                    "description": "Nombre de numéro complémentaires à tirer (minimum 2)",
+                                    "type": "INTEGER",
+                                    "required": true
+                                },
+                                {
+                                    "name": "temps",
+                                    "description": "Temps avant la fin du loto (ex: 1d)",
+                                    "type": "STRING",
+                                    "required": true
+                                }
+                            ]
+                        },
+                        {
+                            "name": "tirage",
+                            "description": "Fait le tirage du loto",
+                            "type": "SUB_COMMAND"
+                        }
+                    ]
+                },
+                {
+                    "name": "participer",
+                    "description": "Participez au loto en cours",
+                    "type": "SUB_COMMAND",
+                    "options": [
+                        {
+                            "name": "gagnants",
+                            "description": "Les numéro gagnants que vous jouez (ex: 15 68 46 75 12)",
+                            "type": "STRING",
+                            "required": true
+                        },
+                        {
+                            "name": "complémentaires",
+                            "description": "Les numéro complémentaires que vous jouez (ex: 94 60)",
+                            "required": true,
+                            "type": "STRING"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "pay",
+            "description": "Donne un montant d'OraCoins à un utilisateur",
+            "options": [
+                {
+                    "name": "montant",
+                    "type": "INTEGER",
+                    "required": true,
+                    "description": "Montant d'argent que vous voulez donner"
+                },
+                {
+                    "name": "utilisateur",
+                    "required": true,
+                    "description": "Utilisateur à qui vous voulez donner l'argent",
+                    "type": "USER"
+                }
+            ]
+        },
+        {
+            "name": "shop",
+            "description": "Utilisez le système de magasin",
+            "options": [
+                {
+                    "name": "item",
+                    "type": "SUB_COMMAND_GROUP",
+                    "description": "Ajoute des items au magasin",
+                    "options": [
+                        {
+                            "name": "ajouter",
+                            "type": "SUB_COMMAND",
+                            "description": "Ajouter un item au magasin",
+                            "options": [
+                                {
+                                    "name": "nom",
+                                    "description": "Nom de l'item",
+                                    "type": "STRING",
+                                    "required": true
+                                },
+                                {
+                                    "name": "type",
+                                    "description": "Type de l'item",
+                                    "type": "STRING",
+                                    "required": true,
+                                    "choices": [
+                                        {
+                                            "name": "Rôle",
+                                            "value": "role"
+                                        },
+                                        {
+                                            "name": "Étiquette",
+                                            "value": "text"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name": "prix",
+                                    "description": "Prix de l'item",
+                                    "type": "INTEGER",
+                                    "required": true
+                                },
+                                {
+                                    "name": "quantité",
+                                    "description": "Nombre d'items que vous voulez ajouter (laissez vide pour illimité)",
+                                    "type": "INTEGER",
+                                    "required": false
+                                },
+                                {
+                                    "name": "description",
+                                    "description": "Description de l'étiquette (si étiquette)",
+                                    "type": "STRING",
+                                    "required": false
+                                },
+                                {
+                                    "name": "role",
+                                    "description": "Rôle (si l'item est un rôle)",
+                                    "type": "ROLE",
+                                    "required": false
+                                }
+                            ]
+                        },
+                        {
+                            "name": "supprimer",
+                            "description": "Supprime un item du magasin",
+                            "type": "SUB_COMMAND",
+                            "options": [
+                                {
+                                    "name": "identifiant",
+                                    "description": "Identifiant de l'item à supprimer",
+                                    "type": "STRING",
+                                    "required": true
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "view",
+                    "description": "Affiche le magasin",
+                    "type": "SUB_COMMAND"
+                },
+                {
+                    "name": "acheter",
+                    "description": "Achète un item du shop",
+                    "type": "SUB_COMMAND",
+                    "options": [
+                        {
+                            "name": "identifiant",
+                            "type": "STRING",
+                            "description": "Identifiant de l'item à acheter",
+                            "required": true
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "stats",
+            "description": "Affiche les statistiques économiques d'un utilisateur",
+            "options": [
+                {
+                    "name": "utilisateur",
+                    "description": "Utilisateur dont vous voulez voir les statistiques",
+                    "required": false,
+                    "type": "USER"
+                }
+            ]
+        },
+        {
+            "name": "échange",
+            "description": "Effectue un échange",
+            "options": [
+                {
+                    "name": "utilisateur",
+                    "description": "Utilisateur avec qui vous voulez échanger",
+                    "type": "USER",
+                    "required": true
+                },
+                {
+                    "name": "item",
+                    "type": "STRING",
+                    "required": true,
+                    "description": "Nom de l'item que vous voulez échanger"
+                },
+                {
+                    "name": "prix",
+                    "type": "INTEGER",
+                    "required": true,
+                    "description": "Prix auxquel vous souhaitez échanger"
+                }
+            ]
+        },
+        {
+            "name": "weekly",
+            "description": "Récupère votre récompense hebdomadaire"
+        }
+    ],
+    [
+        {
+            "name": "8ball",
+            "description": "Demande quelque chose à la boule de crystal",
+            "options": [
+                {
+                    "name": "question",
+                    "description": "Question à poser à la boule de crystal",
+                    "type": "STRING",
+                    "required": true
+                },
+                {
+                    "name": "discret",
+                    "description": "Fait en sorte que seul vous voie ce message.",
+                    "required": false,
+                    "autocomplete": false,
+                    "type": "BOOLEAN"
+                }
+            ]
+        },
+        {
+            "name": "choix",
+            "description": "Fais un choix parmis les propositions",
+            "options": [
+                {
+                    "name": "proposition1",
+                    "description": "Définissez la proposition 1",
+                    "type": "STRING",
+                    "required": true
+                },
+                {
+                    "name": "proposition2",
+                    "description": "Définissez la proposition 2",
+                    "type": "STRING",
+                    "required": true
+                },
+                {
+                    "name": "proposition3",
+                    "description": "Définissez la proposition 3",
+                    "type": "STRING",
+                    "required": false
+                },
+                {
+                    "name": "proposition4",
+                    "description": "Définissez la proposition 4",
+                    "type": "STRING",
+                    "required": false
+                },
+                {
+                    "name": "proposition5",
+                    "description": "Définissez la proposition 5",
+                    "type": "STRING",
+                    "required": false
+                },
+                {
+                    "name": "proposition6",
+                    "description": "Définissez la proposition 6",
+                    "type": "STRING",
+                    "required": false
+                },
+                {
+                    "name": "proposition7",
+                    "description": "Définissez la proposition 7",
+                    "type": "STRING",
+                    "required": false
+                },
+                {
+                    "name": "proposition8",
+                    "description": "Définissez la proposition 8",
+                    "type": "STRING",
+                    "required": false
+                },
+                {
+                    "name": "proposition9",
+                    "description": "Définissez la proposition 9",
+                    "type": "STRING",
+                    "required": false
+                }
+            ]
+        },
+        {
+            "name": "demineur",
+            "description": "Lance une partie de démineur",
+            "options": [
+                {
+                    "name": "discret",
+                    "description": "Fait en sorte que seul vous coie ce message",
+                    "required": false,
+                    "autocomplete": false,
+                    "type": "BOOLEAN"
+                }
+            ]
+        },
+        {
+            "name": "game",
+            "description": "Joue a des jeux sur Oracle",
+            "options": [
+                {
+                    "name": "démineur",
+                    "description": "Joue au démineur sur Oracle",
+                    "type": "SUB_COMMAND"
+                },
+                {
+                    "name": "number",
+                    "description": "Joue à guess the number",
+                    "type": "SUB_COMMAND_GROUP",
+                    "options": [
+                        {
+                            "name": "multijoueur",
+                            "description": "Joue en multijoueur",
+                            "type": "SUB_COMMAND",
+                            "options": [
+                                {
+                                    "name": "max",
+                                    "description": "Nombre maximum",
+                                    "type": "INTEGER",
+                                    "required": false
+                                },
+                                {
+                                    "name": "min",
+                                    "description": "Nombre minimum",
+                                    "type": "INTEGER",
+                                    "required": false
+                                }
+                            ]
+                        },
+                        {
+                            "name": "solo",
+                            "description": "Joue en solo",
+                            "type": "SUB_COMMAND",
+                            "options": [
+                                {
+                                    "name": "max",
+                                    "description": "Nombre maximum",
+                                    "type": "INTEGER",
+                                    "required": false
+                                },
+                                {
+                                    "name": "min",
+                                    "description": "Nombre minimum",
+                                    "type": "INTEGER",
+                                    "required": false
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "morpion",
+                    "description": "Joue au morpion contre Oracle",
+                    "type": "SUB_COMMAND"
+                },
+                {
+                    "name": "roulette-russe",
+                    "description": "Joue à la roulette russe",
+                    "type": "SUB_COMMAND",
+                    "options": [
+                        {
+                            "name": "expulsion",
+                            "description": "⚠ Si vous perdez vous serez expulsé.",
+                            "required": false,
+                            "type": "BOOLEAN"
+                        }
+                    ]
+                },
+                {
+                    "name": "shifumi",
+                    "description": "Joue au shifumi contre Oracle",
+                    "type": "SUB_COMMAND",
+                    "options": [
+                        {
+                            "name": "signe",
+                            "type": "STRING",
+                            "required": true,
+                            "description": "Signe que vous jouez",
+                            "choices": [
+                                {
+                                    "name": "pierre",
+                                    "value": "0",
+                                    "emoji": "✊"
+                                },
+                                {
+                                    "name": "papier",
+                                    "value": "1",
+                                    "emoji": "📜"
+                                },
+                                {
+                                    "name": "ciseaux",
+                                    "value": "2",
+                                    "emoji": "✂"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "8ball",
+                    "description": "Pose une question au bot",
+                    "type": "SUB_COMMAND",
+                    "options": [
+                        {
+                            "name": "question",
+                            "description": "La question que vous voulez me poser",
+                            "required": true,
+                            "type": "STRING"
+                        }
+                    ]
+                },
+                {
+                    "name": "dés",
+                    "description": "Joue au dés",
+                    "type": "SUB_COMMAND",
+                    "options": [
+                        {
+                            "name": "nombre",
+                            "type": "INTEGER",
+                            "description": "Nombre de dés (maximum 64)",
+                            "required": false
+                        },
+                        {
+                            "name": "faces",
+                            "type": "INTEGER",
+                            "description": "Nombre de faces sur les dés",
+                            "required": false
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "blague",
+            "description": "Affiche une blague aléatoire",
+            "options": [
+                {
+                    "name": "global",
+                    "description": "Blague de type global",
+                    "type": "SUB_COMMAND"
+                },
+                {
+                    "name": "dev",
+                    "description": "Blague de type dev",
+                    "type": "SUB_COMMAND"
+                },
+                {
+                    "name": "dark",
+                    "description": "Blague de type dark",
+                    "type": "SUB_COMMAND"
+                },
+                {
+                    "name": "limit",
+                    "description": "Blague de type limit",
+                    "type": "SUB_COMMAND"
+                },
+                {
+                    "name": "beauf",
+                    "description": "Blague de type beauf",
+                    "type": "SUB_COMMAND"
+                },
+                {
+                    "name": "blondes",
+                    "description": "Blague de type blondes",
+                    "type": "SUB_COMMAND"
+                }
+            ]
+        },
+        {
+            "name": "meme",
+            "description": "Envoie un meme"
+        },
+        {
+            "name": "mixnames",
+            "description": "Fait le mélange de deux pseudos",
+            "options": [
+                {
+                    "name": "utilisateur1",
+                    "description": "Premier utilisateur",
+                    "type": "USER",
+                    "required": true
+                },
+                {
+                    "name": "utilisateur2",
+                    "description": "Deuxième utilisateur",
+                    "type": "USER",
+                    "required": false
+                },
+                {
+                    "name": "texte",
+                    "description": "Texte à la place du deuxième utilisateur",
+                    "type": "STRING",
+                    "required": false
+                }
+            ]
+        },
+        {
+            "name": "pof",
+            "description": "Fait un pile ou face",
+            "options": [
+                {
+                    "name": "pari",
+                    "description": "Le choix du côté de la pièce",
+                    "type": "STRING",
+                    "required": true,
+                    "choices": [
+                        {
+                            "name": "Pile",
+                            "value": "pile"
+                        },
+                        {
+                            "name": "Face",
+                            "value": "face"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "cryptage",
+            "description": "Crypte ou décrypte un texte selon votre clé",
+            "options": [
+                {
+                    "name": "action",
+                    "description": "Action à effectuer sur votre texte",
+                    "required": true,
+                    "type": "STRING",
+                    "choices": [
+                        {
+                            "name": "Chiffrer",
+                            "value": "code"
+                        },
+                        {
+                            "name": "Déchiffrer",
+                            "value": "decode"
+                        }
+                    ]
+                },
+                {
+                    "name": "texte",
+                    "type": "STRING",
+                    "required": true,
+                    "description": "Texte à examiner"
+                },
+                {
+                    "name": "clé",
+                    "required": true,
+                    "description": "Clé de chiffrage/déchiffrage",
+                    "type": "STRING"
+                }
+            ]
+        }
+    ],
+    [
+        {
+            "name": "avatar",
+            "description": "Affiche la photo de profil d'une personne",
+            "options": [
+                {
+                    "name": "utilisateur",
+                    "description": "Utilisateur dont vous voulez voir la photo de profil",
+                    "type": "USER",
+                    "required": false,
+                    "autocomplete": false
+                }
+            ]
+        },
+        {
+            "name": "botinfo",
+            "description": "Affiche quelques informations sur le bot"
+        },
+        {
+            "name": "channelinfo",
+            "description": "Affiche les informations d'un salon",
+            "options": [
+                {
+                    "name": "salon",
+                    "description": "Salon dont vous voulez soutirer des informations",
+                    "required": false,
+                    "type": "CHANNEL"
+                }
+            ]
+        },
+        {
+            "name": "roleinfo",
+            "description": "Affiche les informations d'un rôle",
+            "options": [
+                {
+                    "name": "rôle",
+                    "description": "Rôle dont vous voulez vous informez",
+                    "required": false,
+                    "type": "ROLE"
+                }
+            ]
+        },
+        {
+            "name": "servericon",
+            "description": "Affiche l'icône du serveur"
+        },
+        {
+            "name": "serverinfo",
+            "description": "Affiche les informations du serveur"
+        },
+        {
+            "name": "userinfo",
+            "description": "Affiche les informations d'un utilisateur",
+            "options": [
+                {
+                    "name": "utilisateur",
+                    "description": "Utilisateur dont vous voulez être informé",
+                    "type": "USER",
+                    "required": false
+                }
+            ]
+        }
+    ],
+    [
+        {
+            "name": "classement",
+            "description": "Affiche le classement des niveaux du serveur"
+        },
+        {
+            "name": "rank",
+            "description": "Affiche les informations de niveau d'un utilisateur",
+            "options": [
+                {
+                    "name": "utilisateur",
+                    "description": "Utilisateur concerné",
+                    "required": false,
+                    "autocomplete": false,
+                    "type": "USER"
+                },
+                {
+                    "name": "discret",
+                    "description": "Fait en sorte que seul vous voie ce message.",
+                    "required": false,
+                    "autocomplete": false,
+                    "type": "BOOLEAN"
+                }
+            ]
+        }
+    ],
+    [
+        {
+            "name": "cmdpersonnalisée",
+            "description": "Gère les commandes personnalisées",
+            "options": [
+                {
+                    "name": "créer",
+                    "description": "Créer une commande personnalisée",
+                    "type": "SUB_COMMAND",
+                    "options": [
+                        {
+                            "name": "nom",
+                            "description": "Nom de la commande",
+                            "type": "STRING",
+                            "required": true
+                        },
+                        {
+                            "name": "réponse",
+                            "description": "Réponse du bot",
+                            "type": "STRING",
+                            "required": true
+                        }
+                    ]
+                },
+                {
+                    "name": "supprimer",
+                    "description": "Supprime une commande personnalisée",
+                    "type": "SUB_COMMAND",
+                    "options": [
+                        {
+                            "name": "nom",
+                            "description": "Nom de la commande",
+                            "type": "STRING",
+                            "required": true
+                        }
+                    ]
+                },
+                {
+                    "name": "liste",
+                    "description": "Affiche la liste des commandes personnalisées",
+                    "type": "SUB_COMMAND"
+                }
+            ]
+        },
+        {
+            "name": "documentation",
+            "description": "Envoie le lien de la documentation"
+        },
+        {
+            "name": "drop",
+            "description": "Fait un drop dans le salon",
+            "options": [
+                {
+                    "name": "récompense",
+                    "description": "Récompense du drop",
+                    "type": "STRING",
+                    "required": true
+                }
+            ]
+        },
+        {
+            "name": "generatemdp",
+            "description": "Génère un mot de passe aléatoire",
+            "options": [
+                {
+                    "type": "INTEGER",
+                    "name": "taille",
+                    "description": "Nombre de caractères",
+                    "required": true
+                },
+                {
+                    "type": "BOOLEAN",
+                    "name": "majuscules",
+                    "description": "Le mot de passe doit-il inclure des majuscules ?",
+                    "required": true
+                },
+                {
+                    "type": "BOOLEAN",
+                    "name": "nombres",
+                    "description": "Le mot de passe contient-il des nombres ?",
+                    "required": true
+                },
+                {
+                    "type": "BOOLEAN",
+                    "name": "speciaux",
+                    "description": "Le mot de passe doit-il contenir des caractères spéciaux",
+                    "required": true
+                }
+            ]
+        },
+        {
+            "name": "giveaway",
+            "description": "Giveaways",
+            "options": [
+                {
+                    "name": "create",
+                    "description": "Crée un giveaway",
+                    "type": "SUB_COMMAND",
+                    "options": [
+                        {
+                            "name": "récompense",
+                            "description": "récompense données au(x) gagnant(s)",
+                            "required": true,
+                            "type": "STRING",
+                            "autocomplete": false
+                        },
+                        {
+                            "name": "temps",
+                            "type": "STRING",
+                            "description": "Temps du giveaway",
+                            "autocomplete": false,
+                            "required": true
+                        },
+                        {
+                            "name": "gagnants",
+                            "type": "INTEGER",
+                            "required": true,
+                            "autocomplete": false,
+                            "description": "Nombre de gagnants au giveaway"
+                        },
+                        {
+                            "name": "salon",
+                            "type": "CHANNEL",
+                            "required": false,
+                            "autocomplete": false,
+                            "description": "Le salon dans lequel aura lieu le giveaway"
+                        },
+                        {
+                            "name": "bonus",
+                            "type": "STRING",
+                            "required": false,
+                            "description": "Identifiants des rôles bonus (séparés par un espace)"
+                        },
+                        {
+                            "name": "requis",
+                            "type": "STRING",
+                            "required": false,
+                            "description": "Identifiants des rôles requis (séparés par un espace)"
+                        },
+                        {
+                            "name": "interdits",
+                            "type": "STRING",
+                            "required": false,
+                            "description": "Identifiants des rôles interdits (séparés par un espace)"
+                        }
+                    ]
+                },
+                {
+                    "name": "reroll",
+                    "description": "Reroll un giveaway",
+                    "type": "SUB_COMMAND",
+                    "options": [
+                        {
+                            "name": "id",
+                            "description": "identifiant du message du giveaway dans le salon",
+                            "required": true,
+                            "type": "STRING",
+                            "autocomplete": false
+                        }
+                    ]
+                },
+                {
+                    "name": "end",
+                    "description": "Met fin à un giveaway",
+                    "type": "SUB_COMMAND",
+                    "options": [
+                        {
+                            "name": "id",
+                            "description": "Identifiant du message du giveaway dans le salon",
+                            "required": true,
+                            "autocomplete": false,
+                            "type": "STRING"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "google",
+            "description": "Fait une recherche google",
+            "options": [
+                {
+                    "name": "recherche",
+                    "required": true,
+                    "autocomplete": false,
+                    "description": "Le texte que vous souhaitez rechercher.",
+                    "type": "STRING"
+                },
+                {
+                    "name": "discret",
+                    "description": "Fait en sorte que seul vous voie ce message",
+                    "autocomplete": false,
+                    "required": false,
+                    "type": "BOOLEAN"
+                }
+            ]
+        },
+        {
+            "name": "mail-notifs",
+            "description": "Active ou désactive les notifications de mail",
+            "options": [
+                {
+                    "name": "enable",
+                    "description": "Active les notifications de mail",
+                    "type": "SUB_COMMAND"
+                },
+                {
+                    "name": "disable",
+                    "description": "Désactive les notifications de mail",
+                    "type": "SUB_COMMAND"
+                }
+            ]
+        },
+        {
+            "name": "mail",
+            "description": "Envoie un mail à un utilisateur",
+            "options": [
+                {
+                    "name": "utilisateur",
+                    "required": true,
+                    "type": "USER",
+                    "description": "Utilisateur qui recevra le mail"
+                },
+                {
+                    "name": "objet",
+                    "description": "Objet du mail",
+                    "required": true,
+                    "type": "STRING"
+                },
+                {
+                    "name": "contenu",
+                    "description": "Contenu du mail",
+                    "type": "STRING",
+                    "required": true
+                }
+            ]
+        },
+        {
+            "name": "mailbox",
+            "description": "Ouvre votre boite mail"
+        },
+        {
+            "name": "ping",
+            "description": "Pong",
+            "options": [
+                {
+                    "name": "discret",
+                    "description": "Fait en sorte que vous seul voyez ce message.",
+                    "type": "BOOLEAN",
+                    "required": false,
+                    "autocomplete": false
+                }
+            ]
+        },
+        {
+            "name": "say",
+            "description": "Fait dire quelque chose à Oracle",
+            "options": [
+                {
+                    "name": "texte",
+                    "type": "STRING",
+                    "required": true,
+                    "description": "Texte à faire répéter"
+                }
+            ]
+        },
+        {
+            "name": "suggestion",
+            "description": "Fait une suggestion dans le salon de la commande",
+            "options": [
+                {
+                    "name": "suggestion",
+                    "description": "Suggestion à proposer",
+                    "type": "STRING",
+                    "required": true
+                }
+            ]
+        }
+    ],
+    [
+        {
+            "name": "autorole",
+            "description": "Gère les rôles donnés automatiquement à l'arrivée sur le serveur",
+            "options": [
+                {
+                    "name": "ajouter",
+                    "description": "Ajoute un rôle automatiquement donné",
+                    "type": "SUB_COMMAND",
+                    "options": [
+                        {
+                            "name": "rôle",
+                            "description": "Rôle à ajouter",
+                            "type": "ROLE",
+                            "required": true
+                        }
+                    ]
+                },
+                {
+                    "name": "retirer",
+                    "description": "Retirer un rôle automatiquement donné",
+                    "type": "SUB_COMMAND",
+                    "options": [
+                        {
+                            "name": "rôle",
+                            "description": "Rôle à retirer",
+                            "type": "ROLE",
+                            "required": true
+                        }
+                    ]
+                },
+                {
+                    "name": "liste",
+                    "description": "Affiche la liste des rôles automatiques",
+                    "type": "SUB_COMMAND"
+                }
+            ]
+        },
+        {
+            "name": "ban",
+            "description": "Banni un membre pour une raison donnée",
+            "options": [
+                {
+                    "name": "membre",
+                    "required": true,
+                    "description": "L'utilisateur que vous voulez bannir",
+                    "autocomplete": false,
+                    "type": "USER"
+                },
+                {
+                    "name": "raison",
+                    "required": true,
+                    "description": "Raison du bannissement",
+                    "autocomplete": false,
+                    "type": "STRING"
+                }
+            ]
+        },
+        {
+            "name": "censure",
+            "description": "Censure le pseudo d'un membre",
+            "options": [
+                {
+                    "name": "membre",
+                    "description": "Membre à censurer",
+                    "type": "USER",
+                    "required": true
+                },
+                {
+                    "name": "raison",
+                    "description": "Raison de la censure",
+                    "type": "STRING",
+                    "required": true
+                }
+            ]
+        },
+        {
+            "name": "salon",
+            "description": "Gère les salons",
+            "options": [
+                {
+                    "name": "créer",
+                    "type": "SUB_COMMAND",
+                    "description": "Créer un salon",
+                    "options": [
+                        {
+                            "name": "nom",
+                            "description": "Nom du salon",
+                            "type": "STRING",
+                            "required": true,
+                            "autocomplete": false
+                        },
+                        {
+                            "name": "type",
+                            "description": "Type du salon",
+                            "type": "STRING",
+                            "required": true,
+                            "autocomplete": false,
+                            "choices": [
+                                {
+                                    "name": "texte",
+                                    "value": "GUILD_TEXT"
+                                },
+                                {
+                                    "name": "vocal",
+                                    "value": "GUILD_VOICE"
+                                },
+                                {
+                                    "name": "catégorie",
+                                    "value": "GUILD_CATEGORY"
+                                }
+                            ]
+                        },
+                        {
+                            "name": "catégorie",
+                            "type": "CHANNEL",
+                            "required": false,
+                            "autocomplete": false,
+                            "description": "Catégorie dans laquelle le salon sera crée"
+                        }
+                    ]
+                },
+                {
+                    "name": "supprimer",
+                    "type": "SUB_COMMAND",
+                    "description": "Supprimer un salon",
+                    "options": [
+                        {
+                            "name": "salon",
+                            "description": "Le salon à supprimer",
+                            "required": false,
+                            "type": "CHANNEL"
+                        }
+                    ]
+                },
+                {
+                    "name": "renommer",
+                    "type": "SUB_COMMAND",
+                    "description": "Renommer un salon",
+                    "options": [
+                        {
+                            "name": "nom",
+                            "description": "Nouveau nom du salon",
+                            "required": true,
+                            "type": "STRING"
+                        },
+                        {
+                            "name": "salon",
+                            "description": "Salon à renommer",
+                            "required": false,
+                            "type": "CHANNEL"
+                        }
+                    ]
+                },
+                {
+                    "name": "déplacer",
+                    "type": "SUB_COMMAND",
+                    "description": "Déplacer un salon.",
+                    "options": [
+                        {
+                            "name": "places",
+                            "description": "Nombre de places pour déplacer le salon. Rentrez un nombre négatif ou un nombre positif.",
+                            "required": true,
+                            "type": "NUMBER"
+                        },
+                        {
+                            "name": "salon",
+                            "description": "Salon à déplacer",
+                            "required": false,
+                            "type": "CHANNEL"
+                        }
+                    ]
+                },
+                {
+                    "name": "catégoriser",
+                    "type": "SUB_COMMAND",
+                    "description": "Catégoriser un salon",
+                    "options": [
+                        {
+                            "name": "catégorie",
+                            "description": "Catégorie qui pendra le salon",
+                            "required": false,
+                            "type": "CHANNEL"
+                        },
+                        {
+                            "name": "salon",
+                            "description": "Salon à catégoriser",
+                            "required": false,
+                            "type": "CHANNEL"
+                        }
+                    ]
+                },
+                {
+                    "name": "décrire",
+                    "type": "SUB_COMMAND",
+                    "description": "Configure la description d'un salon",
+                    "options": [
+                        {
+                            "name": "salon",
+                            "description": "Salon à décrire",
+                            "type": "CHANNEL",
+                            "required": false
+                        },
+                        {
+                            "name": "description",
+                            "type": "STRING",
+                            "required": false,
+                            "description": "Description à donner au salon (laisser vide pour réinitialiser)"
+                        }
+                    ]
+                },
+                {
+                    "name": "identifier",
+                    "description": "Affiche l'identifiant d'un salon",
+                    "type": "SUB_COMMAND",
+                    "options": [
+                        {
+                            "name": "salon",
+                            "description": "Salon à identifier",
+                            "type": "CHANNEL",
+                            "required": false
+                        },
+                        {
+                            "name": "embed",
+                            "description": "Affiche la réponse sous forme d'embed (plus compliqué pour copier/coller)",
+                            "required": false,
+                            "type": "BOOLEAN"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "clear",
+            "description": "Supprime un nombre de messages dans le salon",
+            "options": [
+                {
+                    "name": "messages",
+                    "description": "Nombre de messages à supprimer",
+                    "required": true,
+                    "type": "INTEGER"
+                }
+            ]
+        },
+        {
+            "name": "demote",
+            "description": "Dérank un utilisateur",
+            "options": [
+                {
+                    "name": "highest",
+                    "description": "Enlève le rôle le plus haut d'un utilisateur",
+                    "type": "SUB_COMMAND",
+                    "options": [
+                        {
+                            "name": "utilisateur",
+                            "type": "USER",
+                            "description": "Utilisateur à dérank",
+                            "required": true
+                        },
+                        {
+                            "name": "raison",
+                            "type": "STRING",
+                            "description": "raison",
+                            "required": true
+                        }
+                    ]
+                },
+                {
+                    "name": "full",
+                    "description": "Retire tout les rôles d'un utilisateur",
+                    "type": "SUB_COMMAND",
+                    "options": [
+                        {
+                            "name": "utilisateur",
+                            "type": "USER",
+                            "description": "Utilisateur à dérank",
+                            "required": true
+                        },
+                        {
+                            "name": "raison",
+                            "type": "STRING",
+                            "description": "raison",
+                            "required": true
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "edit-case",
+            "description": "Modifie un log de modération sur le serveur",
+            "options": [
+                {
+                    "name": "numéro",
+                    "description": "Numéro du log",
+                    "required": true,
+                    "autocomplete": false,
+                    "type": "INTEGER"
+                },
+                {
+                    "name": "raison",
+                    "description": "La nouvelle raison du log",
+                    "required": true,
+                    "type": "STRING",
+                    "autocomplete": false
+                }
+            ]
+        },
+        {
+            "name": "filtre-case-action",
+            "description": "Affiche tout les logs de modération concernant une action précisée",
+            "options": [
+                {
+                    "name": "action",
+                    "description": "L'action a afficher",
+                    "required": true,
+                    "autocomplete": false,
+                    "type": "STRING",
+                    "choices": [
+                        {
+                            "name": "Bannissements",
+                            "value": "ban"
+                        },
+                        {
+                            "name": "Avertissements",
+                            "value": "avertissement"
+                        },
+                        {
+                            "name": "Réduction au silence",
+                            "value": "mute"
+                        },
+                        {
+                            "name": "Expulsion",
+                            "value": "kick"
+                        },
+                        {
+                            "name": "Démutage",
+                            "value": "unmute"
+                        },
+                        {
+                            "name": "Suppression d'avertissements",
+                            "value": "unwarn"
+                        },
+                        {
+                            "name": "Débanissement",
+                            "value": "unban"
+                        },
+                        {
+                            "name": "Modification de pseudo",
+                            "value": "pseudo modifié"
+                        },
+                        {
+                            "name": "Réinitialisation de pseudo",
+                            "value": "pseudo réinitialisé"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "infractions",
+            "description": "Affiche toutes les infractions d'un utilisateur",
+            "options": [
+                {
+                    "name": "membre",
+                    "description": "Membre dont vous voulez voir les infractions",
+                    "required": false,
+                    "type": "USER"
+                }
+            ]
+        },
+        {
+            "name": "kick",
+            "description": "Expulse un membre du serveur",
+            "options": [
+                {
+                    "name": "utilisateur",
+                    "description": "La personne à expulser du serveur",
+                    "type": "USER",
+                    "required": true,
+                    "autocomplete": false
+                },
+                {
+                    "name": "raison",
+                    "description": "Raison de l'expulsion",
+                    "type": "STRING",
+                    "required": true,
+                    "autocomplete": false
+                }
+            ]
+        },
+        {
+            "name": "logs",
+            "description": "Gère les logs du serveur",
+            "options": [
+                {
+                    "name": "afficher",
+                    "description": "Affiche les logs du serveur",
+                    "type": "SUB_COMMAND"
+                },
+                {
+                    "name": "identifier",
+                    "description": "Affiche un log spécifique",
+                    "type": "SUB_COMMAND",
+                    "options": [
+                        {
+                            "name": "identifiant",
+                            "description": "Identifiant du log que vous voulez voir",
+                            "type": "STRING",
+                            "required": true
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "mute",
+            "description": "Mute un membre du serveur",
+            "options": [
+                {
+                    "name": "membre",
+                    "type": "USER",
+                    "description": "Membre à muter",
+                    "required": true
+                },
+                {
+                    "name": "raison",
+                    "type": "STRING",
+                    "description": "Raison du mute",
+                    "required": true
+                },
+                {
+                    "name": "durée",
+                    "type": "INTEGER",
+                    "description": "Durée du mute",
+                    "required": false,
+                    "choices": [
+                        {
+                            "name": "5 minutes",
+                            "value": 300000
+                        },
+                        {
+                            "name": "10 minutes",
+                            "value": 600000
+                        },
+                        {
+                            "name": "20 minutes",
+                            "value": 1200000
+                        },
+                        {
+                            "name": "30 minutes",
+                            "value": 1800000
+                        },
+                        {
+                            "name": "45 minutes",
+                            "value": 2700000
+                        },
+                        {
+                            "name": "1 heure",
+                            "value": 3600000
+                        },
+                        {
+                            "name": "2 heures",
+                            "value": 7200000
+                        },
+                        {
+                            "name": "6 heures",
+                            "value": 21600000
+                        },
+                        {
+                            "name": "1 jour",
+                            "value": 86400000
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "note",
+            "description": "Système de notes de membres",
+            "options": [
+                {
+                    "name": "lire",
+                    "description": "Lis la note d'un membre",
+                    "type": "SUB_COMMAND",
+                    "options": [
+                        {
+                            "name": "membre",
+                            "type": "USER",
+                            "description": "Membre dont vous voulez lire la note",
+                            "required": true
+                        }
+                    ]
+                },
+                {
+                    "name": "écrire",
+                    "description": "Écrit une note pour un membre",
+                    "type": "SUB_COMMAND",
+                    "options": [
+                        {
+                            "name": "membre",
+                            "description": "Membre que vous voulez noter",
+                            "required": true,
+                            "type": "USER"
+                        },
+                        {
+                            "name": "note",
+                            "description": "Note à mettre sur le membre",
+                            "required": true,
+                            "type": "STRING"
+                        }
+                    ]
+                },
+                {
+                    "name": "supprimer",
+                    "description": "Supprime la note d'un membre",
+                    "type": "SUB_COMMAND",
+                    "options": [
+                        {
+                            "name": "membre",
+                            "description": "Membre dont vous voulez supprimer la note",
+                            "type": "USER",
+                            "required": true
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "nuke",
+            "description": "Nuke un salon",
+            "options": [
+                {
+                    "name": "salon",
+                    "description": "Salon à nuker",
+                    "type": "CHANNEL",
+                    "required": true
+                }
+            ]
+        },
+        {
+            "name": "prefixe",
+            "description": "Configure ou modifie le préfixe de votre serveur",
+            "options": [
+                {
+                    "name": "view",
+                    "description": "Affiche le préfixe du serveur",
+                    "type": "SUB_COMMAND"
+                },
+                {
+                    "name": "set",
+                    "description": "Configure le préfixe du bot sur votre serveur",
+                    "type": "SUB_COMMAND",
+                    "options": [
+                        {
+                            "name": "nouveau_prefixe",
+                            "description": "Nouveau préfixe du bot",
+                            "type": "STRING",
+                            "required": true
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "pseudo",
+            "description": "Gère le pseudo d'un membre",
+            "options": [
+                {
+                    "name": "définir",
+                    "description": "Définit le pseudo d'un membre",
+                    "type": "SUB_COMMAND",
+                    "options": [
+                        {
+                            "name": "pseudo",
+                            "description": "Pseudo à donner au membre",
+                            "required": true,
+                            "type": "STRING"
+                        },
+                        {
+                            "name": "membre",
+                            "description": "Membre à renommer",
+                            "required": false,
+                            "type": "USER"
+                        }
+                    ]
+                },
+                {
+                    "name": "réinitialiser",
+                    "description": "Réinitialise le pseudo d'un membre",
+                    "type": "SUB_COMMAND",
+                    "options": [
+                        {
+                            "name": "membre",
+                            "required": false,
+                            "description": "Membre à renommer",
+                            "type": "USER"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "role-react",
+            "description": "Configure les rôles à réaction",
+            "options": [
+                {
+                    "name": "envoyer",
+                    "description": "Envoie le message qui aura les réactions",
+                    "type": "SUB_COMMAND",
+                    "options": [
+                        {
+                            "name": "embed",
+                            "type": "BOOLEAN",
+                            "required": true,
+                            "description": "Définit si le message est un embed"
+                        },
+                        {
+                            "name": "contenu",
+                            "type": "STRING",
+                            "required": true,
+                            "description": "Définit le contenu du message"
+                        },
+                        {
+                            "name": "salon",
+                            "description": "Salon ou sera envoyé le message",
+                            "required": true,
+                            "type": "CHANNEL"
+                        },
+                        {
+                            "name": "titre",
+                            "description": "Titre de l'embed (si embed)",
+                            "required": false,
+                            "type": "STRING"
+                        },
+                        {
+                            "name": "couleur",
+                            "description": "Couleur de l'embed (si embed)",
+                            "required": false,
+                            "type": "STRING"
+                        },
+                        {
+                            "name": "image",
+                            "description": "URL de l'image de l'embed (si embed)",
+                            "type": "STRING",
+                            "required": false
+                        }
+                    ]
+                },
+                {
+                    "name": "ajouter",
+                    "description": "Ajoute un rôle",
+                    "type": "SUB_COMMAND",
+                    "options": [
+                        {
+                            "name": "role",
+                            "description": "Rôle à donner",
+                            "type": "ROLE",
+                            "required": true
+                        },
+                        {
+                            "name": "identifiant",
+                            "description": "Identifiant du message (celui envoyé par la commande /role-react envoyer)",
+                            "type": "STRING",
+                            "required": true
+                        },
+                        {
+                            "name": "salon",
+                            "description": "Salon du message",
+                            "required": true,
+                            "type": "CHANNEL"
+                        },
+                        {
+                            "name": "description",
+                            "description": "Description du rôle à réaction",
+                            "type": "STRING",
+                            "required": true
+                        }
+                    ]
+                },
+                {
+                    "name": "supprime",
+                    "description": "Supprime un rôle",
+                    "type": "SUB_COMMAND",
+                    "options": [
+                        {
+                            "name": "role",
+                            "description": "Rôle à enlever",
+                            "type": "ROLE",
+                            "required": true
+                        },
+                        {
+                            "name": "identifiant",
+                            "description": "Identifiant du message (celui envoyé par la commande /role-react envoyer)",
+                            "type": "STRING",
+                            "required": true
+                        },
+                        {
+                            "name": "salon",
+                            "description": "Salon du message",
+                            "required": true,
+                            "type": "CHANNEL"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "role",
+            "description": "Gère les rôles",
+            "options": [
+                {
+                    "name": "créer",
+                    "description": "Créer un rôle",
+                    "type": "SUB_COMMAND",
+                    "options": [
+                        {
+                            "name": "nom",
+                            "description": "Nom du rôle",
+                            "required": true,
+                            "autocomplete": false,
+                            "type": "STRING"
+                        }
+                    ]
+                },
+                {
+                    "name": "delete",
+                    "description": "Supprime un rôle",
+                    "type": "SUB_COMMAND",
+                    "options": [
+                        {
+                            "name": "role",
+                            "required": true,
+                            "autocomplete": false,
+                            "type": "ROLE",
+                            "description": "Le rôle à supprimer"
+                        }
+                    ]
+                },
+                {
+                    "name": "add",
+                    "description": "Ajoute un rôle à un membre",
+                    "type": "SUB_COMMAND",
+                    "options": [
+                        {
+                            "name": "utilisateur",
+                            "description": "L'utilisateur qui aura le rôle.",
+                            "required": true,
+                            "autocomplete": false,
+                            "type": "USER"
+                        },
+                        {
+                            "name": "role",
+                            "description": "Le rôle à ajouter",
+                            "required": true,
+                            "autocomplete": false,
+                            "type": "ROLE"
+                        }
+                    ]
+                },
+                {
+                    "name": "remove",
+                    "description": "Retire un rôle à un membre",
+                    "type": "SUB_COMMAND",
+                    "options": [
+                        {
+                            "name": "utilisateur",
+                            "description": "Utilisateur qui perdra le rôle",
+                            "required": true,
+                            "autocomplete": false,
+                            "type": "USER"
+                        },
+                        {
+                            "name": "role",
+                            "description": "Le rôle à retirer",
+                            "required": true,
+                            "autocomplete": false,
+                            "type": "ROLE"
+                        }
+                    ]
+                },
+                {
+                    "name": "renommer",
+                    "description": "Renomme un rôle",
+                    "type": "SUB_COMMAND",
+                    "options": [
+                        {
+                            "name": "rôle",
+                            "description": "Rôle à renommer",
+                            "required": true,
+                            "type": "ROLE"
+                        },
+                        {
+                            "name": "nom",
+                            "description": "Nom du rôle",
+                            "required": true,
+                            "type": "STRING"
+                        }
+                    ]
+                },
+                {
+                    "name": "déplacer",
+                    "description": "Déplace un rôle",
+                    "type": "SUB_COMMAND",
+                    "options": [
+                        {
+                            "name": "rôle",
+                            "description": "Rôle à déplacer",
+                            "required": true,
+                            "type": "ROLE"
+                        },
+                        {
+                            "name": "places",
+                            "description": "Nombre de places pour déplacer le rôle. Rentrez un nombre négatif ou un nombre positif.",
+                            "required": true,
+                            "type": "INTEGER"
+                        }
+                    ]
+                },
+                {
+                    "name": "coloriser",
+                    "description": "Colorise un rôle",
+                    "type": "SUB_COMMAND",
+                    "options": [
+                        {
+                            "name": "rôle",
+                            "description": "Rôle à coloriser",
+                            "type": "ROLE",
+                            "required": true
+                        },
+                        {
+                            "name": "couleur",
+                            "description": "Couleur à mettre sur le rôle. Donnez la en hexadecimal (ex: #ff0000)",
+                            "type": "STRING",
+                            "required": true
+                        }
+                    ]
+                },
+                {
+                    "name": "identifier",
+                    "description": "Affiche l'identifiant d'un rôle",
+                    "type": "SUB_COMMAND",
+                    "options": [
+                        {
+                            "name": "rôle",
+                            "description": "Rôle à identifier",
+                            "type": "ROLE",
+                            "required": true
+                        },
+                        {
+                            "name": "embed",
+                            "description": "Affiche la réponse sous forme d'embed (plus compliqué pour copier/coller)",
+                            "required": false,
+                            "type": "BOOLEAN"
+                        }
+                    ]
+                },
+                {
+                    "name": "permissions",
+                    "description": "Gère les permissions d'un rôle",
+                    "type": "SUB_COMMAND_GROUP",
+                    "options": [
+                        {
+                            "name": "accorder",
+                            "description": "Accorde une permission à un rôle",
+                            "type": "SUB_COMMAND",
+                            "options": [
+                                {
+                                    "name": "rôle",
+                                    "description": "Rôle à gérer",
+                                    "type": "ROLE",
+                                    "required": true
+                                },
+                                {
+                                    "name": "permission",
+                                    "description": "Permission à accorder",
+                                    "required": true,
+                                    "type": "STRING"
+                                }
+                            ]
+                        },
+                        {
+                            "name": "refuser",
+                            "description": "Refuse une permission à un rôle",
+                            "type": "SUB_COMMAND",
+                            "options": [
+                                {
+                                    "name": "rôle",
+                                    "description": "Rôle à gérer",
+                                    "required": true,
+                                    "type": "ROLE"
+                                },
+                                {
+                                    "name": "permission",
+                                    "description": "Permission à refuser",
+                                    "type": "STRING",
+                                    "required": true
+                                }
+                            ]
+                        },
+                        {
+                            "name": "liste",
+                            "description": "Affiche la liste des permissions accordables",
+                            "type": "SUB_COMMAND"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "snipe",
+            "description": "Affiche le dernier message supprimé dans le salon",
+            "options": [
+                {
+                    "name": "numéro",
+                    "description": "Le numéro du snipe",
+                    "required": false,
+                    "autocomplete": false,
+                    "type": "INTEGER"
+                }
+            ]
+        },
+        {
+            "name": "ticket-create",
+            "description": "Crée un ticket"
+        },
+        {
+            "name": "ticket",
+            "description": "Interagissez avec le système de tickets",
+            "options": [
+                {
+                    "name": "create",
+                    "description": "Créer un ticket",
+                    "type": "SUB_COMMAND_GROUP",
+                    "options": [
+                        {
+                            "name": "panel",
+                            "description": "Créer un panel de ticket",
+                            "type": "SUB_COMMAND",
+                            "options": [
+                                {
+                                    "name": "sujet",
+                                    "description": "Sujet du panel de ticket",
+                                    "type": "STRING",
+                                    "required": true
+                                },
+                                {
+                                    "name": "salon",
+                                    "description": "Salon du panel de ticket",
+                                    "required": true,
+                                    "type": "CHANNEL"
+                                },
+                                {
+                                    "name": "description",
+                                    "description": "Description du ticket, son objectif.",
+                                    "required": true,
+                                    "type": "STRING"
+                                },
+                                {
+                                    "name": "image",
+                                    "description": "Image affichée sur l'embe du ticket",
+                                    "required": false,
+                                    "type": "STRING"
+                                }
+                            ]
+                        },
+                        {
+                            "name": "ticket",
+                            "description": "Créer un ticket",
+                            "type": "SUB_COMMAND",
+                            "options": [
+                                {
+                                    "name": "sujet",
+                                    "description": "Sujet du ticket",
+                                    "required": true,
+                                    "type": "STRING"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "rename",
+                    "description": "Renomme le ticket",
+                    "type": "SUB_COMMAND",
+                    "options": [
+                        {
+                            "name": "nom",
+                            "description": "Nouveau nom du ticket",
+                            "required": true,
+                            "type": "STRING"
+                        }
+                    ]
+                },
+                {
+                    "name": "save",
+                    "description": "Sauvegarde le ticket",
+                    "type": "SUB_COMMAND"
+                },
+                {
+                    "name": "add",
+                    "description": "Ajoute un utilisateur au ticket",
+                    "type": "SUB_COMMAND",
+                    "options": [
+                        {
+                            "name": "utilisateur",
+                            "description": "Utilisateur à ajouter au ticket",
+                            "type": "USER",
+                            "required": true
+                        }
+                    ]
+                },
+                {
+                    "name": "remove",
+                    "description": "Retire un utilisateur du ticket",
+                    "type": "SUB_COMMAND",
+                    "options": [
+                        {
+                            "name": "utilisateur",
+                            "description": "Utilisateur à retirer du ticket",
+                            "required": true,
+                            "type": "USER"
+                        }
+                    ]
+                },
+                {
+                    "name": "close",
+                    "description": "Ferme le ticket",
+                    "type": "SUB_COMMAND"
+                },
+                {
+                    "name": "delete",
+                    "description": "Supprime le ticket",
+                    "type": "SUB_COMMAND"
+                },
+                {
+                    "name": "reopen",
+                    "description": "Réouvre le ticket",
+                    "type": "SUB_COMMAND"
+                },
+                {
+                    "name": "modrole",
+                    "description": "Gère les rôles de modérateurs de tickets",
+                    "type": "SUB_COMMAND_GROUP",
+                    "options": [
+                        {
+                            "name": "ajouter",
+                            "type": "SUB_COMMAND",
+                            "description": "Ajoute un rôle de modérateur de tickets",
+                            "options": [
+                                {
+                                    "name": "rôle",
+                                    "type": "ROLE",
+                                    "description": "Rôle à ajouter",
+                                    "required": true
+                                }
+                            ]
+                        },
+                        {
+                            "name": "retirer",
+                            "type": "SUB_COMMAND",
+                            "description": "Retirer un rôle de modérateur de tickets",
+                            "options": [
+                                {
+                                    "name": "rôle",
+                                    "type": "ROLE",
+                                    "description": "Rôle à retirer",
+                                    "required": true
+                                }
+                            ]
+                        },
+                        {
+                            "name": "liste",
+                            "description": "Affiche la liste des rôles de modérateurs de tickets",
+                            "type": "SUB_COMMAND"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "unwarn",
+            "description": "Enlève un avertissement à un utilisateur",
+            "options": [
+                {
+                    "name": "membre",
+                    "type": "USER",
+                    "description": "Membre qui aura un avertissement en moins",
+                    "required": true
+                },
+                {
+                    "name": "identifiant",
+                    "description": "Identifiant de l'avertissement (visible avec /logs afficher)",
+                    "type": "INTEGER",
+                    "required": true
+                }
+            ]
+        },
+        {
+            "name": "warn",
+            "description": "Avertit un utilisateur",
+            "options": [
+                {
+                    "name": "utilisateur",
+                    "description": "L'utilisateur en question",
+                    "required": true,
+                    "autocomplete": false,
+                    "type": "USER"
+                },
+                {
+                    "name": "raison",
+                    "description": "Raison de l'avertissement",
+                    "required": true,
+                    "autocomplete": false,
+                    "type": "STRING"
+                }
+            ]
+        }
+    ],
+    [
+        {
+            "name": "commande",
+            "description": "Affiche les informations concernant une commande",
+            "options": [
+                {
+                    "name": "commande",
+                    "description": "Nom de la commande",
+                    "required": true,
+                    "autocomplete": false,
+                    "type": "STRING"
+                },
+                {
+                    "name": "discret",
+                    "description": "Fait en sorte que seul vous voit la réponse.",
+                    "required": false,
+                    "autocomplete": false,
+                    "type": "BOOLEAN"
+                }
+            ]
+        },
+        {
+            "name": "contact",
+            "description": "Prend contact avec mon développeur",
+            "options": [
+                {
+                    "name": "bug",
+                    "description": "Le bug à signaler",
+                    "type": "STRING",
+                    "required": true,
+                    "autocomplete": false
+                }
+            ]
+        },
+        {
+            "name": "csc",
+            "description": "Gère les slash commandes personnalisées",
+            "options": [
+                {
+                    "name": "créer",
+                    "description": "Créer une slash commande personnalisée",
+                    "type": "SUB_COMMAND",
+                    "options": [
+                        {
+                            "name": "nom",
+                            "description": "Nom de la commande",
+                            "type": "STRING",
+                            "required": true
+                        },
+                        {
+                            "name": "réponse",
+                            "description": "Réponse de la commande",
+                            "required": true,
+                            "type": "STRING"
+                        },
+                        {
+                            "name": "embed",
+                            "description": "Si la réponse doit être un embed",
+                            "required": true,
+                            "type": "BOOLEAN"
+                        },
+                        {
+                            "name": "titre",
+                            "description": "Titre de l'embed",
+                            "required": false,
+                            "type": "STRING"
+                        },
+                        {
+                            "name": "couleur",
+                            "description": "Couleur de l'embed (optionnel)",
+                            "required": false,
+                            "type": "STRING"
+                        }
+                    ]
+                },
+                {
+                    "name": "supprimer",
+                    "description": "Supprimer une slash commande personnalisée",
+                    "type": "SUB_COMMAND",
+                    "options": [
+                        {
+                            "name": "nom",
+                            "description": "nom de la commande",
+                            "required": true,
+                            "type": "STRING"
+                        }
+                    ]
+                },
+                {
+                    "name": "liste",
+                    "description": "Liste des slash commandes personnalisées du serveur",
+                    "type": "SUB_COMMAND"
+                },
+                {
+                    "name": "variables",
+                    "description": "Variables disponibles en réponse",
+                    "type": "SUB_COMMAND"
+                }
+            ]
+        },
+        {
+            "name": "avis",
+            "description": "Envoie votre avis sur le bot",
+            "options": [
+                {
+                    "name": "avis",
+                    "description": "Votre avis",
+                    "type": "STRING",
+                    "required": true,
+                    "autocomplete": false
+                }
+            ]
+        },
+        {
+            "name": "help",
+            "description": "Affiche la page d'aide des commandes",
+            "options": [
+                {
+                    "name": "discret",
+                    "description": "Fait en sorte que vous seul voyez ce message.",
+                    "type": "BOOLEAN",
+                    "required": false,
+                    "autocomplete": false
+                }
+            ]
+        },
+        {
+            "name": "invite",
+            "description": "Envoie le lien d'invitation du bot"
+        },
+        {
+            "name": "rappel",
+            "description": "Gère vos rappels",
+            "options": [
+                {
+                    "name": "ajouter",
+                    "description": "Ajoute un rappel",
+                    "type": "SUB_COMMAND",
+                    "options": [
+                        {
+                            "name": "temps",
+                            "description": "Le temps avant le rappel",
+                            "type": "STRING",
+                            "required": true
+                        },
+                        {
+                            "name": "contenu",
+                            "description": "Contenu du rappel",
+                            "required": true,
+                            "type": "STRING"
+                        }
+                    ]
+                },
+                {
+                    "name": "retirer",
+                    "description": "Retire un rappel",
+                    "type": "SUB_COMMAND",
+                    "options": [
+                        {
+                            "name": "numéro",
+                            "description": "Numéro du rappel à supprimer",
+                            "type": "NUMBER",
+                            "required": true
+                        }
+                    ]
+                },
+                {
+                    "name": "liste",
+                    "type": "SUB_COMMAND",
+                    "description": "Affiche la liste de vos rappels"
+                }
+            ]
+        },
+        {
+            "name": "sondage",
+            "description": "Fait un sondage",
+            "options": [
+                {
+                    "name": "question",
+                    "type": "STRING",
+                    "required": true,
+                    "description": "Question du sondage"
+                },
+                {
+                    "name": "proposition_1",
+                    "type": "STRING",
+                    "description": "Proposition 1 du sondage",
+                    "required": true
+                },
+                {
+                    "name": "proposition_2",
+                    "type": "STRING",
+                    "description": "Proposition 2 du sondage",
+                    "required": true
+                },
+                {
+                    "name": "proposition_3",
+                    "type": "STRING",
+                    "description": "Proposition 3 du sondage",
+                    "required": false
+                },
+                {
+                    "name": "proposition_4",
+                    "type": "STRING",
+                    "description": "Proposition 4 du sondage",
+                    "required": false
+                },
+                {
+                    "name": "proposition_5",
+                    "type": "STRING",
+                    "description": "Proposition 5 du sondage",
+                    "required": false
+                },
+                {
+                    "name": "proposition_6",
+                    "type": "STRING",
+                    "description": "Proposition 6 du sondage",
+                    "required": false
+                },
+                {
+                    "name": "proposition_7",
+                    "type": "STRING",
+                    "description": "Proposition 7 du sondage",
+                    "required": false
+                },
+                {
+                    "name": "proposition_8",
+                    "type": "STRING",
+                    "description": "Proposition 8 du sondage",
+                    "required": false
+                },
+                {
+                    "name": "proposition_9",
+                    "type": "STRING",
+                    "description": "Proposition 9 du sondage",
+                    "required": false
+                },
+                {
+                    "name": "proposition_10",
+                    "type": "STRING",
+                    "description": "Proposition 10 du sondage",
+                    "required": false
+                }
+            ]
+        },
+        {
+            "name": "support",
+            "description": "Envoie le lien du serveur de support"
+        }
+    ]
+]

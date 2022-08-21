@@ -27,12 +27,33 @@ module.exports = {
         channel.guild.fetchAuditLogs({ type: 'CHANNEL_DELETE' }).then((entries) => {
             let log = package.embeds.log(channel.guild)
                 .setTitle("Salon supprimé")
-            if (entries.entries.first().target.id == channel.id) {
-                log.setDescription(`Un salon a été supprimé`)
                 .setColor('#ff0000')
+
+            if (entries.entries.first().target.id == channel.id) {
+                const mod = entries.entries.first().executor;
+                log.setDescription(`Un salon a été supprimé`)
+                .addFields(
+                    {
+                        name: "Modérateur",
+                        value: `<@${mod.id}> ( ${mod.tag} \`${mod.id}\` )`,
+                        inline: true
+                    },
+                    {
+                        name: 'Salon',
+                        value: `${channel.name} ( ${package.channelTypes[channel.type]} \`${channel.id}\` )`,
+                        inline: true
+                    },
+                    {
+                        name: "Date",
+                        value: `<t:${(Date.now() / 1000).toFixed(0)}:F> ( <t:${(Date.now() / 1000).toFixed(0)}:R> )`,
+                        inline: true
+                    }
+                )
             } else {
-                
-            }
-        })
+                log.setDescription(`Le salon ${channel.name} ( ${package.channelTypes[channel.type]} \`${channel.id}\` ) a été supprimé`)
+            };
+
+            functions.log(channel.guild, log);
+        });
     }
 };
