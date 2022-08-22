@@ -20,6 +20,10 @@ module.exports = {
                         value: 'ban'
                     },
                     {
+                        name: 'Softbannissements',
+                        value: 'softban'
+                    },
+                    {
                         name: 'Avertissements',
                         value: 'avertissement'
                     },

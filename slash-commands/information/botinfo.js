@@ -16,6 +16,7 @@ module.exports = {
      * @param {Discord.CommandInteraction} interaction 
      */
     run: async(interaction) => {
+        await interaction.deferReply();
         await interaction.client.guilds.fetch();
 
         const embed = package.embeds.classic(interaction.user)
@@ -59,9 +60,9 @@ module.exports = {
                     inline: true
                 },
                 {
-                    name: "Développeur",
+                    name: "Développeurs",
                     inline: false,
-                    value: `[${((await interaction.client.users.fetch(package.configs.gs)).tag)}](https://github.com/Greensky-gs)`
+                    value: `[${((await interaction.client.users.fetch(package.configs.gs)).tag)}](https://github.com/Greensky-gs)\n[${((await interaction.client.users.fetch(package.configs.swiz)).tag)}](https://github.com/Swiizyy)`
                 }
             )
             .setColor(interaction?.guild?.me?.displayHexColor ?? 'ORANGE')
@@ -76,6 +77,6 @@ module.exports = {
         
         let components = [];
         if (functions.random(10, 0) == 4) components.push(row);
-        interaction.reply({ embeds: [ embed ], components }).catch(() => {});
+        interaction.editReply({ embeds: [ embed ], components }).catch(() => {});
     }
 }

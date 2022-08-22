@@ -38,7 +38,11 @@ module.exports = {
             let count = 0;
             
             stats.forEach((stat, i) => {                
-                now.addField(`${i + 1}]`, `<@${stat.user}>\n${parseInt(stat.coins).toLocaleString('en').replace(/,/g, ' ')} ${package.configs.coins}`, false);
+                now.addFields({
+                    name: `${i + 1}]`,
+                    value: `<@${stat.user}>\n${parseInt(stat.coins).toLocaleString('fr-DE')} ${package.configs.coins}`,
+                    inline: false
+                });
 
                 pile = false;
 
@@ -67,8 +71,11 @@ module.exports = {
             .setColor('ORANGE')
 
             stats.forEach((stat, i) => {
-                const x = stat.coins.toLocaleString('en');
-                embed.addField(`${i + 1}]`, `<@${stat.user}>\n${x.replace(/,/g, ' ')}`, false);
+                const x = stat.coins.toLocaleString('fr-DE');
+                embed.addFields({
+                    name: `${i + 1}]`,
+                    value: `<@${stat.user}>\n${x}`,
+                    inline: false});
             });
 
             interaction.reply({ embeds: [ embed ] }).catch(() => {});

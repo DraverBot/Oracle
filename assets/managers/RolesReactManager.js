@@ -55,7 +55,7 @@ class RolesReactManager {
      * @param {{ guild: Discord.Guild, channel: Discord.BaseGuildTextChannel, content: Discord.MessageOptions }} data
      */
     sendMessage(data) {
-        const components = new Discord.MessageActionRow()
+        const components = new Discord.ActionRowBuilder()
             .addComponents(
                 new Discord.MessageSelectMenu()
                     .setMaxValues(1)
@@ -115,7 +115,7 @@ class RolesReactManager {
         selector.setMaxValues(1);
         selector.setMinValues(1);
 
-        data.message.edit({ components: [ new Discord.MessageActionRow().addComponents(selector) ] }).catch(() => {});
+        data.message.edit({ components: [ new Discord.ActionRowBuilder().addComponents(selector) ] }).catch(() => {});
         let { roles } = this.cache.get(data.guild.id).get(data.message.id);
 
         if (roles.length == 0) role = data.role.id;
@@ -154,7 +154,7 @@ class RolesReactManager {
         selector.setMaxValues(1);
         selector.setMinValues(1);
 
-        data.message.edit({ components: [ new Discord.MessageActionRow().addComponents(selector) ] }).catch(() => {});
+        data.message.edit({ components: [ new Discord.SelectMenuBuilder().addComponents(selector) ] }).catch(() => {});
 
         let roleIndex = roles.indexOf(data.role.id);
         roles.splice(roleIndex, 1);

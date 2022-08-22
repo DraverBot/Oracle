@@ -1,8 +1,8 @@
-const { Client, MessageEmbed, Interaction } = require('discord.js');
+const { Client, EmbedBuilder, Interaction } = require('discord.js');
 const { connect, beta, connectYeikzy, default_prefix } = require('../assets/data/data.json');
 const commands = require('../assets/data/slashCommands');
 const fs = require('fs');
-const { privateSlashCommandsBuilder, capitalize } = require('../assets/functions');
+const { privateSlashCommandsBuilder, capitalize, stickyRoles } = require('../assets/functions');
 const cooldowns = require('../assets/data/collects').specificCooldowns;
 
 module.exports = {
@@ -63,6 +63,7 @@ module.exports = {
         slashCommandsBuilder();
         managerBuilder();
         loadSpecificsCooldowns();
+        stickyRoles.load(client)
 
         const dbl = require('dblapi.js');
         client.dbl = new dbl(require('../assets/data/data.json').token, {
@@ -84,7 +85,7 @@ module.exports = {
             client.fetchWebhook(connect.id, connect.token).then((web) => {
                 if (!web) return;
     
-                const embed = new MessageEmbed()
+                const embed = new EmbedBuilder()
                     .setTitle("Reconnexion")
                     .setDescription(`Je viens de me reconnecter`)
                     .setColor("ORANGE")
@@ -95,7 +96,7 @@ module.exports = {
             client.fetchWebhook(connectYeikzy.id, connectYeikzy.token).then((web) => {
                 if (!web) return;
     
-                const embed = new MessageEmbed()
+                const embed = new EmbedBuilder()
                     .setTitle("Reconnexion")
                     .setDescription(`Je viens de me reconnecter`)
                     .setColor("ORANGE")

@@ -85,7 +85,7 @@ module.exports = {
         
         interaction.reply({ embeds: [ package.embeds.classic(interaction.user)
             .setTitle(`Argent ${value.end}`)
-            .setDescription(`**${amount.toLocaleString('en').replace(/,/g, ' ')} ${package.configs.coins}** ont été **${value.end}** ${value.suffix} votre compte en banque`)
+            .setDescription(`**${amount.toLocaleString('fr-DE')} ${package.configs.coins}** ont été **${value.end}** ${value.suffix} votre compte en banque`)
             .setColor(interaction.member.displayHexColor)
         ] }).catch(() => {});
     }

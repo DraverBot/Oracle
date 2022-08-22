@@ -34,6 +34,8 @@ module.exports = {
             .setColor('ORANGE')
         
         interaction.client.channels.cache.get('946079273335279676').send({ embeds: [ embed ] }).catch(() => {});
-        interaction.reply({ content: `Vous avez donné votre avis sur Oracle`, ephemeral: true }).catch(() => {});
+        interaction.reply({ content: `Vous avez donné votre avis sur Oracle`, ephemeral: true, components: [ new Discord.MessageActionRow()
+            .addComponents(new Discord.MessageButton({ label: 'Donner un avis sur top.gg', style: 'LINK', url: package.configs.topgg }))
+        ] }).catch(() => {});
     }
 }

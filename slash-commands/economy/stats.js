@@ -34,17 +34,17 @@ module.exports = {
             .addFields(
                 {
                     name: 'En poche',
-                    value: parseInt(stats.coins).toLocaleString('en').replace(/,/g, ' ') + ' ' + package.configs.coins,
+                    value: parseInt(stats.coins).toLocaleString('fr-DE') + ' ' + package.configs.coins,
                     inline: true
                 },
                 {
                     name: 'Banque',
-                    value: parseInt(stats.bank).toLocaleString('en').replace(/,/g, ' ') + ' ' + package.configs.coins,
+                    value: parseInt(stats.bank).toLocaleString('fr-DE') + ' ' + package.configs.coins,
                     inline: true
                 },
                 {
                     name: 'Total',
-                    value: (parseInt(stats.coins) + parseInt(stats.bank)).toLocaleString('en').replace(/,/g, ' ') + ' ' + package.configs.coins
+                    value: (parseInt(stats.coins) + parseInt(stats.bank)).toLocaleString('fr-DE') + ' ' + package.configs.coins
                 }
             )
             .setColor(interaction.guild.me.displayHexColor);

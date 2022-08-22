@@ -1,11 +1,11 @@
-const { MessageEmbed } = require('discord.js');
+const { EmbedBuilder } = require('discord.js');
 
 module.exports = {
     /**
      * @param {{ reward: String, winnerCount: Number, hosterId: String, channel: TextChannel, time: Number, ?bonusRoles: String[], ?deniedRoles: String[], ?requiredRoles: String[] }} data 
      */
     giveaway: (data) => {
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
             .setTitle("🎉 Giveaway 🎉")
             .setColor('#00ff00')
             .setDescription(`**${data.reward}**
@@ -40,7 +40,7 @@ Finit <t:${((parseInt(data.time) + Date.now()) / 1000).toFixed(0)}:R>`)
         return embed;
     },
     ended: (data, winners) => {
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
             .setTitle("🎉 Giveaway terminé 🎉")
             .setColor('#ff0000')
             .setDescription(`**${data.reward}**
@@ -56,7 +56,7 @@ Finit <t:${(Date.now() / 1000).toFixed(0)}:R>`)
         let roles = deniedRoles;
         if (typeof roles == 'string') roles = JSON.parse(roles);
 
-        return new MessageEmbed()
+        return new EmbedBuilder()
             .setTitle("🚫 Accès refusé")
             .setDescription(`L'accès à [**ce giveaway**](${url}) vous est refusé car vous avez un ou plusieurs de ces rôles :\n${roles.map(x => `<@&${x}>`).join(' ')}`)
             .setColor('#ff0000')
@@ -65,42 +65,42 @@ Finit <t:${(Date.now() / 1000).toFixed(0)}:R>`)
         let roles = requiredRoles;
         if (typeof roles == 'string') roles = JSON.parse(roles);
 
-        return new MessageEmbed()
+        return new EmbedBuilder()
             .setTitle("🚫 Accès refusé")
             .setDescription(`L'accès à [**ce giveaway**](${url}) vous est réfusé car vous n'avez pas un ou plusieurs de ces rôles :\n${roles.map(x => `<@&${x}>`).join(' ')}`)
             .setColor('#ff0000')
     },
     entryAllowed: (url) => {
-        return new MessageEmbed()
+        return new EmbedBuilder()
             .setTitle("🎉 Accès autorisé")
             .setColor('#00ff00')
             .setDescription(`Votre participation à [**ce giveaway**](${url}) a été confirmée.\nBonne chance !`)
     },
     alreadyParticipate: (url) => {
-        return new MessageEmbed()
+        return new EmbedBuilder()
             .setTitle("🚫 Déjà participé")
             .setDescription(`Vous participez déjà à [**ce giveaway**](${url}).`)
             .setColor('#ff0000')
     },
     notParticipated: (url) => {
-        return new MessageEmbed()
+        return new EmbedBuilder()
             .setTitle("🚫 Pas de participation")
             .setDescription(`Vous n'avez pas participé à [**ce giveaway**](${url})`)
             .setColor('#ff0000')
     },
     removeParticipation: (url) => {
-        return new MessageEmbed()
+        return new EmbedBuilder()
             .setTitle("❌ Participation annulée")
             .setDescription(`Votre participation à [**ce giveaway**](${url}) a été annulée.`)
             .setColor('#00ff00')
     },
     winners: (winners, url) => {
-        if (winners.length == 0) return new MessageEmbed()
+        if (winners.length == 0) return new EmbedBuilder()
             .setTitle("Pas de gagnants")
             .setDescription(`Il n'y a aucun gagnants pour [**ce giveaway**](${url}).`)
             .setColor('#ff0000');
         
-        return new MessageEmbed()
+        return new EmbedBuilder()
             .setTitle("🎉 Gagnants")
             .setDescription(`Le${winners.length > 1 ? 's':''} gagnant${winners.length > 1 ? 's':''} de [**ce giveaway**](${url}) ${winners.length > 1 ? 'sont':'est'} ${winners.map(x => `<@${x}>`).join(' ')}`)
             .setColor('#00ff00')

@@ -269,7 +269,7 @@ module.exports = {
                 .setTitle("Supression")    
                 .setDescription(`<#${channel.id}> sera supprimé <t:${((Date.now() + 5000) / 1000).toFixed(0)}:R>`)
                 .setColor('ORANGE')
-            ], components: [ new Discord.MessageActionRow({ components: [ new Discord.MessageButton({ label: 'Annuler', style: 'DANGER', customId: 'cancel' }) ] }) ] }).then(() => {
+            ], components: [ new Discord.ActionRowBuilder({ components: [ new Discord.MessageButton({ label: 'Annuler', style: 'DANGER', customId: 'cancel' }) ] }) ] }).then(() => {
                 interaction.fetchReply().then((reply) => {
                     const collector = reply.createMessageComponentCollector({ filter: x => x.user.id == interaction.user.id, time: 5000, max: 1 });
 

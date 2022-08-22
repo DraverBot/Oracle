@@ -47,7 +47,7 @@ class TicketsManager {
         if (data.channel.type !== 'GUILD_TEXT') return 'not a text channel';
         if (!this.validString(data.subject)) return 'not a valid text';
 
-        const panel = new Discord.MessageEmbed()
+        const panel = new Discord.EmbedBuilder()
         .setTitle("Panel de ticket")
         .setDescription(`__Sujet du ticket :__ ${data.subject}\n__Description :__\n${data.description}\n\nRappel :\n→ Pas de spam\n→ Pas de troll\n\nAppuyez sur le bouton pour ouvrir un ticket.`)
         .setColor(data.guild.me.displayHexColor)
@@ -55,7 +55,7 @@ class TicketsManager {
 
         if (data.image) panel.setImage(data.image);
         
-        data.channel.send({ embeds: [ panel ], components: [ new Discord.MessageActionRow().addComponents(new Discord.MessageButton({ customId: 'ticket_panel', emoji: '📥', style: 'SECONDARY' })) ] }).then((sent) => {
+        data.channel.send({ embeds: [ panel ], components: [ new Discord.ActionRowBuilder().addComponents(new Discord.MessageButton({ customId: 'ticket_panel', emoji: '📥', style: 'SECONDARY' })) ] }).then((sent) => {
             const dataset = {
                 message_id: sent.id,
                 guild_id: sent.guild.id,
@@ -81,21 +81,21 @@ class TicketsManager {
         let { roles } = this.configs.get(data.guild.id);
         if (!roles) roles = [];
         
-        const embed = new Discord.MessageEmbed()
+        const embed = new Discord.EmbedBuilder()
             .setTitle("Ticket")
             .setDescription(`Ticket ouvert par <@${data.user.id}>.\n__Sujet :__ ${data.sujet}`)
             .setColor(data.guild.me.displayHexColor)
         
         if (data.image) embed.setImage(data.image);
 
-        const row = new Discord.MessageActionRow()
+        const row = new Discord.ActionRowBuilder()
             .addComponents(
-                new Discord.MessageButton()
-                    .setStyle('SECONDARY')
+                new Discord.ButtonBuilder()
+                    .setStyle(Discord.ButtonStyle.Secondary)
                     .setCustomId('ticket-close')
                     .setEmoji('🔐'),
                 new Discord.MessageButton()
-                    .setStyle("DANGER")
+                    .setStyle(Discord.ButtonStyle.Danger)
                     .setCustomId('mention-everyone')
                     .setLabel('mentionner everyone')
             )
@@ -152,18 +152,18 @@ class TicketsManager {
         const menu = data.channel.messages.cache.get(ticket.message_id);
         if (!menu) return 'error: menu not found';
 
-        const row = new Discord.MessageActionRow()
+        const row = new Discord.ActionRowBuilder()
             .addComponents(
-                new Discord.MessageButton()
-                    .setStyle('SECONDARY')
+                new Discord.ButtonBuilder()
+                    .setStyle(Discord.ButtonStyle.Secondary)
                     .setCustomId('ticket-reopen')
                     .setEmoji('🔓'),
-                new Discord.MessageButton()
-                    .setStyle('PRIMARY')
+                new Discord.ButtonBuilder()
+                    .setStyle(Discord.ButtonStyle.Primary)
                     .setCustomId('ticket-save')
                     .setEmoji('📜'),
-                new Discord.MessageButton()
-                    .setStyle('DANGER')
+                new Discord.ButtonBuilder()
+                    .setStyle(Discord.ButtonStyle.Danger)
                     .setCustomId('ticket-delete')
                     .setEmoji('🗑')
             )
@@ -185,10 +185,10 @@ class TicketsManager {
         const menu = data.channel.messages.cache.get(ticket.message_id);
         if (!menu) return 'error: menu not found';
 
-        const row = new Discord.MessageActionRow()
+        const row = new Discord.ActionRowBuilder()
             .addComponents(
-                new Discord.MessageButton()
-                    .setStyle('SECONDARY')
+                new Discord.ButtonBuilder()
+                    .setStyle(Discord.ButtonStyle.Secondary)
                     .setCustomId('ticket-close')
                     .setEmoji('🔐')
             );
@@ -215,10 +215,10 @@ class TicketsManager {
      * @param {{ channel: Discord.GuildTextBasedChannel, menu: Discord.Message, user: Discord.User }} data
      */
     pingEveryone(data) {
-        const row = new Discord.MessageActionRow()
+        const row = new Discord.ActionRowBuilder()
             .addComponents(
-                new Discord.MessageButton()
-                    .setStyle('SECONDARY')
+                new Discord.ButtonBuilder()
+                    .setStyle(Discord.ButtonStyle.Secondary)
                     .setCustomId('ticket-close')
                     .setEmoji('🔐')
             )
@@ -308,15 +308,15 @@ class TicketsManager {
                         .setDescription(`Êtes-vous sûr de vouloir mentionner everyone ?`)
                         .setColor('YELLOW')
                     ], components: [
-                        new Discord.MessageActionRow()
+                        new Discord.ActionRowBuilder()
                             .addComponents(
-                                new Discord.MessageButton()
+                                new Discord.ButtonBuilder()
                                     .setLabel('Oui')
-                                    .setStyle('SUCCESS')
+                                    .setStyle(Discord.ButtonStyle.Success)
                                     .setCustomId('yes'),
                                 new Discord.MessageButton()
                                     .setLabel('Non')
-                                    .setStyle('DANGER')
+                                    .setStyle(Discord.ButtonStyle.Danger)
                                     .setCustomId('no')
                             )
                     ], ephemeral: true });
@@ -345,7 +345,7 @@ class TicketsManager {
                     interaction.deferReply();
 
                     setTimeout(() => {
-                        const attachment = new Discord.MessageAttachment()
+                        const attachment = new Discord.AttachmentBuilder()
                             .setFile(customId)
                             .setName(`${interaction.channel.name}-ticket-save.html`)
                             .setDescription(`Sauvegarde du ticket`)

@@ -35,13 +35,13 @@ module.exports = {
                     .setColor('ORANGE')
 
                 levels.forEach((lvl) => {
-                    embed.addField(
-                        (levels.indexOf(lvl) + 1).toString(),
-                        `<@${lvl.user_id}>
+                    embed.addField({
+                        name: (levels.indexOf(lvl) + 1).toString(),
+                        value: `<@${lvl.user_id}>
 > Niveau **${parseInt(lvl.level).toLocaleString('fr-DE')}**
 > Avec un total de **${parseInt(lvl.total).toLocaleString('fr-DE')} messages**`,
-                        false
-                    );
+                        inline: false
+                    });
                 });
 
                 interaction.reply({ embeds: [ embed ] }).catch(() => {});
@@ -58,13 +58,13 @@ module.exports = {
                 for (let i = 0; i < levels.length; i++) {
                     const lvl = levels[i];
 
-                    now.addField(
-                        (levels.indexOf(lvl) + 1).toString(),
-                        `<@${lvl.user_id}>
+                    now.addField({
+                        name: (levels.indexOf(lvl) + 1).toString(),
+                        value: `<@${lvl.user_id}>
 > Niveau **${parseInt(lvl.level).toLocaleString('fr-DE')}**
 > Avec un total de **${parseInt(lvl.total).toLocaleString('fr-DE')} messages**`,
-                        false
-                    );
+                        inline: false
+                    });
 
                     pile = false;
 

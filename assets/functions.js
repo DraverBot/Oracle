@@ -50,22 +50,22 @@ module.exports = {
        let index = 0;
        let id = paginationName;
 
-       const row = new Discord.MessageActionRow()
+       const row = new Discord.ActionRowBuilder()
             .addComponents(
-                new Discord.MessageButton()
+                new Discord.ButtonBuilder()
                     .setEmoji('◀')
                     .setCustomId('arrière')
-                    .setStyle('SECONDARY'),
-                new Discord.MessageButton()
+                    .setStyle(Discord.ButtonStyle.Secondary),
+                new Discord.ButtonBuilder()
                     .setEmoji('🔢')
                     .setCustomId('select')
-                    .setStyle('PRIMARY'),
-                new Discord.MessageButton()
-                    .setStyle('SECONDARY')
+                    .setStyle(Discord.ButtonStyle.Primary),
+                new Discord.ButtonBuilder()
+                    .setStyle(Discord.ButtonStyle.Secondary)
                     .setEmoji('▶')
                     .setCustomId('avant'),
-                new Discord.MessageButton()
-                    .setStyle('DANGER')
+                new Discord.ButtonBuilder()
+                    .setStyle(Discord.ButtonStyle.Danger)
                     .setCustomId('close')
                     .setEmoji('❌')
             )
@@ -214,7 +214,7 @@ module.exports = {
     /**
      * 
      * @param {Discord.Guild} guild 
-     * @param {Discord.MessageEmbed} embed 
+     * @param {Discord.EmbedBuilder} embed 
      * @param {Discord.TextChannel} test
      */
     log: (guild, embed) => {
@@ -294,7 +294,7 @@ module.exports = {
         return true;
     },
     /**
-     * @param {{ mod: Discord.GuildMember, member: Discord.GuildMember, interaction: Discord.CommandInteraction, ?checkBotCompare: Boolean ?checkSelfUser: Boolean, ?checkOwner: Boolean, ?checkBot: Boolean, ?ownerValid: Boolean, ?all: Boolean }} data 
+     * @param {{ mod: Discord.GuildMember, member: Discord.GuildMember, interaction: Discord.CommandInteraction, ?checkRole: { activated: Boolean, role: Discord.Role } ?checkBotCompare: Boolean ?checkSelfUser: Boolean, ?checkOwner: Boolean, ?checkBot: Boolean, ?ownerValid: Boolean, ?all: Boolean }} data 
      */
     checkPerms(data) {
         const send = (embed) => {
@@ -316,6 +316,25 @@ module.exports = {
             send(embeds.notEnoughHiger(data.mod.user, data.member));
             return false;
         };
+        if (data.checkRole?.activated == true) {
+            let role = data.checkRole.role;
+            if (role.position >= data.mod.guild.me.roles.highest.position) {
+                send(embeds.classic(data.mod.user)
+                    .setTitle("Rôle trop haut")
+                    .setDescription(`Le rôle <@&${role.id}> est supérieur ou égal à moi`)
+                    .setColor('#ff0000')
+                );
+                return false;
+            };
+            if (role.position >= data.mod.roles.highest.position) {
+                send(embeds.classic(data.mod)
+                    .setTitle("Rôle trop haut")
+                    .setDescription(`Le rôle <@&${role.id}> est trop haut pour vous.`)
+                    .setColor('#ff0000')
+                );
+                return false;
+            };
+        }
         if (data.checkBotCompare == true && data.member.roles.position >= data.member.guild.me.roles.highest.position) {
             send(embeds.classic(data.mod.user)
                 .setTitle("Pas assez élevé")
@@ -375,16 +394,16 @@ module.exports = {
      */
     rpgPagination(channel, user, pages) {
         const texts = pages;
-        const row = new Discord.MessageActionRow()
+        const row = new Discord.ActionRowBuilder()
             .addComponents(
-                new Discord.MessageButton()
+                new Discord.ButtonBuilder()
                     .setCustomId('past')
                     .setEmoji('⬅')
-                    .setStyle('SECONDARY'),
-                new Discord.MessageButton()
+                    .setStyle(Discord.ButtonStyle.Secondary),
+                new Discord.ButtonBuilder()
                     .setCustomId('next')
                     .setEmoji('➡')
-                    .setStyle('SECONDARY')
+                    .setStyle(Discord.ButtonStyle.Secondary)
             );
         
         let index = 0;
@@ -431,16 +450,16 @@ module.exports = {
         return xdata;
     },
     generateChoiceButton(textConfirm, textCancel) {
-        const row = new Discord.MessageActionRow()
+        const row = new Discord.ActionRowBuilder()
             .addComponents(
-                new Discord.MessageButton()
-                    .setStyle('SUCCESS')
+                new Discord.ButtonBuilder()
+                    .setStyle(Discord.ButtonStyle.Success)
                     .setLabel(textConfirm || 'Valider')
                     .setCustomId('confirm'),
-                new Discord.MessageButton()
+                new Discord.ButtonBuilder()
                     .setCustomId('cancel')
                     .setLabel(textCancel || 'Annuler')
-                    .setStyle('DANGER')
+                    .setStyle(Discord.ButtonStyle.Danger)
             );
 
         return row;
@@ -456,8 +475,8 @@ module.exports = {
     },
     /**
      * @param {Discord.Message} message
-     * @param {String | Discord.MessageEmbed} content
-     * @param {Discord.MessageActionRow} row
+     * @param {String | Discord.EmbedBuilder} content
+     * @param {Discord.ActionRowBuilder} row
      */
     reply: async(message, content, row) => {
         let data = {
@@ -546,5 +565,50 @@ module.exports = {
             return specificCooldowns.get(`${userId}.${commandName}`).date;
         },
         getCode: (userId, commandName) => userId + '.' + commandName
+    },
+    stickyRoles: {
+        /**
+         * @param {Discord.Guild} guild 
+         * @param {Discord.GuildMember} member 
+         */
+        loadSpecific(guild, member) {
+            const sql = `SELECT role_id FROM stickyroles WHERE user_id="${member.id}" AND guild_id="${guild.id}"`;
+            guild.client.db.query(sql, async(err, req) => {
+                if (err) return console.log(err);
+                if (req.length == 0) return;
+
+                for (const rId of req) {
+                    let role = await guild.roles.fetch(rId.role_id, { cache: true });
+                    if (role && !member.roles.cache.has(role)) member.roles.add(role).catch(() => {});
+                };
+            });
+        },
+        /**
+         * @param {Discord.Client} client 
+         */
+        load(client) {
+            client.db.query(`SELECT user_id, guild_id FROM stickyroles`, async(err, req) => {
+                if (err) return console.log(err);
+                if (req.length == 0) return;
+
+                let guilds = new Discord.Collection();
+                await client.guilds.fetch();
+
+                for (const data of req) {
+                    if (!guilds.has(data.guild_id)) {
+                        let guild = client.guilds.cache.get(data.guild_id);
+                        if (guild) guilds.set(guild.id, guild);
+                    };
+
+                    let guild = guilds.get(data.guild_id);
+                    if (!guild) return;
+
+                    let member = (await guild.members.fetch(data.user_id));
+                    if (member) {
+                        this.loadSpecific(guild, member);
+                    };
+                }
+            })
+        }
     }
 }

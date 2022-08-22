@@ -5,7 +5,7 @@ const package = functions.package();
 module.exports = {
     event: 'messageCreate',
     /**
-     * @param {Discord.Message} message 
+     * @param {Discord.Message} message
      */
     execute: (message) => {
         const client = message.client;

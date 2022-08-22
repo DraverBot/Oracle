@@ -42,10 +42,10 @@ module.exports = {
 
         await interaction.reply({ embeds: [ package.embeds.classic(interaction.user)
             .setTitle("Confirmation")
-            .setDescription(`Confirmez-vous que vous voulez donner **${amount.toLocaleString('en').replace(/,/g, ' ')} ${package.configs.coins}** à <@${user.id}> ?`)
+            .setDescription(`Confirmez-vous que vous voulez donner **${amount.toLocaleString('fr-DE')} ${package.configs.coins}** à <@${user.id}> ?`)
             .setColor('YELLOW')
-        ],  components: [ new Discord.MessageActionRow()
-            .addComponents(new Discord.MessageButton({ label: 'Oui', style: 'SUCCESS', customId: 'y' }), new Discord.MessageButton({ label: 'Non', style: 'DANGER', customId: 'n' }))
+        ],  components: [ new Discord.ActionRowBuilder()
+            .addComponents(new Discord.ButtonBuilder({ label: 'Oui', style: Discord.ButtonStyle.Success, customId: 'y' }), new Discord.ButtonBuilder({ label: 'Non', style: Discord.ButtonStyle.Danger, customId: 'n' }))
         ] }).catch(() => {});
 
         const msg = await interaction.fetchReply();
@@ -58,7 +58,7 @@ module.exports = {
 
             interaction.editReply({ embeds: [ package.embeds.classic(interaction.user)
                 .setTitle("Transaction effectuée")
-                .setDescription(`Vous avez donné **${amount.toLocaleString('en').replace(/,/g, ' ')}** ${package.configs.coins} à <@${user.id}>`)
+                .setDescription(`Vous avez donné **${amount.toLocaleString('fr-DE')}** ${package.configs.coins} à <@${user.id}>`)
                 .setColor(interaction.member.displayHexColor)
             ], components: [] }).catch(() => {});
         });

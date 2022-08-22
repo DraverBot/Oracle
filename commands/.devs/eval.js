@@ -1,4 +1,4 @@
-const { token, gs } = require('../../assets/data/data.json')
+const { gs } = require('../../assets/data/data.json')
 const emojis = require('../../assets/data/emojis.json')
 const functions = require('../../assets/functions');
 
@@ -12,19 +12,17 @@ const ms = require('ms');
 
 module.exports.run = async (message, args, client, prefix) => {
     if (message.author.id !== gs) return
-    if (args.join(" ").includes(token)) return message.channel.send({content: `${emojis.gsno} Pas d'argument avec token`});
     
     const content = args.join(' ');
         const result = new Promise((resolve, reject) => resolve(eval(content)));
         return result.then((output) => {
             if (typeof output !== 'string') output = require('util').inspect(output, { depth: 0 });
             if (output.includes(token)) output = output.replace(token, 'T0K3N');
-            return message.channel.send({ content: `\`\`\`${output}\`\`\`` });
+            return message.channel?.send({ content: `\`\`\`${output}\`\`\`` });
         }).catch(err => {
             if (err) {
                 err = err.toString();
-                if (err.includes(token)) err = err.replace(token, '`T0K3N`');
-                return message.channel.send({ content: `\`\`\`${err}\`\`\`` })
+                return message.channel?.send({ content: `\`\`\`${err}\`\`\`` })
             }
         });
 }

@@ -54,12 +54,12 @@ class Morpion {
         return embed;
     }
     generateButtons() {
-        let first = new Discord.MessageActionRow();
-        let second = new Discord.MessageActionRow();
+        let first = new Discord.ActionRowBuilder();
+        let second = new Discord.ActionRowBuilder();
 
         for (let i = 0;i<9;i++) {
-            const btn = new Discord.MessageButton()
-                .setStyle('SECONDARY')
+            const btn = new Discord.ButtonBuilder()
+                .setStyle(Discord.ButtonStyle.Secondary)
                 .setLabel(`Case ${i + 1}`)
                 .setCustomId(i.toString())
 
@@ -69,8 +69,8 @@ class Morpion {
         };
 
         second.addComponents(
-            new Discord.MessageButton()
-                .setStyle('DANGER')
+            new Discord.ButtonBuilder()
+                .setStyle(Discord.ButtonStyle.Danger)
                 .setLabel('Abandonner')
                 .setCustomId('cancel')
         );

@@ -1,11 +1,10 @@
 const Discord = require('discord.js');
 const fs = require('fs');
 
-const { Intents } = require('discord.js');
-
+const { IntentsBitField } = require('discord.js');
 const client = new Discord.Client({
     partials: ['MESSAGE', 'CHANNEL', 'REACTION', 'USER'],
-    intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES,Intents.FLAGS.GUILD_MESSAGE_REACTIONS, Intents.FLAGS.DIRECT_MESSAGES, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILDS, Intents.FLAGS.DIRECT_MESSAGE_REACTIONS]
+    intents: [ IntentsBitField.Flags.Guilds, IntentsBitField.Flags.GuildMessages,IntentsBitField.Flags.GuildMessageReactions, IntentsBitField.Flags.DirectMessages, IntentsBitField.Flags.GuildMembers, IntentsBitField.Flags.DirectMessageReactions, IntentsBitField.Flags.GuildBans, IntentsBitField.Flags.GuildVoiceStates ]
 });
 
 const configs = require('./assets/data/data.json');
@@ -37,5 +36,7 @@ fs.readdirSync('./commands').filter(x => x.startsWith('.')).forEach((dirName) =>
 
 fs.writeFileSync(`./assets/data/commands.json`, JSON.stringify(obj, '', 1));
 
-let token = configs.beta === true ? configs.beta_token : configs.token;
+const tokens = require('./assets/data/tokens.json');
+
+let token = configs.beta === true ? tokens.beta_token : tokens.token;
 client.login(token);

@@ -86,7 +86,7 @@ module.exports = {
         const subcommand = interaction.options.getSubcommand();
 
         if (subcommand == 'démarrer') {
-            if (!interaction.member.permissions.has('MANAGE_GUILD')) return interaction.reply({ embeds: [ package.embeds.missingPermission(interaction.user, "gérer le serveur") ] }).catch(() => {});
+            if (!interaction.member.permissions.has(Discord.PermissionsBitField.Flags.ManageGuild)) return interaction.reply({ embeds: [ package.embeds.missingPermission(interaction.user, "gérer le serveur") ] }).catch(() => {});
             const reward = parseInt(interaction.options.get('récompense').value);
             const numbers = parseInt(interaction.options.get('gagnants').value);
             const complementaries = parseInt(interaction.options.get('complémentaires').value);
@@ -107,7 +107,7 @@ module.exports = {
             interaction.reply({ embeds: [ package.embeds.loto.started(interaction.user, numbers, complementaries, reward, time) ] }).catch(() => {});
         };
         if (subcommand == 'tirage') {
-            if (!interaction.member.permissions.has('MANAGE_GUILD')) return interaction.reply({ embeds: [ package.embeds.missingPermission(interaction.user, "gérer le serveur") ] }).catch(() => {});
+            if (!interaction.member.permissions.has(Discord.PermissionsBitField.Flags.ManageGuild)) return interaction.reply({ embeds: [ package.embeds.missingPermission(interaction.user, "gérer le serveur") ] }).catch(() => {});
 
             const result = interaction.client.LotoManager.end(interaction.guild.id);
             let embed;

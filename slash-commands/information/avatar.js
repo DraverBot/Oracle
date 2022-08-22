@@ -28,6 +28,6 @@ module.exports = {
     run: (interaction) => {
         const user = interaction.options.get('utilisateur') ? interaction.options.get('utilisateur').user : interaction.user;
 
-        interaction.reply({ content: `Voici la photo de profil de **${user.username}**:\n**${user.displayAvatarURL({ dynamic: true, size: 4096 })}**` });
+        interaction.reply({ content: user.displayAvatarURL({ dynamic: true, size: 4096 }) });
     }
 }

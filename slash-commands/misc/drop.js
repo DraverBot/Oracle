@@ -33,13 +33,13 @@ module.exports = {
             .setDescription(`${package.emojis.gsdrop} Drop de <@${interaction.user.id}> !\n\nSoyez le premier à appuyer sur le bouton pour gagner !\n__**Récompense :**__ ${drop}`)
             .setColor(interaction.guild.me.displayHexColor)
         
-        const row = new Discord.MessageActionRow()
+        const row = new Discord.ActionRowBuilder()
             .setComponents(
-                new Discord.MessageButton()
+                new Discord.ButtonBuilder()
                     .setCustomId('claim')
                     .setLabel('Réclamer')
                     .setEmoji(package.emojis.gsdrop)
-                    .setStyle('SUCCESS')
+                    .setStyle(Discord.ButtonStyle.Success)
         );
 
         await interaction.reply({ embeds: [ embed ], components: [ row ] }).catch(() => {});

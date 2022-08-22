@@ -16,7 +16,7 @@ module.exports = {
         }).then((logs) => {
             const log = logs.entries.first();
 
-            const embed = new Discord.MessageEmbed()
+            const embed = new Discord.EmbedBuilder()
                 .setTimestamp()
                 .setFooter({ text: guild.name, iconURL: guild.iconURL({ dynamic: true }) ? guild.iconURL({ dynamic: true }) : log.target.displayAvatarURL({ dynamic: true }) })
                 .setTitle("Bannissement")

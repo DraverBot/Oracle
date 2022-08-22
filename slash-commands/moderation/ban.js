@@ -34,7 +34,7 @@ module.exports = {
      * @param {Discord.CommandInteraction} interaction 
      */
     run: (interaction) => {
-        const member = interaction.options.get('member').member;
+        const member = interaction.options.get('membre').member;
         const reason = interaction.options.get('raison').value;
         if (reason.includes('"')) return interaction.reply({ embeds: [ package.embeds.guillement(interaction.user) ] });
 

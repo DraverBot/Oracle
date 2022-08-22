@@ -129,9 +129,9 @@ module.exports = {
                 .setTitle("Confirmation")
                 .setDescription(`Confirmez-vous que vous voulez réinitialiser les ${package.configs.coins} de <@${member.id}>`)
                 .setColor('YELLOW')
-            ], components: [ new Discord.MessageActionRow().addComponents(
-                new Discord.MessageButton({ label: 'Oui', customId: 'y', style: 'SUCCESS' }),
-                new Discord.MessageButton({ label: 'Non', customId: 'n', style: 'DANGER' })
+            ], components: [ new Discord.ActionRowBuilder().addComponents(
+                new Discord.ButtonBuilder({ label: 'Oui', customId: 'y', style: Discord.ButtonStyle.Success }),
+                new Discord.ButtonBuilder({ label: 'Non', customId: 'n', style: Discord.ButtonStyle.Danger })
             ) ] }).catch(() => {});
             const msg = await interaction.fetchReply();
 
@@ -152,9 +152,9 @@ module.exports = {
                 .setTitle("Confirmation")
                 .setDescription(`Confirmez-vous que vous voulez réinitialiser les ${package.configs.coins} de ${interaction.guild.name}`)
                 .setColor('YELLOW')
-            ], components: [ new Discord.MessageActionRow().addComponents(
-                new Discord.MessageButton({ label: 'Oui', customId: 'y', style: 'SUCCESS' }),
-                new Discord.MessageButton({ label: 'Non', customId: 'n', style: 'DANGER' })
+            ], components: [ new Discord.ActionRowBuilder().addComponents(
+                new Discord.ButtonBuilder({ label: 'Oui', customId: 'y', style: Discord.ButtonStyle.Success }),
+                new Discord.ButtonBuilder({ label: 'Non', customId: 'n', style: Discord.ButtonStyle.Danger })
             ) ] }).catch(() => {});
             const msg = await interaction.fetchReply();
 

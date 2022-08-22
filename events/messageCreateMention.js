@@ -1,4 +1,4 @@
-const { MessageActionRow, MessageButton } = require('discord.js');
+const { ButtonBuilder, ButtonStyle, ActionRowBuilder } = require('discord.js');
 const functions = require('../assets/functions');
 const package = functions.package();
 
@@ -28,19 +28,19 @@ module.exports = {
                 reponse.setURL('https://www.youtube.com/watch?v=dQw4w9WgXcQ');
             }; 
             
-            let row = new MessageActionRow();
+            let row = new ActionRowBuilder();
             let buttons = [];
             if (functions.random(10, 0) == 5) {
-                let support = new MessageButton()
+                let support = new ButtonBuilder()
                     .setLabel('Serveur de support')
-                    .setStyle('LINK')
+                    .setStyle(ButtonStyle.Link)
                     .setURL(package.configs.support)
                 buttons.push(support);
             };
             if (functions.random(10, 0) == 5) {
-                let invite = new MessageButton()
+                let invite = new ButtonBuilder()
                     .setLabel('Inviter Oracle')
-                    .setStyle('LINK')
+                    .setStyle(ButtonStyle.Link)
                     .setURL(package.configs.link)
                 
                 if (buttons.length == 0) {
@@ -54,9 +54,9 @@ module.exports = {
                 };
             };
             if (functions.random(10, 0) == 5 && buttons.length < 2) {
-                let topgg = new MessageButton()
+                let topgg = new ButtonBuilder()
                     .setLabel('Page top.gg')
-                    .setStyle('LINK')
+                    .setStyle(ButtonStyle.Link)
                     .setURL(package.configs.topgg)
                     
                 if (buttons.length == 0) {

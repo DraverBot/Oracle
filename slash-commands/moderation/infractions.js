@@ -36,7 +36,7 @@ module.exports = {
                 return;
             };
 
-            if (req.length === 0) return message.channel.send({ embeds: [ package.embeds.classic(interaction.user)
+            if (req.length === 0) return interaction.editReply({ embeds: [ package.embeds.classic(interaction.user)
                 .setTitle("Pas d'infractions")
                 .setDescription(`<@${member.id}> n'a aucune infraction sur ce serveur.`)
                 .setColor('GREEN')

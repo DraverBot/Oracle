@@ -63,10 +63,10 @@ module.exports = {
             let id = interaction.user.id;
             await interaction.reply({ embeds: [ package.embeds.classic(interaction.user)
                 .setTitle("Confirmation de l'échange")
-                .setDescription(`Confirmez-vous que vous donnez **${itemName}** à <@${user.id}> en échange de **${price.toLocaleString('en').replace(/,/g, ' ')}** ${package.configs.coins} ?`)
+                .setDescription(`Confirmez-vous que vous donnez **${itemName}** à <@${user.id}> en échange de **${price.toLocaleString('fr-DE')}** ${package.configs.coins} ?`)
                 .setColor('YELLOW')
-            ], components: [ new Discord.MessageActionRow()
-                .addComponents(new Discord.MessageButton({ label: 'Oui', style: 'SUCCESS', customId: 'y' }), new Discord.MessageButton({ label: 'Non', style: 'DANGER', customId: 'n' }))
+            ], components: [ new Discord.ActionRowBuilder()
+                .addComponents(new Discord.ButtonBuilder({ label: 'Oui', style: Discord.ButtonStyle.Success, customId: 'y' }), new Discord.ButtonBuilder({ label: 'Non', style: Discord.ButtonStyle.Danger, customId: 'n' }))
             ], content: `<@${id}>` }).catch(() => {});
 
             const msg = await interaction.fetchReply();
@@ -81,7 +81,7 @@ module.exports = {
                         id = user.id;
                         await interaction.editReply({ embeds: [ package.embeds.classic(interaction.user)
                             .setTitle("Confirmation de l'échange")
-                            .setDescription(`Confirmez-vous que vous donnez **${price.toLocaleString('en').replace(/,/g, ' ')}** ${package.configs.coins} à <@${interaction.user.id}> en échange de **${itemName}** ?`)
+                            .setDescription(`Confirmez-vous que vous donnez **${price.toLocaleString('fr-DE')}** ${package.configs.coins} à <@${interaction.user.id}> en échange de **${itemName}** ?`)
                             .setColor('YELLOW')
                         ], content: `<@${id}>` }).catch(() => {});
                     } else {

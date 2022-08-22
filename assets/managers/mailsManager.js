@@ -77,24 +77,24 @@ class MailManager {
         });
     }
     generateMailBoxButtons() {
-        const row = new Discord.MessageActionRow()
+        const row = new Discord.ActionRowBuilder()
         .addComponents(
-            new Discord.MessageButton()
+            new Discord.ButtonBuilder()
                 .setLabel('Non-lus')
-                .setStyle('SUCCESS')
+                .setStyle(Discord.ButtonStyle.Success)
                 .setCustomId('noread'),
-            new Discord.MessageButton()
-                .setStyle('SECONDARY')
+            new Discord.ButtonBuilder()
+                .setStyle(Discord.ButtonStyle.Secondary)
                 .setLabel('Lus')
                 .setCustomId('read'),
-            new Discord.MessageButton()
-                .setStyle('PRIMARY')
+            new Discord.ButtonBuilder()
+                .setStyle(Discord.ButtonStyle.Primary)
                 .setLabel('Supprimer un mail')
                 .setCustomId('delete')
                 .setEmoji('🗑️')
             ,
-            new Discord.MessageButton()
-                .setStyle('DANGER')
+            new Discord.ButtonBuilder()
+                .setStyle(Discord.ButtonStyle.Danger)
                 .setLabel('Annuler')
                 .setCustomId('cancel')
         );
@@ -112,7 +112,7 @@ class MailManager {
             .setDescription(`Choisissez un mail`)
             .setColor('ORANGE')
 
-        const menu = new Discord.MessageSelectMenu()
+        const menu = new Discord.SelectMenuBuilder()
             .setCustomId('selector')
             .setMaxValues(1)
             .setMinValues(1)
@@ -137,7 +137,7 @@ class MailManager {
             }
         ]);
         
-        const row = new Discord.MessageActionRow()
+        const row = new Discord.ActionRowBuilder()
             .addComponents(
                 menu
             )
@@ -184,7 +184,7 @@ class MailManager {
             .setDescription(`Choisissez un mail`)
             .setColor('ORANGE')
 
-        const menu = new Discord.MessageSelectMenu()
+        const menu = new Discord.SelectMenuBuilder()
             .setCustomId('selector')
             .setMaxValues(1)
             .setMinValues(1)
@@ -202,7 +202,7 @@ class MailManager {
 
         menu.addOptions(this.generateCancelButton());
         
-        const row = new Discord.MessageActionRow()
+        const row = new Discord.ActionRowBuilder()
             .addComponents(
                 menu
             )
@@ -253,16 +253,16 @@ class MailManager {
         menu.addOptions(this.generateCancelButton());
 
         const confirm = (mailId, mailObject, isImportant) => {
-            const row = new Discord.MessageActionRow()
+            const row = new Discord.ActionRowBuilder()
                 .addComponents(
-                    new Discord.MessageButton()
-                        .setStyle('SUCCESS')
+                    new Discord.ButtonBuilder()
+                        .setStyle(Discord.ButtonStyle.Success)
                         .setLabel('Valider')
                         .setCustomId('confirm'),
-                    new Discord.MessageButton()
+                    new Discord.ButtonBuilder()
                         .setCustomId('cancele')
                         .setLabel('Annuler')
-                        .setStyle('DANGER')
+                        .setStyle(Discord.ButtonStyle.Danger)
                 )
             message.delete().catch(() => {});
             message.channel.send({ components: [ row ], embeds: [ pack.embeds.classic(user)
@@ -300,7 +300,7 @@ class MailManager {
             .setTitle("Supprimer un mail")
             .setDescription(`Choisissez un mail pour le supprimer`)
             .setColor('ORANGE')
-        ], components: [ new Discord.MessageActionRow().addComponents(menu) ] }).then((sent) => {
+        ], components: [ new Discord.ActionRowBuilder().addComponents(menu) ] }).then((sent) => {
             const collector = sent.createMessageComponentCollector({ filter: i => i.user.id === user.id, time: 120000, max: 1 });
 
             collector.on('collect', /** @param {Discord.SelectMenuInteraction} interaction */(interaction) => {

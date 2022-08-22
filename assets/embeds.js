@@ -1,16 +1,16 @@
 const emojis = require('./data/emojis.json');
-const { MessageEmbed, User, Message, Interaction, GuildMember, Guild } = require('discord.js');
+const { User, Message, Interaction, GuildMember, Guild, EmbedBuilder, Embed } = require('discord.js');
 const collections = require('./data/collects');
 const data = require('./data/data.json');
 
 /**
  * @param {User | GuildMember} user 
- * @returns {MessageEmbed}
+ * @returns {Embed}
  */
 const generateBasic = (user) => {
     let u = user;
     if (u.guild) u = u.user;
-    return new MessageEmbed()
+    return new EmbedBuilder()
         .setTimestamp()
         .setFooter({ text: u.username.toString(), iconURL: u.avatarURL({dynamic: true})})
 }
@@ -18,10 +18,10 @@ const generateBasic = (user) => {
 module.exports = {
     /**
      * @param {User} user 
-     * @returns {MessageEmbed}
+     * @returns {EmbedBuilder}
      */
     noUser: (user) => {
-        return new MessageEmbed()
+        return new EmbedBuilder()
             .setTitle("🚫 Utilisateur introuvable")
             .setColor('DARK_RED')
             .setDescription(`Oops, cet utilisateur est introuvable, réessayez avec l'identifiant ou la mention.\n> Un [utilisateur](https://github.com/BotOracle/Documentation/blob/main/others/user.md) est attendu.`)
@@ -51,7 +51,7 @@ module.exports = {
      * @param {Discord.Guild} guild 
      */
     log: (guild) => {
-        let embed = new MessageEmbed()
+        let embed = new EmbedBuilder()
             .setTimestamp()
         
         if (guild.icon) embed.setFooter({ text: guild.name, iconURL: guild.iconURL({ dynamic: true })})
@@ -69,7 +69,7 @@ module.exports = {
             .setColor('RED')
     },
     cancel: () => {
-        return new MessageEmbed()
+        return new EmbedBuilder()
             .setTitle(`:bulb: Commande annulée`)
             .setColor('YELLOW')
     },
@@ -103,7 +103,7 @@ module.exports = {
             .setColor('RED')
     },
     waitForReacts: () => {
-        return new MessageEmbed()
+        return new EmbedBuilder()
             .setDescription(`${emojis.loading} Patientez le temps de l'ajout des réactions`)
             .setColor('YELLOW')
     },
@@ -280,7 +280,7 @@ ${Edata.winners.length == 0 ? 'Pas de gagnants' : Edata.winners.map(w => `<@${w.
      * @param {Guild} guild 
      */
     logs: (guild) => {
-        return new MessageEmbed()
+        return new EmbedBuilder()
             .setFooter({ text: guild.name, iconURL: guild.icon ? guild.iconURL({ dynamic: true }) : guild.client.user.avatarURL() })
             .setTimestamp()
     }
