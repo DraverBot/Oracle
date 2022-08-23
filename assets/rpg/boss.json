@@ -1,5 +1,0 @@
-[
-    {"name":"Blob vert géant", "pv":30, "dammages":1, "esquive":10, "special":1.5, "description": "Blob vert géant qui vit dans le temple de la forêt.\nCe n'est qu'un blob mais il est la preuve que le monde est plus dangereux quand on est petit.", "element":{"exist": true,"element":true,"objet":"terre"}, "id": "blob_vert_geant"},
-    {"name": "Gleok", "pv":35, "dammages":1, "esquive":0, "special":1.75, "description":"Dragon de feu qui vit dans le temple de feu", "element":{"exist": true,"element":true, "objet":"feu"}, "id": "gleok"},
-    {"name":"Ohisse", "dammages":1, "esquive":25, "special":2, "pv":40, "description":"Gardien du temple éolien. Ne peut se détruire que de l'intérieur", "element":{"exist": true,"element": false, "objet": "ocarina"}, "id": "ohisse"}
-]

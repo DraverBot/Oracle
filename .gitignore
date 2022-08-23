@@ -4,3 +4,4 @@ assets/managers/rpManager.js
 private-slash-commands/*.js
 script.js
 assets/data/tokens.json
+assets/data/db.json

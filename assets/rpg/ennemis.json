@@ -1,4 +1,0 @@
-[
-    {"id": "octorok", "name": "octorok", "emoji": "<:octorok:855787103823593492>", "attacks":{"damages":0.25, "esquive":10, "frequence": 3}, "rarety": "common", "life":5, "spawn": "all"},
-    {"id": "blob_vert", "name": "Blob vert", "emoji": null, "attacks":{"damages": 0.5, "esquive":50, "frequence": 5}, "rarety": "rare", "life":7, "spawn": "all"}
-]
