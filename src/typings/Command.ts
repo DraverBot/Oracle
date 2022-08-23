@@ -37,8 +37,9 @@ interface SpecificCooldown {
 export type CommandType = {
     permissions?: string[];
     dm?: boolean;
-    cooldown: 5;
-    module: 'giveaways' | 'moderation' | 'misc' | 'configuration' | 'fun' | 'usefull' | 'tickets' | 'levels' | 'economy' 
+    dev?: boolean,
+    cooldown?: number;
+    module: 'moderation' | 'information' | 'misc' | 'usefull' | 'fun' | 'tickets' | 'giveaways' | 'economy' | 'levels',
     specificCooldown?: SpecificCooldown;
     run: RunFunction;
 } & ChatInputApplicationCommandData;
