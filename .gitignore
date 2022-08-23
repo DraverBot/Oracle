@@ -1,7 +1,4 @@
-node_modules/
-
-assets/managers/rpManager.js
-private-slash-commands/*.js
-script.js
+node_modules
+.env
 assets/data/tokens.json
 assets/data/db.json

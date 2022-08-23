@@ -1,0 +1,47 @@
+[
+    {
+        "name": "Informations",
+        "value": "information",
+        "default": true
+    },
+    {
+        "name": "Modération",
+        "value": "moderation",
+        "default": "1"
+    },
+    {
+        "name": "Giveaways",
+        "value": "giveaways",
+        "default": true
+    },
+    {
+        "name": "Utilitaires",
+        "value": "usefull",
+        "default": true
+    },
+    {
+        "name": "Amusement",
+        "value": "fun",
+        "default": true
+    },
+    {
+        "name": "Tickets",
+        "value": "tickets",
+        "default": false
+    },
+    {
+        "name": "Divers",
+        "value": "misc",
+        "default": true
+    },
+    {
+        "name": "Niveaux",
+        "value": "levels",
+        "default": false
+    },
+    {
+        "name": "Économie",
+        "value": "economy",
+        "default": false
+    }
+]
