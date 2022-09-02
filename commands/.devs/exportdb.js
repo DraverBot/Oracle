@@ -42,11 +42,8 @@ module.exports = {
                         return;
                     };
                     let structure = `CREATE TABLE ${table} (
-${tableData.map((x) => `                        ${x.Field} ${x.Type.toUpperCase()} ${x.Null == 'NO' ? 'NOT NULL':''} ${x.Default == null ? '': `DEFAULT ${x.Default == "current_timestamp()" ? "CURRENT_TIMESTAMP" : `"${x.Default.startsWith("'") ? x.Default.substring(1, x.Default.length - 1) : x.Default}"`}`}${x.Extra.includes('auto_increment') ? " AUTO_INCREMENT":''}`).join(',\n')}
+${tableData.map((x) => `                        ${x.Field} ${x.Type.toUpperCase()} ${x.Null == 'NO' ? 'NOT NULL':''} ${x.Default == null ? '': `DEFAULT ${x.Default == "current_timestamp()" ? "CURRENT_TIMESTAMP" : `"${x.Default.startsWith("'") ? x.Default.substring(1, x.Default.length - 1) : x.Default}"`}`}${x.Extra.includes('auto_increment') ? " AUTO_INCREMENT":''} ${x.Key == 'PRI' ? 'PRIMARY KEY' :''}`).join(',\n')}
                     );`;
-
-                    let primaryKey = tableData.find(x => x.Key && x.Key == 'PRI');
-                    if (primaryKey) structure+=`\n\nALTER TABLE ${table} ADD PRIMARY KEY ( ${primaryKey.Field} );`;
 
                     sql+=structure;
                     sql+="\n\n";

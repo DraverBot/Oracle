@@ -128,7 +128,7 @@ module.exports = {
 
             
             const fileContent = `const Discord = require('discord.js');
-const functions = require('../../assets/functions');
+const functions = require('../assets/functions');
 const package = functions.package();
 
 module.exports = {

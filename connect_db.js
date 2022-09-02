@@ -14,6 +14,8 @@ module.exports.connect = () => {
 
     db.connect((error) => {
         if (error) throw error;
+
+        db.query(`CREATE TABLE IF NOT EXISTS modules (guild_id VARCHAR(255) NOT NULL PRIMARY KEY)`, (er) => {if (er) throw er});
     });
 
     return db;

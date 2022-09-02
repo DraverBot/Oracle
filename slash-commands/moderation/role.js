@@ -1,6 +1,7 @@
 const Discord = require('discord.js');
 const functions = require('../../assets/functions');
 const package = functions.package();
+const perms = Object.keys(package.perms).filter(x => x!== "USE_VAD").sort().map(x => ({ name: package.perms[x], value: x }));
 
 module.exports = {
     configs: {
@@ -133,6 +134,75 @@ module.exports = {
                         required: true
                     }
                 ]
+            },
+            {
+                name: "identifier",
+                description: "Affiche l'identifiant d'un rôle",
+                type: 'SUB_COMMAND',
+                options: [
+                    {
+                        name: "rôle",
+                        description: "Rôle à identifier",
+                        type: 'ROLE',
+                        required: true
+                    },
+                    {
+                        name: 'embed',
+                        description: "Affiche la réponse sous forme d'embed (plus compliqué pour copier/coller)",
+                        required: false,
+                        type: 'BOOLEAN'
+                    }
+                ]
+            },
+            {
+                name: 'permissions',
+                description: "Gère les permissions d'un rôle",
+                type: 'SUB_COMMAND_GROUP',
+                options: [
+                    {
+                        name: "accorder",
+                        description: "Accorde une permission à un rôle",
+                        type: 'SUB_COMMAND',
+                        options: [
+                            {
+                                name: "rôle",
+                                description: "Rôle à gérer",
+                                type: 'ROLE',
+                                required: true
+                            },
+                            {
+                                name: 'permission',
+                                description: "Permission à accorder",
+                                required: true,
+                                type: 'STRING',
+                            }
+                        ]
+                    },
+                    {
+                        name: 'refuser',
+                        description: "Refuse une permission à un rôle",
+                        type: 'SUB_COMMAND',
+                        options: [
+                            {
+                                name: "rôle",
+                                description: "Rôle à gérer",
+                                required: true,
+                                type: 'ROLE'
+                            },
+                            {
+                                name: "permission",
+                                description: 'Permission à refuser',
+                                type: 'STRING',
+                                required: true
+                            }
+                        ]
+                    },
+                    {
+                        name: "liste",
+                        description: "Affiche la liste des permissions accordables",
+                        type: 'SUB_COMMAND'
+                    }
+                ]
             }
         ]
     },
@@ -169,6 +239,75 @@ module.exports = {
             return true;
         };
 
+        if (['accorder', 'refuser'].includes(subCommand)) {
+            let role = interaction.options.getRole('rôle');
+            let permissionString = interaction.options.get('permission').value;
+            const perm = perms.find(x => x.name.toLowerCase() == permissionString.toLowerCase());
+            if (!perm) return interaction.reply({ embeds: [ package.embeds.classic(interaction.user)
+                .setTitle("Permission inconnue")
+                .setDescription(`Cette permission n'existe pas.\nUtilisez la commande \`/role permissions liste\` pour voir la liste des permissions disponibles`)
+                .setColor('#ff0000')
+            ] }).catch(() => {});
+
+            if (role.position >= interaction.member.roles.highest.position) return interaction.reply({ embeds: [ package.embeds.classic(interaction.user)
+                .setTitle("Action impossible")
+                .setDescription(`Le rôle <@&${role.id}> est trop haut pour vous`)
+                .setColor('#ff0000')
+            ] }).catch(() => {});
+            if (role.position >= interaction.guild.me.roles.highest.position) return interaction.reply({ embeds: [ package.embeds.classic(interaction.user)
+                .setTitle("Action impossible")
+                .setDescription(`Le rôle <@&${role.id}> est trop haut pour moi`)
+                .setColor('#ff0000')
+            ] }).catch(() => {});
+            if (!interaction.member.permissions.has(perm.value)) return interaction.reply({ embeds: [ package.embeds.missingPermission(interaction.user, perm.value) ] }).catch(() => {});
+            if (!interaction.guild.me.permissions.has(perm.value)) return interaction.reply({ embeds: [ package.embeds.classic(interaction.user)
+                .setTitle("❌ Permission manquante")
+                .setDescription(`Je n'ai pas la permission **${perm.name}**`)
+                .setColor('#ff0000')
+            ] }).catch(() => {});
+
+            let permissions = role.permissions.toArray();
+            if (subCommand == 'accorder') {
+                if (!permissions.includes(perm.value)) permissions.push(perm.value);
+            } else {
+                if (permissions.includes(perm.value)) {
+                    permissions.splice(permissions.indexOf(perm.value), 1);
+                };
+            };
+
+            role.setPermissions(Discord.Permissions.resolve(permissions));
+            
+            interaction.reply({ embeds: [ package.embeds.classic(interaction.user)
+                .setTitle(subCommand == 'accorder' ? "✅ Permission accordée":"🚫 Permission refusée")
+                .setColor(subCommand == 'accorder' ? '#00ff00' : '#ff0000')
+                .setDescription(`La permission \`${perm.name}\` a été **${subCommand == 'accorder' ? "accordée":'refusée'}** au rôle <@&${role.id}>`)
+            ] }).catch(() => {});
+        };
+        if (subCommand == 'liste') {
+            const embed = package.embeds.classic(interaction.user)
+                .setTitle("Permissions accordables")
+                .setDescription(`Voici la liste des permissions accordables pour un rôle :\n${perms.map(x => x.name).map(x => `\`${x}\``).join(', ')}`)
+                .setColor(interaction.guild.me.displayHexColor)
+            
+            interaction.reply({ embeds: [ embed ] }).catch(() => {});
+        }
+        if (subCommand == 'identifier') {
+            let { id, hexColor } = interaction.options.getRole('rôle');
+            let embed = interaction.options.getBoolean('embed') ?? false;
+
+            let reply = {};
+            if (embed == true) {
+                reply.embeds = [ package.embeds.classic(interaction.user)
+                    .setTitle("Identifiant")
+                    .setDescription(`L'identifiant du rôle <@&${id}> est \`${id}\``)
+                    .setColor(hexColor)
+                ];
+            } else {
+                reply.content = `\`${id}\``;
+            };
+
+            interaction.reply(reply).catch(() => {});
+        }
         if (subCommand === 'créer') {
             const roleName = interaction.options.get('nom').value;
             

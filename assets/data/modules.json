@@ -1,0 +1,37 @@
+[
+    {
+        "name": "Économie",
+        "value": "economy",
+        "default": false
+    },
+    {
+        "name": "Modération",
+        "value": "moderation",
+        "default": true
+    },
+    {
+        "name": "Utilitaires",
+        "value": "usefull",
+        "default": true
+    },
+    {
+        "name": "Amusement",
+        "value": "fun",
+        "default": true
+    },
+    {
+        "name": "Informations",
+        "value": "information",
+        "default": false
+    },
+    {
+        "name": "Divers",
+        "value": "misc",
+        "default": true
+    },
+    {
+        "name": "Niveaux",
+        "value": "levels",
+        "default": false
+    }
+]

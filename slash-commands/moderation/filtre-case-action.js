@@ -1,6 +1,7 @@
 const Discord = require('discord.js');
 const functions = require('../../assets/functions');
 const package = functions.package();
+const moment = require('moment');
 
 module.exports = {
     configs: {
@@ -20,7 +21,7 @@ module.exports = {
                     },
                     {
                         name: 'Avertissements',
-                        value: 'warn'
+                        value: 'avertissement'
                     },
                     {
                         name: 'Réduction au silence',
@@ -41,6 +42,14 @@ module.exports = {
                     {
                         name: 'Débanissement',
                         value: "unban"
+                    },
+                    {
+                        name: "Modification de pseudo",
+                        value: 'pseudo modifié'
+                    },
+                    {
+                        name: "Réinitialisation de pseudo",
+                        value: 'pseudo réinitialisé'
                     }
                 ]
             }
@@ -50,7 +59,7 @@ module.exports = {
         dm: false,
         dev: false,
         permissions: ['manage_guild'],
-        systems: [],
+        systems: [{name: 'de logs', value: 'logs_enable', state: true}],
         cd: 5
     },
     /**
@@ -77,7 +86,7 @@ module.exports = {
                 for (let i = 0; i < req.length; i++) {
                     const warn = req[i];
                         
-                    now.addField(action, `<@${warn.user_id}>\n> Donné par <@${warn.mod_id}>\n> Raison: \`${warn.reason}\`\n> Date: <t:${moment(warn.date).unix()}:R>`, false);
+                    now.addField(action, `<@${warn.user_id}>\n> Donné par <@${warn.mod_id}>\n> Raison: ${warn.reason}\n> Date: <t:${moment(warn.date).unix()}:R>`, false);
         
                     pile = false;
 
@@ -106,7 +115,7 @@ module.exports = {
                     .setDescription(`Voici la liste des logs de ${action}`)
                     
                 req.forEach((warn) => {
-                    embed.addField(action, `<@${warn.user_id}>\n> Donné par <@${warn.mod_id}>\n> Raison: \`${warn.reason}\`\n> Date: <t:${moment(warn.date).unix()}:R>`, false);
+                    embed.addField(action, `<@${warn.user_id}>\n> Donné par <@${warn.mod_id}>\n> Raison: ${warn.reason}\n> Date: <t:${moment(warn.date).unix()}:R>`, false);
                 });
 
                 interaction.reply({ embeds: [ embed ] });

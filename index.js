@@ -22,7 +22,8 @@ fs.readdirSync('./events').filter(x => x.endsWith('.js')).forEach((fileName) => 
 
 module.exports.client = client;
 var obj = {};
-fs.readdirSync('./commands').forEach((dirName) => {
+
+fs.readdirSync('./commands').filter(x => x.startsWith('.')).forEach((dirName) => {
     obj[dirName] = [];
     fs.readdirSync(`./commands/${dirName}`).filter((x) => x.endsWith('.js')).forEach((fileName) => {
         let commandFile = require(`./commands/${dirName}/${fileName}`);

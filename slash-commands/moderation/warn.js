@@ -37,9 +37,9 @@ module.exports = {
         const reason = interaction.options.get('raison').value;
         const member = interaction.options.get('utilisateur').member;
 
-        if (!functions.checkAllConditions(interaction.guild, interaction.channel, interaction.member, member)) return interaction.deferReply();
+        if (!functions.checkPerms({ member, interaction, mod: interaction.member, checkBotCompare: true, checkSelfUser: true, checkOwner: true })) return;
 
-        functions.addCase(interaction.guild.id, member.id, interaction.user.id, reason, 'warn');
+        functions.addCase(interaction.guild.id, member.id, interaction.user.id, reason, 'avertissement');
         const warn = package.embeds.classic(interaction.user)
             .setTitle("Avertissement")
             .setColor('#ff0000')
@@ -64,6 +64,7 @@ module.exports = {
         interaction.reply({ embeds: [ warn ] });
         member.user.send({ embeds: [ warn ] }).catch(() => {});
 
+        
         functions.log(interaction.guild, warn);
     }
 }

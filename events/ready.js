@@ -1,5 +1,5 @@
 const { Client, MessageEmbed, Interaction } = require('discord.js');
-const { connect, beta, connectYeikzy, default_prefix } = require('../assets/data/data.json');
+const { connect, beta, connectYeikzy } = require('../assets/data/data.json');
 const commands = require('../assets/data/slashCommands');
 const fs = require('fs');
 const { privateSlashCommandsBuilder, capitalize } = require('../assets/functions');
@@ -15,39 +15,42 @@ module.exports = {
 
         const slashCommandsBuilder = () => {
             privateSlashCommandsBuilder(client);
+            const slashCommands = [];
 
             fs.readdirSync('./slash-commands').forEach((dir) => {
                 fs.readdirSync(`./slash-commands/${dir}`).filter((x) => x.endsWith('.js')).forEach((fileName) => {
                     const file = require(`../slash-commands/${dir}/${fileName}`);
-    
-                    if (file.guild) {
-                        client.application.commands.create(file.configs, file.guild).catch((e) => console.log(e));
-                    } else {                    
-                        client.application.commands.create(file.configs).catch((e) => console.log(e));
-                    };
+
+                    if (commands.has(file.configs.name)) return console.log(`command ${file.configs.name} already exists`);
     
                     if (!file.help) file.help = { dm: false, dev: false, permissions: [], systems:[], cd: 5 };
                     file.help.category = dir;
-
+                    
+                    if (file.guild) {
+                        client.application.commands.create(file.configs, file.guild).catch((e) => console.log(e));
+                    } else {                    
+                        slashCommands.push(file.configs);
+                    };
                     commands.set(file.configs.name, file);
                 });
+            });
 
-            })
+            client.application.commands.set(slashCommands);
         };
         const loadSpecificsCooldowns = () => {
-            client.db.query(`SELECT * FROM cooldowns WHERE date >= "${Date.now()}"`, (err, req) => {
+            client.db.query(`SELECT * FROM cooldowns WHERE date > "${Date.now()}"`, (err, req) => {
                 if (err) throw err;
 
                 for (const cd of req) {
                     const dataset = cd;
-                    dataset.command = `/${dataset.command}`;
+                    dataset.command = `${dataset.command}`;
 
                     cooldowns.set(`${dataset.user_id}.${dataset.command}`, dataset);
                 }
             })
         };
         const managerBuilder = () => {
-            fs.readdirSync('./assets/managers').forEach((managerFileName) => {
+            fs.readdirSync('./assets/managers').filter(x => x.endsWith('.js')).forEach((managerFileName) => {
                 const file = require(`../assets/managers/${managerFileName}`);
 
                 const managerName = capitalize(managerFileName.split('.')[0]);
@@ -108,7 +111,8 @@ module.exports = {
             {name: 'la version ' + require('../assets/data/data.json').version, type: 'WATCHING'},
             {name: `%users% utilisateurs`, type: 'WATCHING'},
             {name: `%servers% serveurs`, type: 'WATCHING'},
-            {name: `Le préfixe ${default_prefix}`, type: 'WATCHING'}
+            {name: "%members% membres", type: 'WATCHING'},
+            {name: 'une vidéo', type: 'STREAMING', url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'}
         ];
         
         setInterval(() => {
@@ -124,6 +128,13 @@ module.exports = {
             statut.name = statut.name
                 .replace('%users%', client.users.cache.size)
                 .replace('%servers%', client.guilds.cache.size);
+            
+            if (statut.name.includes('%members%')) {
+                (async() => {await client.guilds.fetch()});
+                let members = client.guilds.cache.map(x => x.memberCount).reduce((a, b) => a + b);
+
+                statut.name = statut.name.replace('%members%', members);
+            };
 
             client.user.setActivity(statut);
         }, 20000);

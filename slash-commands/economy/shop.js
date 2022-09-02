@@ -6,7 +6,7 @@ module.exports = {
     help: {
         cd: 5,
         permissions:[],
-        systems: [{name: "d'économie", value: 'economy_enable', state: true}],
+        systems: [],
         dm: false,
         dev: false
     },
@@ -152,7 +152,7 @@ module.exports = {
 
                 interaction.reply({ embeds: [ package.embeds.classic(interaction.user)
                     .setTitle("Item ajouté")
-                    .setDescription(`L'item ${name} a été ajouté au magasin pour **${price.toLocaleString('en').replace(/,/g, ' ')}** ${package.configs.coins}`)
+                    .setDescription(`L'item ${name} a été ajouté au magasin pour **${price.toLocaleString('fr-DE')}** ${package.configs.coins}`)
                     .setColor('ORANGE')
                 ] }).catch(() => {});
             })
@@ -223,7 +223,7 @@ module.exports = {
                     };
 
                     data.extra = JSON.parse(data.extra);
-                    embed.addField(data.item_name, `${data.item_type == 'role' ? `<@&${data.extra.id}>` : data.extra.text}\n**Identifiant :** \`${data.id}\`\n> Prix : ${parseInt(data.price).toLocaleString('en').replace(/,/g, ' ')} ${package.configs.coins}\nEn stock : ${parseInt(data.quantity) == 0 ? "illimité" : `${data.quantity} restant(s)`}`, true);
+                    embed.addField(data.item_name, `${data.item_type == 'role' ? `<@&${data.extra.id}>` : data.extra.text}\n**Identifiant :** \`${data.id}\`\n> Prix : ${parseInt(data.price).toLocaleString('fr-DE')} ${package.configs.coins}\nEn stock : ${parseInt(data.quantity) == 0 ? "illimité" : `${data.quantity} restant(s)`}`, true);
                     return returned + 1;
                 };
 
@@ -260,7 +260,7 @@ module.exports = {
 
                 await interaction.reply({ embeds: [ package.embeds.classic(interaction.user)
                     .setTitle("Item acheté")
-                    .setDescription(`Vous avez acheté **${item.item_name}** pour ${item.price.toLocaleString('en').replace(/,/g, ' ')} ${package.configs.coins}`)
+                    .setDescription(`Vous avez acheté **${item.item_name}** pour ${item.price.toLocaleString('fr-DE')} ${package.configs.coins}`)
                     .setColor('#00ff00')
                 ] }).catch(() => {});
 
@@ -283,7 +283,7 @@ module.exports = {
                         interaction.client.CoinsManager.addCoins({ user_id: interaction.user.id, guild_id: interaction.guild.id }, item.price);
                         interaction.editReply({ content: `<@${interaction.user.id}>`, embeds: [ package.embeds.classic(interaction.user)
                             .setTitle("Erreur")
-                            .setDescription(`Une erreur a eu lieu lors de l'ajout de l'item dans votre inventaire.\nL'achat vous a été remboursé, vous récupérez **${item.price.toLocaleString('en').replace(/,/g, ' ')}** ${package.configs.coins}`)
+                            .setDescription(`Une erreur a eu lieu lors de l'ajout de l'item dans votre inventaire.\nL'achat vous a été remboursé, vous récupérez **${item.price.toLocaleString('fr-DE')}** ${package.configs.coins}`)
                             .setColor('#ff0000')
                         ] }).catch(() => {});
 

@@ -8,7 +8,7 @@ module.exports = {
         dm: false,
         dev: false,
         permissions: [],
-        systems: [{name: "d'économie", value: "economy_enable", state: true}]
+        systems: [],
     },
     configs: {
         name: "banque",

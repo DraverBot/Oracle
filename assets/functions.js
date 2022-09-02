@@ -98,7 +98,8 @@ module.exports = {
                 };
             
                 if (interaction.customId === 'select') {
-                    const msgCollector = channel.createMessageCollector({ filter: (m) => m.author.id == user.id , time: 120000});
+                    let channelCollector = (channel !== 'none' ? interaction.channel : channel);
+                    const msgCollector = channelCollector.createMessageCollector({ filter: (m) => m.author.id == user.id , time: 120000});
  
                     var trash = new Discord.Collection();
                     
@@ -118,9 +119,9 @@ module.exports = {
                         };
  
                         let number = parseInt(m.content);
-                        if (isNaN(number)) return msg.channel.send({ embeds: [ embeds.invalidNumber(user) ] }).then(x => trash.set(x.id, x));
+                        if (isNaN(number)) return msg.channelCollector.send({ embeds: [ embeds.invalidNumber(user) ] }).then(x => trash.set(x.id, x));
                         number--;
-                        if (number < 0 || number > pages.length) return channel.send({ content: 'Cette page n\'existe pas' }).then(x => trash.set(x.id, x));
+                        if (number < 0 || number > pages.length) return channelCollector.send({ content: 'Cette page n\'existe pas' }).then(x => trash.set(x.id, x));
  
                         const selected = pages[number];
  
@@ -143,7 +144,7 @@ module.exports = {
 
         if (channel == "none") {
             if (interaction.replied) {
-                await interaction.editReply({ embeds: [ list[0] ], content: '', components: [ row ] }).catch(() => {});
+                await interaction.editReply({ embeds: [ list[0] ], content: '** **', components: [ row ] }).catch((e) => {console.log(e)});
             } else {
                 await interaction.reply({ embeds: [ list[0] ], components: [ row ] }).catch(() => {});
             };
@@ -177,8 +178,8 @@ module.exports = {
     },
     getNumbersEmoji: () => {
         return [
-            '0️⃣', '1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣', '9️⃣'
-        ]
+            '0️⃣', '1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣', '9️⃣', '🔟'
+        ];
     },
    /**
     * @returns {Number}
@@ -205,7 +206,7 @@ module.exports = {
     addCase: (guild_id, user_id, mod_id, reason, action) => {
         const { client } = require('../index');
 
-        client.db.query(`INSERT INTO mod_cases (guild_id, user_id, mod_id, action, reason) VALUES ("${guild_id}", "${user_id}", "${mod_id}", "${action}", "${reason}")`, (error, request) => {
+        client.db.query(`INSERT INTO mod_cases (guild_id, user_id, mod_id, action, reason) VALUES ("${guild_id?.id ?? guild_id}", "${user_id}", "${mod_id}", "${action}", "${reason}")`, (error, request) => {
             if (error) console.error(error);
         });
     },
@@ -217,7 +218,6 @@ module.exports = {
      */
     log: (guild, embed) => {
         const client = guild.client;
-        let action = capitalize(embed.title);
 
         client.db.query(`SELECT logs_enable, logs_channel FROM configs WHERE guild_id="${guild.id}"`, (err, req) => {
             if (err) return console.log(err);
@@ -238,6 +238,7 @@ module.exports = {
      * @param {Discord.GuildMember} modo 
      * @param {Discord.GuildMember} member 
      * @param {?Discord.CommandInteraction} interaction
+     * @deprecated Use `checkPerms` instead
      */
     checkAllConditions: (guild, channel, modo, member, interaction) => {
         const { compareRoles } = require('./functions.js')
@@ -289,6 +290,71 @@ module.exports = {
             ] });
             return false;
         };
+        return true;
+    },
+    /**
+     * @param {{ mod: Discord.GuildMember, member: Discord.GuildMember, interaction: Discord.CommandInteraction, ?checkBotCompare: Boolean ?checkSelfUser: Boolean, ?checkOwner: Boolean, ?checkBot: Boolean, ?ownerValid: Boolean, ?all: Boolean }} data 
+     */
+    checkPerms(data) {
+        const send = (embed) => {
+            if (data.interaction.replied) {
+                data.interaction.editReply({ embeds: [ embed ], components: [] }).catch(() => {});
+            } else {
+                data.interaction.reply({ embeds: [ embed ] }).catch(() => {});
+            };
+        };
+        if (data.all == true) {
+            for (const x  of ['checkBot', 'checkOwner', 'checkBotCompare', 'checkSelfUser']) {
+                data[x] = true;
+            };
+            data.ownerValid = false;
+        };
+        let owner = data.member.id == data.member.guild.ownerId;
+
+        if (data.mod.id !== data.member.guild.ownerId && data.mod.roles.highest.position <= data.member.roles.highest.position) {
+            send(embeds.notEnoughHiger(data.mod.user, data.member));
+            return false;
+        };
+        if (data.checkBotCompare == true && data.member.roles.position >= data.member.guild.me.roles.highest.position) {
+            send(embeds.classic(data.mod.user)
+                .setTitle("Pas assez élevé")
+                .setDescription(`Oops, il semblerait que <@${data.member.id}> soit supérieur ou égal à moi dans la hiérarchie des rôles.`)
+                .setColor('#ff0000')
+            )
+            return false;
+        };
+        if (data.checkBot == true && data.member.user.bot == true) {
+            send(embeds.classic(data.mod)
+                .setTitle("Bot")
+                .setDescription(`<@${data.member.id}> est un bot (je ne peux tout de même pas blâmer un coupain)`)
+                .setColor('#ff0000')
+            );
+            return false;
+        };
+        if (data.checkOwner == true && owner && (data.mod.id !== data.mod.guild.ownerId && data.ownerValid == true)) {
+            send(embeds.classic(data.mod)
+                .setTitle("Propriétaire")
+                .setDescription(`<@${data.member.id}> est le propriétaire du serveur, vous n'allez quand même pas tenter un coup d'état ?`)
+                .setColor('#ff0000')
+            );
+            return false;
+        };
+        if (data.checkSelfUser == true && data.member.id == data.mod.id) {
+            send(embeds.classic(data.mod)
+                .setTitle("Narcissisme")
+                .setDescription(`La personne que vous ciblez ( <@${data.member.id}> ) est **vous**. Je suis sûr que vous n'êtes pas narcissique à ce point !`)
+                .setColor('#ff0000')
+            );
+            return false;
+        };
+        if (!data.member.moderatable) {
+            send(embeds.classic(data.mod)
+                .setTitle("Membre non-modérable")
+                .setDescription(`Je ne peux pas effectuer d'actions de modération sur <@${data.member.id}>`)
+                .setColor('#ff0000')
+            );
+            return false;
+        }
         return true;
     },
     /**
@@ -464,7 +530,6 @@ module.exports = {
                 command: data.commandName,
                 date: data.time
             };
-            if (data.isSlash == true) dataset.command = `/${data.commandName}`;
 
             data.client.db.query(`INSERT INTO cooldowns (${Object.keys(dataset).join(', ')}) VALUES (${Object.values(dataset).map(x => `"${x}"`).join(', ')})`, (err) => {
                 if (err) console.log(err);

@@ -19,7 +19,7 @@ module.exports.help = {
  * @param {String} prefix 
  */
 module.exports.run = (message, args, client, prefix) => {
-    client.db.query(`SELECT * FROM configs WHERE guild_id="${message.guild.id}"`, (err, req) => {
+    client.db.query(`SELECT level_enable FROM configs WHERE guild_id="${message.guild.id}"`, (err, req) => {
         if (err) {
             console.log(err);
             message.channel.send({ embeds: [ package.embeds.errorSQL(message.author) ] });

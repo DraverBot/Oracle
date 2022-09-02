@@ -121,24 +121,6 @@
             "param": "level_message"
         },
         {
-            "name": "Système de niveaux",
-            "type": "boolean",
-            "description": "Active ou désactive le système de niveaux",
-            "param": "level_enable"
-        },
-        {
-            "name": "Système d'interchat",
-            "type": "boolean",
-            "description": "Active ou désactive le système d'interchat",
-            "param": "interchat_enable"
-        },
-        {
-            "name": "Salon d'interchat",
-            "type": "channel",
-            "description": "Configure le salon d'interchat",
-            "param": "interchat_channel"
-        },
-        {
             "name": "Roles d'arrivée",
             "type": "boolean",
             "description": "Active ou désactive les rôles donnés à l'arrivée des membres",
@@ -163,10 +145,10 @@
             "param": "counting_channel"
         },
         {
-            "name": "Système d'économie",
+            "name": "Système de tickets",
             "type": "boolean",
-            "description": "Active ou désactive le système d'économie",
-            "param": "economy_enable"
+            "description": "Active oudésactive le système de tickets",
+            "param": "ticket_enable"
         }
     ]
 }

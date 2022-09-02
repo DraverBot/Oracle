@@ -29,7 +29,7 @@ module.exports.run = (message, args, client, prefix) => {
                 .setStyle('DANGER')
                 .setEmoji("❌")
         )
-    message.channel.send({content: "Êtes-vous sûr de vouloir nettoyer " + `${message.channel.name} ? Cette action est irréversible.`, components: [ row ]}).then(async(valideMSG) => {
+    interaction({content: "Êtes-vous sûr de vouloir nettoyer " + `${message.channel.name} ? Cette action est irréversible.`, components: [ row ]}).then(async(valideMSG) => {
         
         const filter = (interaction) => interaction.user.id === message.author.id;
 

@@ -38,6 +38,12 @@ module.exports = {
      * @param {Discord.CommandInteraction} interaction 
      */
     run: async(interaction) => {
+        await interaction.reply({ embeds: [ package.embeds.classic(interaction.user)
+            .setTitle("Passage en slash commande")
+            .setDescription(`Depuis le passage en slash commandes (depuis le <t:1660664940:F> pour être exact), Oracle est passé en slash commandes.\nDepuis, le préfixe n'est plus utilisable`)
+            .setColor('#ff0000')
+        ] });
+        return;
         await interaction.reply({ embeds: [ package.embeds.waitForDb(interaction.user) ] });
 
         interaction.client.db.query(`SELECT prefix FROM prefixes WHERE guild_id="${interaction.guild.id}"`, (err, req) => {

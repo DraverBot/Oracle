@@ -6,7 +6,7 @@ module.exports = {
     help: {
         cd: 5,
         permissions: [],
-        systems: [{name: 'd\'économie', value: "economy_enable", state: true}],
+        systems: [],
         dm: false,
         dev: false
     },
