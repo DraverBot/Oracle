@@ -33,5 +33,10 @@
         "name": "Niveaux",
         "value": "levels",
         "default": false
+    },
+    {
+        "name": "Suggestions",
+        "value": "suggestions",
+        "default": false
     }
 ]

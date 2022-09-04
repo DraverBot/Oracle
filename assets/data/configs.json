@@ -147,8 +147,14 @@
         {
             "name": "Système de tickets",
             "type": "boolean",
-            "description": "Active oudésactive le système de tickets",
+            "description": "Active ou désactive le système de tickets",
             "param": "ticket_enable"
+        },
+        {
+            "name": "Salon de suggestion",
+            "type": "channel",
+            "description": "Configure le salon de suggestions",
+            "param": "suggest_channel"
         }
     ]
 }
