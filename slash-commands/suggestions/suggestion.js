@@ -131,8 +131,8 @@ module.exports = {
                     suggestion = suggestion.replace(/"/g, '\\"');
     
                     let similar;
-                    if (request.length > 0) {
-                        similar = findBestMatch(suggestion, request.map(x => x.suggestion.replace(/\\\\'/g, '"')));
+                    if (request.filter(x => x.ended === '0').length > 0) {
+                        similar = findBestMatch(suggestion, request.filter(x => x.ended === '0').map(x => x.suggestion.replace(/\\\\'/g, '"')));
                     };
                     
                     const embed = package.embeds.classic(interaction.user)
@@ -240,11 +240,53 @@ module.exports = {
                     approves = parseInt(approves);
 
                     /**
-                     * @param {{ content: String, color: String }} data 
+                     * @param {{ content: String, color: String, buttonStyle: 'SUCCESS' | 'DANGER' }} data 
                      */
-                    const end = (data) => {
-                        
-                    }
+                    const end = async(data) => {
+                        const embed = suggestMsg.embeds[0];
+                        embed.setColor(data.color);
+
+                        suggestMsg.edit({ embeds: [ embed ], components: [ new Discord.MessageActionRow()
+                            .setComponents(new Discord.MessageButton({ customId: 'info', label: data.content, style: data.buttonStyle, disabled: true }))
+                        ] }).catch(console.log);
+
+                        await interaction.editReply({ embeds: [ package.embeds.classic(interaction.user)
+                            .setTitle(functions.capitalize(data.content))
+                            .setDescription(`La suggestion a été **${data.content.split(' ')[1]}**`)
+                            .setColor(data.color)
+                        ] }).catch(() => {});
+
+                        interaction.client.db.query(`UPDATE suggestions SET ended='1' WHERE id="${suggestId}"`, (e) => {
+                            if (e) {
+                                functions.sendError(e, 'suggestion', interaction.user);
+                                interaction.editReply({ embeds: [ package.embeds.errorSQL(interaction.user) ] }).catch(() => {});
+                            };
+                        });
+                    };
+
+                    if (rejects >= approves) end({ content: 'suggestion rejetée', color: '#ff0000', buttonStyle: 'DANGER' })
+                    else if (rejects < approves) end({ content: 'suggestion validée', color: '00ff00', buttonStyle: 'SUCCESS' });
+                };
+                if (subcommand === 'supprimer') {
+                    if (suggestion.user_id !== interaction.user.id && !interaction.member.permissions.has('ADMINSITRATOR')) return interaction.editReply({ embeds: [ package.embeds.classic(interaction.user)
+                        .setTitle("Erreur")
+                        .setDescription(`Seuls les administrateurs ou l'auteur de la suggestion peuvent supprimer la suggestion`)
+                        .setColor('#ff0000')
+                    ] }).catch(() => {});
+                
+                    await suggestMsg.delete().catch(() => {});
+                    await interaction.editReply({ embeds: [ package.embeds.classic(interaction.user)
+                        .setTitle("Suggestion supprimée")
+                        .setDescription(`La suggestion a été supprimée`)
+                        .setColor('#ff0000')
+                    ] }).catch(() => {});
+
+                    interaction.client.db.query(`DELETE FROM suggestions WHERE id="${suggestId}"`, (e) => {
+                        if (e) {
+                            functions.sendError(e, 'suggestion', interaction.user);
+                            interaction.editReply({ embeds: [ package.embeds.errorSQL(interaction.user) ] }).catch(() => {});
+                        };
+                    });
                 }
             });
         });
