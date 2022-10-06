@@ -10,3 +10,8 @@ CREATE TABLE suggestions (
     suggestion VARCHAR(255) NOT NULL,
     votes LONGTEXT NOT NULL DEFAULT "[]"
 );
+
+CREATE TABLE jokes (
+    guild_id VARCHAR(255) NOT NULL,
+    data LONGTEXT DEFAULT '{"global": true, "dark": false, "dev": true, "limit": false, "beauf": true, "blondes": true}'
+);

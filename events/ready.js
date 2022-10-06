@@ -35,7 +35,7 @@ module.exports = {
                 });
             });
 
-            client.application.commands.set(slashCommands);
+            client.application.commands.set(slashCommands).catch(console.log);
         };
         const loadSpecificsCooldowns = () => {
             client.db.query(`SELECT * FROM cooldowns WHERE date > "${Date.now()}"`, (err, req) => {
