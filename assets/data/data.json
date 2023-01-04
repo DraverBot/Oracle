@@ -14,29 +14,29 @@
     "link": "https://bit.ly/3NUdTvE",
     "error": {
         "id": "976874250260578404",
-        "token": "LC8ld5MDeX1wh-DAtnhnBf9SsI8wevos2Q9N0PiqkhKWhzaT3G934trT9DqbCRQlLKkd",
-        "url": "https://discord.com/api/webhooks/976874250260578404/LC8ld5MDeX1wh-DAtnhnBf9SsI8wevos2Q9N0PiqkhKWhzaT3G934trT9DqbCRQlLKkd"
+        "token": "X",
+        "url": "X"
     },
     "add": {
         "id": "976880711908855848",
-        "token": "e_FdWqmzf3JIQti9ng_AUkRY_wt-adNf4PQjyZICTgL9Xh0TETiKs_LXHY3oKIlQNucn"
+        "token": "X"
     },
     "remove": {
         "id": "976880774760513576",
-        "token": "VzKdF39WHH6Sd_q9245QkBfcf3rrnCIY8XI8JA51EkOuOK9_j3mgKj5ZcYIHzFVxcgCO"
+        "token": "X"
     },
     "connect": {
-        "token": "iIyIzSZPJUtWGRhNuFs6lbk2YOYPIBJKV06-wozdIr6QdtjdXLETh5OlFFfrSCj7eAYf",
-        "id": "977526598767099944"
+        "token": "X",
+        "id": "X"
     },
-    "blagues-api-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMzg2NDc5MDY1MzA3MTUyMzg0IiwibGltaXQiOjEwMCwia2V5Ijoia2RxU3RhNGVxeEpzSXlFSlBLQ0J2emdXNkJoM0VUbHc4aFBJUTlzczBxTUMwYm5HZHgiLCJjcmVhdGVkX2F0IjoiMjAyMi0wNS0yMlQxMzoyMTo0NiswMDowMCIsImlhdCI6MTY1MzIyNTcwNn0.KFM1NwvmjE0RlQeQfafhvt3jOQEpwGjwDuTq0NAINp4",
+    "blagues-api-token": "X",
     "statsYeikzy": {
-        "id": "995347314585632928",
-        "token": "pn1tW5UgtC3sYX96G-1mxxYUoUraAHesZLdBkMWJftJs6j5hlOLY4N_CZF4h-qsGcZhJ"
+        "id": "X",
+        "token": "X"
     },
     "connectYeikzy": {
-        "id": "995397323687473282",
-        "token": "WE6gnpDWwNt0L84bEtGd0rYoh10LTAQNqi6ZY0BSKGxCgHoCUwceGGIAXNmynAPL9Bc6"
+        "id": "X",
+        "token": "X"
     },
     "coins": "OraCoins",
     "coinsSuffix": "d'OraCoins"
