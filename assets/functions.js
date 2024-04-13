@@ -435,6 +435,8 @@ module.exports = {
     async privateSlashCommandsBuilder(client) {
         const commands = require('./data/slashCommands');
 
+        if (!fs.existsSync('./private-slash-commands')) fs.mkdirSync('./private-slash-commands')
+        
         const commandFiles = fs.readdirSync('./private-slash-commands');
         for (const file of commandFiles) {
             const props = require(`../private-slash-commands/${file}`);
