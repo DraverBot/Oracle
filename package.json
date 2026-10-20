@@ -9,7 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@discordjs/rest": "^0.6.0",
+    "@discordjs/rest": "^2.0.0",
     "blagues-api": "^2.1.0",
     "dblapi.js": "^2.4.1",
     "discord-api-types": "^0.26.1",
